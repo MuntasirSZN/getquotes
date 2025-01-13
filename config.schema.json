@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GetQuotes Configuration",
+  "type": "object",
+  "properties": {
+    "authors": {
+      "type": "array",
+      "description": "List of authors to fetch quotes from.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "theme_color": {
+      "type": "string",
+      "description": "Hex color code for theming, e.g., \"#RRGGBB\".",
+      "pattern": "^#?[0-9A-Fa-f]{6}$"
+    },
+    "max_tries": {
+      "type": "integer",
+      "description": "Maximum number of attempts to find a quote.",
+      "minimum": 1,
+      "default": 30
+    },
+    "log_file": {
+      "type": "string",
+      "description": "Path to the log file.",
+      "default": "getquotes.log"
+    }
+  },
+  "required": ["authors", "theme_color"],
+  "additionalProperties": false
+}
