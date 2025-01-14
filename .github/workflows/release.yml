@@ -20,7 +20,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: 🔍 Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       # Set up Rust toolchain
       - name: ⚙️ Set up Rust
         uses: actions-rs/toolchain@v1
