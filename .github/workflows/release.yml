@@ -45,7 +45,7 @@ jobs:
           cp target/${{ matrix.target }}/release/$BINARY_NAME release/getquotes-${{ matrix.target }}
       # Upload the artifact
       - name: 📤 Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: getquotes-${{ matrix.target }}
           path: release/getquotes-${{ matrix.target }}
@@ -56,7 +56,7 @@ jobs:
     steps:
       # Download all artifacts
       - name: 📥 Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       # Create GitHub Release
@@ -75,7 +75,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: 🔍 Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       # Set up Rust toolchain
       - name: ⚙️ Set up Rust
         uses: actions-rs/toolchain@v1
