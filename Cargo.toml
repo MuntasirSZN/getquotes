@@ -12,7 +12,7 @@ repository = "https://github.com/MuntasirSZN/getquotes"
 keywords = ["quotes", "wikiquote", "command-line", "cli", "rust"]
 
 [dependencies]
-reqwest = { version = "0.12.12", features = ["json", "blocking"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "blocking"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
