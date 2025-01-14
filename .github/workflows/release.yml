@@ -12,8 +12,6 @@ jobs:
   build:
     name: 🛠️ Build for ${{ matrix.target }}
     runs-on: ubuntu-latest
-    env:
-      OPENSSL_DIR: /usr/lib/ssl  # Default OpenSSL directory on Ubuntu
     strategy:
       matrix:
         target:
@@ -37,14 +35,6 @@ jobs:
       # Install cross for cross-compilation
       - name: 📦 Install cross
         run: cargo install cross
-
-      # Install OpenSSL development libraries in the Docker container
-      - name: 🔧 Install OpenSSL
-        run: |
-          if [[ "${{ matrix.target }}" == "x86_64-unknown-linux-gnu" ]]; then
-            docker run --rm -v $(pwd):/workdir ghcr.io/cross-rs/x86_64-unknown-linux-gnu:0.2.5 \
-              sh -c "apt-get update && apt-get install -y libssl-dev pkg-config && pkg-config --libs --cflags openssl"
-          fi
 
       # Build for the target platform
       - name: 🏗️ Build for ${{ matrix.target }}
@@ -103,10 +93,6 @@ jobs:
         with:
           toolchain: stable
           override: true
-
-      # Install OpenSSL development libraries
-      - name: 🔧 Install OpenSSL
-        run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
 
       # Authenticate with crates.io
       - name: 🔑 Authenticate with crates.io
