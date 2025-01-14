@@ -1,9 +1,9 @@
 # 📜 GetQuotes - Fetch Inspirational Quotes from the Command Line 🚀
 
-![GitHub](https://img.shields.io/badge/License-MIT-blue.svg)
-![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes)
-![GitHub stars](https://img.shields.io/github/stars/MuntasirSZN/getquotes)
-![GitHub forks](https://img.shields.io/github/forks/MuntasirSZN/getquotes)
+![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8)
+![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge)
+![GitHub stars](https://img.shields.io/github/stars/MuntasirSZN/getquotes?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=292324)
+![Last commit](https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)
 
 **GetQuotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
 
