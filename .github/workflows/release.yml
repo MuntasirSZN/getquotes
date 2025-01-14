@@ -21,6 +21,8 @@ jobs:
       # Checkout the repository
       - name: 🔍 Checkout code
         uses: actions/checkout@v4
+      - name: 🔧 Install OpenSSL
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config
       # Set up Rust toolchain
       - name: ⚙️ Set up Rust
         uses: actions-rs/toolchain@v1
