@@ -10,6 +10,8 @@ jobs:
   build:
     name: 🛠️ Build for ${{ matrix.target }}
     runs-on: ubuntu-latest
+    env:
+      OPENSSL_DIR: /usr/lib/ssl  # Default OpenSSL directory on Ubuntu
     strategy:
       matrix:
         target:
@@ -84,6 +86,8 @@ jobs:
         with:
           toolchain: stable
           override: true
+      - name: 🔧 Install OpenSSL
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-conf
       # Authenticate with crates.io
       - name: 🔑 Authenticate with crates.io
         run: echo "${{ secrets.CRATES_IO_TOKEN }}" | cargo login
