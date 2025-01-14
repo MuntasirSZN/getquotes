@@ -24,6 +24,20 @@ jobs:
       - name: 🔍 Checkout code
         uses: actions/checkout@v4
 
+      # Install sqlite3 development libraries (Linux only)
+      - name: 🔧 Install sqlite3 (Linux)
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
+      # Set up Android NDK (Android only)
+      - name: 🔧 Set up Android NDK
+        if: matrix.target == 'aarch64-linux-android'
+        run: |
+          mkdir -p ~/android-ndk
+          wget https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
+          unzip android-ndk-r25b-linux.zip -d ~/android-ndk
+          echo "$HOME/android-ndk/android-ndk-r25b" >> $GITHUB_PATH
+
       # Set up Rust toolchain
       - name: ⚙️ Set up Rust
         uses: actions-rs/toolchain@v1
@@ -31,9 +45,6 @@ jobs:
           toolchain: stable
           override: true
           target: ${{ matrix.target }}
-      - name: 🔧 Install sqlite3 (Linux)
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
 
       # Install cross for cross-compilation
       - name: 📦 Install cross
