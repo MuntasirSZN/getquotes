@@ -5,7 +5,6 @@ edition = "2021"
 authors = [ "Muntasir Mahmud <muntasir.joypurhat@gmail.com>" ]
 description = "A command line tool to get quotes from the WikiQuotes"
 license = "MIT"
-license-file = "LICENSE"
 documentation = "https://github.com/MuntasirSZN/getquotes"
 readme = "README.md"
 repository = "https://github.com/MuntasirSZN/getquotes"
@@ -26,7 +25,7 @@ logger = "0.4.0"
 env_logger = "0.11.6"
 log = "0.4.22"
 chrono = "0.4.39"
-rusqlite = "0.32.1"
+rusqlite = { version = "0.32.1", fetures = ["bundled"] }
 clap = { version = "4", features = ["derive"] }
 
 [dev-dependencies]
