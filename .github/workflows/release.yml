@@ -27,7 +27,7 @@ jobs:
         with:
           toolchain: stable
           override: true
-          targets: ${{ matrix.target }}
+          target: ${{ matrix.target }}
       # Install cross for cross-compilation
       - name: 📦 Install cross
         run: cargo install cross
