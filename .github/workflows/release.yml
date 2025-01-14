@@ -23,12 +23,7 @@ jobs:
       # Checkout the repository
       - name: 🔍 Checkout code
         uses: actions/checkout@v4
-
-      # Install sqlite3 development libraries (Linux only)
-      - name: 🔧 Install sqlite3 (Linux)
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
-
+        
       # Set up Android NDK (Android only)
       - name: 🔧 Set up Android NDK
         if: matrix.target == 'aarch64-linux-android'
