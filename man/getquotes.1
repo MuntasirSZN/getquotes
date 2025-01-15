@@ -1,0 +1,97 @@
+% GETQUOTES(1) Version 0.1.0 | GetQuotes Command Line Tool Documentation
+
+# NAME
+
+getquotes - fetch and display inspirational quotes from Wikiquote
+
+# SYNOPSIS
+
+**getquotes** [OPTIONS]
+
+# DESCRIPTION
+
+**getquotes** is a command-line tool that fetches and displays inspirational quotes from Wikiquote. It supports both online and offline operation, with features for customizing quote sources and display options.
+
+# OPTIONS
+
+**--authors** *AUTHOR_LIST*
+: Specify one or more authors to fetch quotes from. Multiple authors should be comma-separated.
+  Example: --authors "Albert Einstein,Mahatma Gandhi"
+
+**--rainbow-mode**
+: Enable colorful display of quotes using rainbow colors.
+
+**--offline**
+: Run in offline mode using previously cached quotes. Requires prior cache initialization.
+
+**--init-cache**
+: Initialize or update the quote cache for offline use.
+
+**--help**
+: Display help information and exit.
+
+**--version**
+: Display version information and exit.
+
+# EXIT STATUS
+
+**0**
+: Success
+
+**1**
+: General error (e.g., network failure, invalid arguments)
+
+**2**
+: Cache initialization failure
+
+# FILES
+
+*~/.local/share/getquotes/quotes.db*
+: Quote cache database
+
+*~/.config/getquotes/config.json*
+: User configuration file
+
+# ENVIRONMENT
+
+**GETQUOTES_CONFIG**
+: Path to alternative configuration file
+
+**RUST_LOG**
+: Controls logging level (error, warn, info, debug, trace)
+
+# EXAMPLES
+
+Fetch a random quote:
+    **getquotes**
+
+Get quotes from specific authors:
+    **getquotes --authors "Albert Einstein,Mahatma Gandhi"**
+
+Display quotes with rainbow colors:
+    **getquotes --rainbow-mode**
+
+Use cached quotes in offline mode:
+    **getquotes --offline**
+
+Initialize the quote cache:
+    **getquotes --init-cache**
+
+# BUGS
+
+Report bugs at: https://github.com/MuntasirSZN/getquotes/issues
+
+# AUTHOR
+
+Written by Muntasir Mahmud <muntasir.joypurhat@gmail.com>
+
+# COPYRIGHT
+
+Copyright © 2025 Muntasir Mahmud.
+License MIT: <https://opensource.org/licenses/MIT>
+
+# SEE ALSO
+
+Full documentation at: <https://github.com/MuntasirSZN/getquotes>
+
+Project home page: <https://github.com/MuntasirSZN/getquotes>

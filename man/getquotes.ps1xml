@@ -1,0 +1,55 @@
+<#
+.SYNOPSIS
+Fetches and displays inspirational quotes from Wikiquote.
+
+.DESCRIPTION
+GetQuotes is a command-line tool that retrieves inspirational quotes from Wikiquote. 
+It supports both online and offline operation, with features for customizing quote sources 
+and display options. Written in Rust, it provides fast and efficient quote retrieval.
+
+.PARAMETER authors
+Specify one or more authors to fetch quotes from. Multiple authors should be comma-separated.
+
+.PARAMETER rainbow-mode
+Enable colorful display of quotes using rainbow colors.
+
+.PARAMETER offline
+Run in offline mode using previously cached quotes. Requires prior cache initialization.
+
+.PARAMETER init-cache
+Initialize or update the quote cache for offline use.
+
+.EXAMPLE
+getquotes
+Fetches and displays a random quote.
+
+.EXAMPLE
+getquotes --authors "Albert Einstein,Mahatma Gandhi"
+Gets quotes from specific authors.
+
+.EXAMPLE
+getquotes --rainbow-mode
+Displays quotes with rainbow colors.
+
+.EXAMPLE
+getquotes --offline
+Uses cached quotes in offline mode.
+
+.EXAMPLE
+getquotes --init-cache
+Initializes the quote cache.
+
+.NOTES
+Author: Muntasir Mahmud
+Version: 0.1.0
+GitHub: https://github.com/MuntasirSZN/getquotes
+
+.LINK
+https://github.com/MuntasirSZN/getquotes
+
+.INPUTS
+None. GetQuotes does not accept pipeline input.
+
+.OUTPUTS
+System.String. GetQuotes outputs quotes as text.
+#>
