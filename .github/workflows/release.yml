@@ -12,17 +12,23 @@ jobs:
     runs-on: ${{ matrix.target == 'x86_64-apple-darwin' && 'macos-latest' || matrix.target == 'aarch64-apple-darwin' && 'macos-latest' || matrix.target == 'x86_64-pc-windows-gnu' && 'windows-latest' || matrix.target == 'x86_64-pc-windows-msvc' && 'windows-latest' || 'ubuntu-latest' }}
     strategy:
       matrix:
-        target:
+        include:
           # Linux
-          - x86_64-unknown-linux-gnu
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
           # macOS
-          - x86_64-apple-darwin
-          - aarch64-apple-darwin
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
           # Windows
-          - x86_64-pc-windows-gnu
-          - x86_64-pc-windows-msvc
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
           # Android
-          - aarch64-linux-android
+          - target: aarch64-linux-android
+            os: ubuntu-latest
 
     steps:
       - name: 🔍 Checkout code
@@ -34,43 +40,54 @@ jobs:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
 
-      - name: 🔧 Install Android NDK
-        if: matrix.target == 'aarch64-linux-android'
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r25c
-          add-to-path: true
-
       - name: 🔧 Setup Android build environment
         if: matrix.target == 'aarch64-linux-android'
         run: |
+          wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
+          unzip android-ndk-r25c-linux.zip
+          echo "ANDROID_NDK_HOME=$PWD/android-ndk-r25c" >> $GITHUB_ENV
           rustup target add aarch64-linux-android
-          echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
-          echo "ANDROID_NDK_HOME=${{ steps.setup-ndk.outputs.ndk-path }}" >> $GITHUB_ENV
+          echo "CC_aarch64_linux_android=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+          echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
 
-      - name: ⚖️ Build for ${{ matrix.target }}
+      - name: ⚖️ Build for Android
+        if: matrix.target == 'aarch64-linux-android'
         run: |
-          if [[ "${{ matrix.target }}" == "aarch64-linux-android" ]]; then
-            cargo build --target aarch64-linux-android --release
-          else
-            cargo build --target ${{ matrix.target }} --release
-          fi
+          cargo build --target aarch64-linux-android --release
+        env:
+          CC: ${{ env.CC_aarch64_linux_android }}
+          AR: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
 
-      - name: 📁 Package binary
+      - name: ⚖️ Build for Windows
+        if: contains(matrix.target, 'windows')
+        shell: pwsh
+        run: |
+          cargo build --target ${{ matrix.target }} --release
+
+      - name: ⚖️ Build for Unix
+        if: "!contains(matrix.target, 'windows') && matrix.target != 'aarch64-linux-android'"
+        run: |
+          cargo build --target ${{ matrix.target }} --release
+
+      - name: 📁 Package binary (Windows)
+        if: contains(matrix.target, 'windows')
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release
+          Copy-Item "target/${{ matrix.target }}/release/getquotes.exe" -Destination "release/getquotes-${{ matrix.target }}.exe"
+
+      - name: 📁 Package binary (Unix)
+        if: "!contains(matrix.target, 'windows')"
+        shell: bash
         run: |
           mkdir -p release
-          BINARY_NAME=getquotes
-          if [[ "${{ matrix.target }}" == *"windows"* ]]; then
-            BINARY_NAME=getquotes.exe
-          fi
-          cp target/${{ matrix.target }}/release/$BINARY_NAME release/getquotes-${{ matrix.target }}
+          cp "target/${{ matrix.target }}/release/getquotes" "release/getquotes-${{ matrix.target }}"
 
       - name: 📤 Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: getquotes-${{ matrix.target }}
-          path: release/getquotes-${{ matrix.target }}
+          path: release/getquotes-${{ matrix.target }}*
 
   release:
     name: 🚀 Create GitHub Release
@@ -86,12 +103,12 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/getquotes-x86_64-unknown-linux-gnu
-            artifacts/getquotes-x86_64-apple-darwin
-            artifacts/getquotes-aarch64-apple-darwin
-            artifacts/getquotes-x86_64-pc-windows-gnu
-            artifacts/getquotes-x86_64-pc-windows-msvc
-            artifacts/getquotes-aarch64-linux-android
+            artifacts/getquotes-x86_64-unknown-linux-gnu/getquotes-x86_64-unknown-linux-gnu
+            artifacts/getquotes-x86_64-apple-darwin/getquotes-x86_64-apple-darwin
+            artifacts/getquotes-aarch64-apple-darwin/getquotes-aarch64-apple-darwin
+            artifacts/getquotes-x86_64-pc-windows-gnu/getquotes-x86_64-pc-windows-gnu.exe
+            artifacts/getquotes-x86_64-pc-windows-msvc/getquotes-x86_64-pc-windows-msvc.exe
+            artifacts/getquotes-aarch64-linux-android/getquotes-aarch64-linux-android
 
   publish:
     name: 📦 Publish to crates.io
