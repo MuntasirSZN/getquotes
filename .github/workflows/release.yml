@@ -1,9 +1,11 @@
 name: 🚀 Release Builds and Publish
+
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:
+
 jobs:
   build:
     name: 💠 Build for ${{ matrix.target }}
@@ -21,25 +23,41 @@ jobs:
           - x86_64-pc-windows-msvc
           # Android
           - aarch64-linux-android
+
     steps:
       - name: 🔍 Checkout code
         uses: actions/checkout@v3
-      # Set up Rust toolchain
+
       - name: ⚙️ Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
+          target: ${{ matrix.target }}
           components: rustfmt, clippy
-      # Install cross for cross-compilation
-      - name: 📦 Install cross
-        run: cargo install cross
-      # Build for the target platform
+
+      - name: 📦 Install dependencies
+        if: matrix.target == 'aarch64-linux-android'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+          rustup target add aarch64-linux-android
+
+      - name: 🔧 Install Android NDK
+        if: matrix.target == 'aarch64-linux-android'
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r25c
+          add-to-path: true
+
       - name: ⚖️ Build for ${{ matrix.target }}
         uses: houseabsolute/actions-rust-cross@v0
         with:
           command: build
           target: ${{ matrix.target }}
           args: --release
-      # Package the binary
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER: ${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang
+
       - name: 📁 Package binary
         run: |
           mkdir -p release
@@ -48,12 +66,13 @@ jobs:
             BINARY_NAME=getquotes.exe
           fi
           cp target/${{ matrix.target }}/release/$BINARY_NAME release/getquotes-${{ matrix.target }}
-      # Upload the artifact
+
       - name: 📤 Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: getquotes-${{ matrix.target }}
           path: release/getquotes-${{ matrix.target }}
+
   release:
     name: 🚀 Create GitHub Release
     runs-on: ubuntu-latest
@@ -63,6 +82,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
       - name: 🗿 Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
@@ -73,6 +93,7 @@ jobs:
             artifacts/getquotes-x86_64-pc-windows-gnu
             artifacts/getquotes-x86_64-pc-windows-msvc
             artifacts/getquotes-aarch64-linux-android
+
   publish:
     name: 📦 Publish to crates.io
     runs-on: ubuntu-latest
@@ -80,11 +101,14 @@ jobs:
     steps:
       - name: 🔍 Checkout code
         uses: actions/checkout@v3
+
       - name: ⚙️ Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+
       - name: 🔑 Authenticate with crates.io
         run: echo "${{ secrets.CRATES_IO_TOKEN }}" | cargo login
+
       - name: 🚀 Publish to crates.io
         run: cargo publish

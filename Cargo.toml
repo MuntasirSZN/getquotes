@@ -2,7 +2,7 @@
 name = "getquotes"
 version = "0.1.0"
 edition = "2021"
-authors = [ "Muntasir Mahmud <muntasir.joypurhat@gmail.com>" ]
+authors = ["Muntasir Mahmud <muntasir.joypurhat@gmail.com>"]
 description = "A command line tool to get quotes from the WikiQuotes"
 license = "MIT"
 documentation = "https://github.com/MuntasirSZN/getquotes"
@@ -28,6 +28,18 @@ chrono = "0.4.39"
 rusqlite = { version = "0.32.1", features = ["bundled"] }
 clap = { version = "4", features = ["derive"] }
 
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.14"
+
 [dev-dependencies]
 mockito = "1.6.1"
 tempdir = "0.3.7"
+
+[profile.release]
+lto = true
+strip = true
+opt-level = 3
+codegen-units = 1
+
+[package.metadata.android]
+build_targets = ["aarch64-linux-android"]
