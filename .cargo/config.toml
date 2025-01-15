@@ -1,3 +1,0 @@
-[target.aarch64-linux-android]
-linker = "aarch64-linux-android-clang"
-rustflags = ["-C", "link-arg=-lunwind"]
