@@ -27,6 +27,7 @@ log = "0.4.25"
 chrono = "0.4.39"
 rusqlite = { version = "0.32.1", features = ["bundled"] }
 clap = { version = "4", features = ["derive"] }
+git_rev = "0.1.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.14"

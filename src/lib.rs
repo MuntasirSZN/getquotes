@@ -8,12 +8,21 @@ pub mod types;
 use crate::config::{load_or_create_config, parse_hex_color};
 use clap::Parser;
 use colored::*;
+use git_rev::revision_string;
 use log::{debug, error, info, warn};
+use rand::prelude::SliceRandom;
 use rand::{thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 
+// Retrieve the commit hash at compile time
+const GIT_HASH: &str = revision_string!();
+
 #[derive(Parser, Debug)]
+#[command(name = "getquotes")]
+#[command(
+    about = "getquotes: A fully featured CLI tool to fetch and display quotes from Wikiquote"
+)]
 pub struct Args {
     #[arg(long, help = "Specify a list of authors to fetch quotes from")]
     pub authors: Option<String>,
@@ -35,6 +44,8 @@ pub struct Args {
 
     #[arg(long, help = "Run in offline mode, using cached quotes")]
     pub offline: bool,
+    #[arg(long, help = "Show version information and exit")]
+    pub version: bool,
 }
 
 pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
@@ -42,9 +53,17 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let mut cfg = load_or_create_config()?;
 
     // Update config with CLI options
-    if let Some(authors) = args.authors {
-        cfg.authors = authors.split(',').map(|s| s.to_string()).collect();
+    cfg.authors = args
+        .authors
+        .unwrap_or_default()
+        .split(',')
+        .map(|s| s.trim().to_string())
+        .collect();
+    if cfg.authors.is_empty() {
+        error!("No authors configured.");
+        return Err("No authors configured.".into());
     }
+
     if let Some(theme_color) = args.theme_color {
         cfg.theme_color = theme_color;
     }
@@ -61,6 +80,15 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     info!("Logger initialized. Log file: {}", cfg.log_file);
 
     debug!("Loaded config: {:?}", cfg);
+
+    if args.version {
+        println!(
+            "getquotes v{} (commit {})",
+            env!("CARGO_PKG_VERSION"),
+            GIT_HASH
+        );
+        return Ok(());
+    }
 
     let mut rng = thread_rng();
 
@@ -80,6 +108,25 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
             }
         }
     };
+
+    if args.offline {
+        let quotes = cache::get_cached_quotes()?;
+        if let Some((auth, quote)) = quotes.choose(&mut rng) {
+            let colorized_quote = format!("\"{}\"", quote).truecolor(color.0, color.1, color.2);
+            let dash = "-";
+            println!(
+                "{}\n\n {:>99}{}",
+                colorized_quote.bold(),
+                dash.bold().green(),
+                auth.green()
+            );
+            info!("Quote successfully displayed from cache.");
+            return Ok(());
+        } else {
+            error!("No quotes available in cache.");
+            return Err("No quotes available in cache.".into());
+        }
+    }
 
     // Create an HTTP client
     let client = Client::new();

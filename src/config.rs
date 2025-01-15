@@ -76,7 +76,9 @@ pub fn load_or_create_config() -> Result<Config, Box<dyn StdError + Send + Sync>
 pub fn get_config_path() -> Result<PathBuf, Box<dyn StdError + Send + Sync>> {
     let home = home_dir()
         .ok_or_else(|| Box::<dyn StdError + Send + Sync>::from("Unable to find home directory."))?;
-    let config_path = home.join(".config/getquotes/config.json");
+    let config_dir = home.join(".config/getquotes");
+    create_dir_all(&config_dir)?;
+    let config_path = config_dir.join("config.json");
     Ok(config_path)
 }
 

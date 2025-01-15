@@ -4,26 +4,41 @@ use rand::Rng;
 use reqwest::Client;
 use rusqlite::Connection;
 use std::error::Error as StdError;
-use std::sync::Arc;
 use tokio::time;
+use std::sync::Arc;
+use crate::cache::get_database_path;
 
 pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let cfg = load_or_create_config()?;
+    if cfg.authors.is_empty() {
+        return Err("No authors configured for caching.".into());
+    }
     let author_idx = rand::thread_rng().gen_range(0..cfg.authors.len());
     let author = &cfg.authors[author_idx];
 
-    if let Ok(Some((title, sections))) = get_author_sections(&client, author).await {
-        for section in sections {
-            let quotes = fetch_quotes(&client, &title, &section.index).await?;
-            for quote in quotes {
-                // Store the quote in the database
-                let conn = Connection::open("~/.local/share/getquotes/quotes.db")?;
-                conn.execute(
-                    "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
-                    &[&author, &quote],
-                )?;
+    match get_author_sections(&client, author).await {
+        Ok(Some((title, sections))) => {
+            for section in sections {
+                match fetch_quotes(&client, &title, &section.index).await {
+                    Ok(quotes) => {
+                        for quote in quotes {
+                            let db_path = get_database_path()?;
+                            let conn = Connection::open(db_path.to_str().unwrap())?;
+                            match conn.execute(
+                                "INSERT OR IGNORE INTO quotes (author, quote) VALUES (?1, ?2)",
+                                &[&author, &quote],
+                            ) {
+                                Ok(_) => println!("Cached quote: {}", quote),
+                                Err(e) => eprintln!("Failed to cache quote: {}", e),
+                            }
+                        }
+                    }
+                    Err(e) => eprintln!("Failed to fetch quotes for section {}: {}", section.index, e),
+                }
             }
         }
+        Ok(None) => println!("No valid page found for author '{}'.", author),
+        Err(e) => eprintln!("Failed to get sections for author '{}': {}", author, e),
     }
     Ok(())
 }

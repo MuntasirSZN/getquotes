@@ -563,6 +563,7 @@ dependencies = [
  "colored 3.0.0",
  "dirs",
  "env_logger",
+ "git_rev",
  "html-escape",
  "log 0.4.25",
  "logger",
@@ -596,6 +597,12 @@ name = "gimli"
 version = "0.31.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07e28edb80900c19c28f1072f2e8aeca7fa06b23cd4169cefe1af5aa3260783f"
+
+[[package]]
+name = "git_rev"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "60884563ea313b5037683cd5d44f1e14e9cb07b08543756242a65887f9cff48e"
 
 [[package]]
 name = "h2"

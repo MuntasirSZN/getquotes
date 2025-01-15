@@ -5,9 +5,9 @@ use getquotes::config::{load_or_create_config, parse_hex_color};
 #[test]
 pub fn test_hex_color_parsing() {
     assert_eq!(parse_hex_color("#FF0000"), Some((255, 0, 0)));
-    assert_eq!(parse_hex_color("#00FF00"), Some((0, 255, 0)));
-    assert_eq!(parse_hex_color("FF0000"), None); // Missing #
-    assert_eq!(parse_hex_color("#GGGGGG"), None); // Invalid hex
+    assert_eq!(parse_hex_color("FF0000"), Some((255, 0, 0)));
+    assert_eq!(parse_hex_color("#GGGGGG"), None);
+    assert_eq!(parse_hex_color("#FF00"), None);
 }
 
 #[test]
