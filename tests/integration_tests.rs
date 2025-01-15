@@ -1,12 +1,11 @@
 mod common;
 
 use getquotes::{run, Args};
-use tokio;
 
 #[tokio::test]
-async fn test_full_quote_retrieval() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+pub async fn test_full_quote_retrieval() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let _temp = common::setup_temp_home()?;
-    
+
     let args = Args {
         authors: Some("Einstein".to_string()),
         theme_color: Some("#FF0000".to_string()),

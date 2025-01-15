@@ -9,7 +9,7 @@ mod tests {
         use std::io::Write;
 
         #[test]
-        fn test_load_existing_config() {
+        pub fn test_load_existing_config() {
             let temp_dir = TempDir::new("config_test").unwrap();
             let config_path = temp_dir.path().join("config.json");
             let sample_config = r#"
@@ -36,7 +36,7 @@ mod tests {
         }
 
         #[test]
-        fn test_create_new_config() {
+        pub fn test_create_new_config() {
             let temp_dir = TempDir::new("config_test").unwrap();
             env::set_var("HOME", temp_dir.path().to_str().unwrap());
 
@@ -49,7 +49,7 @@ mod tests {
         }
 
         #[test]
-        fn test_parse_hex_color() {
+        pub fn test_parse_hex_color() {
             assert_eq!(parse_hex_color("#1A2B3C"), Some((0x1A, 0x2B, 0x3C)));
             assert_eq!(parse_hex_color("1A2B3C"), None);
             assert_eq!(parse_hex_color("#1A2B3"), None);

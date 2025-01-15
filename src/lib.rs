@@ -1,9 +1,9 @@
-mod background;
-mod cache;
-mod config;
-mod logger;
-mod quotes;
-mod types;
+pub mod background;
+pub mod cache;
+pub mod config;
+pub mod logger;
+pub mod quotes;
+pub mod types;
 
 use crate::config::{load_or_create_config, parse_hex_color};
 use clap::Parser;
@@ -12,7 +12,6 @@ use log::{debug, error, info, warn};
 use rand::{thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
-use std::sync::Arc;
 
 #[derive(Parser, Debug)]
 pub struct Args {
@@ -26,19 +25,19 @@ pub struct Args {
     pub max_tries: Option<usize>,
 
     #[arg(long, help = "Specify the log file path")]
-    log_file: Option<String>,
+    pub log_file: Option<String>,
 
     #[arg(long, help = "Enable rainbow mode for random quote colors")]
-    rainbow_mode: bool,
+    pub rainbow_mode: bool,
 
     #[arg(long, help = "Initialize the quote cache for offline mode")]
     pub init_cache: bool,
 
     #[arg(long, help = "Run in offline mode, using cached quotes")]
-    offline: bool,
+    pub offline: bool,
 }
 
-pub async fn run(args: Args, client: Arc<Client>) -> Result<(), Box<dyn StdError + Send + Sync>> {
+pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     // Load or create config file
     let mut cfg = load_or_create_config()?;
 

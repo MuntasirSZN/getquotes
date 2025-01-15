@@ -7,7 +7,7 @@
 
 **GetQuotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
 
-______________________________________________________________________
+---
 
 ## 📥 Installation
 
@@ -25,7 +25,7 @@ cd getquotes
 cargo build --release
 ```
 
-______________________________________________________________________
+---
 
 ## 🛠️ Usage
 
@@ -77,7 +77,7 @@ Display help information:
 getquotes --help
 ```
 
-______________________________________________________________________
+---
 
 ## 📂 Project Structure
 
@@ -88,9 +88,8 @@ getquotes/
 ├── CHANGELOG.md
 ├── config.schema.json
 ├── man/
-│   └── getquote.md
-├── output.txt
-├── quotes.db
+│   ├── getquotes.ps1xml
+│   └── getquotes.1
 ├── README.md
 ├── src/
 │   ├── background.rs
@@ -112,7 +111,7 @@ getquotes/
     └── quotes_tests.rs
 ```
 
-______________________________________________________________________
+---
 
 ## 🚀 Features
 
@@ -122,7 +121,7 @@ ______________________________________________________________________
 - **Offline Mode**: Use cached quotes when offline. 📴
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
-______________________________________________________________________
+---
 
 ## 🤝 Contributing
 
@@ -135,13 +134,13 @@ We welcome contributions from the community! If you'd like to contribute, please
 
 Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contribution Guidelines](CONTRIBUTING.md).
 
-______________________________________________________________________
+---
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-______________________________________________________________________
+---
 
 ## 🙏 Acknowledgments
 
@@ -149,7 +148,7 @@ ______________________________________________________________________
 - **Rust Community**: For the amazing ecosystem and tools. 🦀
 - **Inspiration**: This project was inspired by the need for a simple, daily dose of inspiration. 🌟
 
-______________________________________________________________________
+---
 
 ## 📬 Contact
 
@@ -157,12 +156,12 @@ If you have any questions, feel free to reach out:
 
 - **MuntasirSZN**: [GitHub](https://github.com/MuntasirSZN) | [Email](mailto:muntasir.joypurhat@gmail.com)
 
-______________________________________________________________________
+---
 
 ## 🌟 Show Your Support
 
 If you find this project useful, please give it a ⭐️ on [GitHub](https://github.com/MuntasirSZN/getquotes)!
 
-______________________________________________________________________
+---
 
 Happy quoting! 🎉

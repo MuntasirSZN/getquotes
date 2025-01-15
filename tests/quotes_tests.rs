@@ -1,19 +1,23 @@
-mod common;
-
-use getquotes::quotes::{get_author_sections, fetch_quotes};
-use mockito::mock;
+use getquotes::quotes::{fetch_quotes, get_author_sections};
+use mockito::Server;
 use reqwest::Client;
+
+mod common;
 
 #[tokio::test]
 async fn test_author_sections_fetching() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let _m = mock("GET", "/w/api.php")
+    let mut server = Server::new();
+    let _m = server
+        .mock("GET", "/w/api.php")
         .with_status(200)
-        .with_body(r#"{
+        .with_body(
+            r#"{
             "parse": {
                 "title": "Einstein",
                 "sections": [{"index": "1", "line": "Quotes"}]
             }
-        }"#)
+        }"#,
+        )
         .create();
 
     let client = Client::new();
@@ -24,15 +28,19 @@ async fn test_author_sections_fetching() -> Result<(), Box<dyn std::error::Error
 
 #[tokio::test]
 async fn test_quotes_fetching() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let _m = mock("GET", "/w/api.php")
+    let mut server = Server::new();
+    let _m = server
+        .mock("GET", "/w/api.php")
         .with_status(200)
-        .with_body(r#"{
+        .with_body(
+            r#"{
             "parse": {
                 "text": {
                     "*": "<ul><li>Test quote 1</li><li>Test quote 2</li></ul>"
                 }
             }
-        }"#)
+        }"#,
+        )
         .create();
 
     let client = Client::new();

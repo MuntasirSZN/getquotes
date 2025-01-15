@@ -12,7 +12,7 @@ use std::sync::Arc;
 use tokio::spawn;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn StdError + Send + Sync>> {
+pub async fn main() -> Result<(), Box<dyn StdError + Send + Sync>> {
     let args = Args::parse();
     let client = Arc::new(Client::new());
 
@@ -26,5 +26,5 @@ async fn main() -> Result<(), Box<dyn StdError + Send + Sync>> {
     }
 
     // Pass other arguments to the run function
-    run(args, client).await
+    run(args).await
 }

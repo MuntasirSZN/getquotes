@@ -17,7 +17,7 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
             let quotes = fetch_quotes(&client, &title, &section.index).await?;
             for quote in quotes {
                 // Store the quote in the database
-                let conn = Connection::open("quotes.db")?;
+                let conn = Connection::open("~/.local/share/getquotes/quotes.db")?;
                 conn.execute(
                     "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
                     &[&author, &quote],

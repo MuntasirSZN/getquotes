@@ -4,7 +4,7 @@ use getquotes::logger::initialize_logger;
 use std::fs;
 
 #[test]
-fn test_logger_init() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+pub fn test_logger_init() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let temp = common::setup_temp_home()?;
     let log_path = temp.path().join("test.log");
     
