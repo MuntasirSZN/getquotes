@@ -139,4 +139,4 @@ jobs:
         run: echo "${{ secrets.CRATES_IO_TOKEN }}" | cargo login
 
       - name: 🚀 Publish to crates.io
-        run: cargo publish
+        run: cargo publish --allow-dirty
