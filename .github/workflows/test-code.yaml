@@ -1,0 +1,71 @@
+name: ⌛ Test Code With Nextest
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: 🧪 Test with Nextest on ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          # Linux
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          # macOS (Intel)
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          # macOS (ARM/M1)
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          # Windows (GNU)
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+          # Windows (MSVC)
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+          # Android
+          - target: aarch64-linux-android
+            os: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🦀 Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          target: ${{ matrix.target }}
+          components: rustfmt, clippy
+
+      - name: 📦 Install Nextest
+        run: cargo install cargo-nextest
+
+      - name: 🔧 Setup Android NDK (if Android target)
+        if: matrix.target == 'aarch64-linux-android'
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
+          unzip android-ndk-r25c-linux.zip
+          echo "ANDROID_NDK_HOME=$PWD/android-ndk-r25c" >> $GITHUB_ENV
+          rustup target add aarch64-linux-android
+          echo "CC_aarch64_linux_android=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+          echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+
+      - name: 🧪 Run Nextest
+        run: |
+          if [[ "${{ matrix.target }}" == "aarch64-linux-android" ]]; then
+            export CC=${{ env.CC_aarch64_linux_android }}
+            export AR=${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
+          fi
+          cargo nextest run --target ${{ matrix.target }}
+
+      - name: 📊 Upload Test Results (Optional)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.target }}
+          path: target/nextest
