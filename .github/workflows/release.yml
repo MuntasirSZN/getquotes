@@ -9,24 +9,20 @@ on:
 jobs:
   build:
     name: 💠 Build for ${{ matrix.target }}
-    runs-on: ${{ matrix.target == 'x86_64-apple-darwin' && 'macos-latest' || matrix.target == 'aarch64-apple-darwin' && 'macos-latest' || matrix.target == 'x86_64-pc-windows-gnu' && 'windows-latest' || matrix.target == 'x86_64-pc-windows-msvc' && 'windows-latest' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          # Linux
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-          # macOS
           - target: x86_64-apple-darwin
             os: macos-latest
           - target: aarch64-apple-darwin
             os: macos-latest
-          # Windows
           - target: x86_64-pc-windows-gnu
             os: windows-latest
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-          # Android
           - target: aarch64-linux-android
             os: ubuntu-latest
 
@@ -39,11 +35,11 @@ jobs:
         with:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
-  
+
       - name: 📦 Cache Rust dependencies
         uses: Swatinem/rust-cache@v1
 
-      - name: 🔧 Setup Android build environment
+      - name: 🤖 Setup Android build environment
         if: matrix.target == 'aarch64-linux-android'
         run: |
           wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
@@ -53,7 +49,7 @@ jobs:
           echo "CC_aarch64_linux_android=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
           echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
 
-      - name: ⚖️ Build for Android
+      - name: 🛠️ Build for Android
         if: matrix.target == 'aarch64-linux-android'
         run: |
           cargo build --target aarch64-linux-android --release
@@ -61,13 +57,13 @@ jobs:
           CC: ${{ env.CC_aarch64_linux_android }}
           AR: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
 
-      - name: ⚖️ Build for Windows
+      - name: 🛠️ Build for Windows
         if: contains(matrix.target, 'windows')
         shell: pwsh
         run: |
           cargo build --target ${{ matrix.target }} --release
 
-      - name: ⚖️ Build for Unix
+      - name: 🛠️ Build for Unix
         if: "!contains(matrix.target, 'windows') && matrix.target != 'aarch64-linux-android'"
         run: |
           cargo build --target ${{ matrix.target }} --release
@@ -103,7 +99,7 @@ jobs:
         with:
           path: artifacts
 
-      - name: 📝 Get version from tag
+      - name: 🏷️ Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
@@ -124,22 +120,72 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish:
-    name: 📦 Publish to crates.io
+      - name: 📝 Save version and checksum
+        run: |
+          echo "VERSION=${{ steps.get_version.outputs.VERSION }}" > metadata.txt
+          checksum=$(sha256sum artifacts/getquotes-x86_64-unknown-linux-gnu/getquotes-x86_64-unknown-linux-gnu | awk '{print $1}')
+          echo "CHECKSUM=$checksum" >> metadata.txt
+          echo "PKGVER=$(cd getquotes && git rev-list --count HEAD).$(cd getquotes && git rev-parse --short HEAD)" >> metadata.txt
+
+      - name: 📤 Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metadata
+          path: metadata.txt
+
+  update-aur-packages:
+    name: 📦 Update AUR Packages
     runs-on: ubuntu-latest
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: release
+    container:
+      image: archlinux
     steps:
-      - name: 🔍 Checkout code
+      - name: 🔍 Checkout repository
         uses: actions/checkout@v3
 
-      - name: ⚙️ Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: 🔑 Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          components: rustfmt, clippy
+          ssh-private-key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
 
-      - name: 🔑 Authenticate with crates.io
-        run: echo "${{ secrets.CRATES_IO_TOKEN }}" | cargo login
+      - name: 📥 Install necessary packages
+        run: pacman -Sy --noconfirm git makepkg
 
-      - name: 🚀 Publish to crates.io
-        run: cargo publish --allow-dirty
+      - name: 📥 Download metadata artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: metadata
+          path: metadata
+
+      - name: 📄 Read metadata
+        id: read_metadata
+        run: |
+          export VERSION=$(cat metadata/metadata.txt | grep VERSION | cut -d '=' -f2)
+          export CHECKSUM=$(cat metadata/metadata.txt | grep CHECKSUM | cut -d '=' -f2)
+          export PKGVER=$(cat metadata/metadata.txt | grep PKGVER | cut -d '=' -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "CHECKSUM=$CHECKSUM" >> $GITHUB_OUTPUT
+          echo "PKGVER=$PKGVER" >> $GITHUB_OUTPUT
+
+      - name: 📥 Fetch current getquotes PKGBUILD from AUR
+        id: fetch_current_pkgver
+        run: |
+          curl -o current-PKGBUILD https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=getquotes
+          current_pkgver=$(grep pkgver current-PKGBUILD | cut -d '=' -f2 | tr -d '"')
+          echo "CURRENT_PKGVER=$current_pkgver" >> $GITHUB_OUTPUT
+
+      - name: 🔄 Update AUR packages
+        if: ${{ steps.read_metadata.outputs.VERSION != steps.fetch_current_pkgver.outputs.CURRENT_PKGVER }}
+        run: |
+          # Commands to update AUR packages
+          git clone ssh://aur@aur.archlinux.org/getquotes.git aur-getquotes
+          cd aur-getquotes
+          sed -i "s/pkgver=.*/pkgver=${{ steps.read_metadata.outputs.VERSION }}/g" PKGBUILD
+          sed -i "s/sha256sums=.*/sha256sums=('${{ steps.read_metadata.outputs.CHECKSUM }}')/g" PKGBUILD
+          makepkg --printsrcinfo > .SRCINFO
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add PKGBUILD .SRCINFO
+          git commit -m "Update to version ${{ steps.read_metadata.outputs.VERSION }}"
+          git push origin master
+          # Additional steps for getquotes-git can be included here
