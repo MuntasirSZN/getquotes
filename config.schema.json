@@ -1,31 +1,49 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "GetQuotes Configuration",
+  "description": "Configuration settings for the GetQuotes application.",
   "type": "object",
   "properties": {
     "authors": {
       "type": "array",
       "description": "List of authors to fetch quotes from.",
       "items": {
-        "type": "string"
+        "type": "string",
+        "description": "Name of an author."
       },
-      "minItems": 1
+      "minItems": 1,
+      "examples": [
+        ["Albert Einstein", "Isaac Newton"]
+      ]
     },
     "theme_color": {
       "type": "string",
-      "description": "Hex color code for theming, e.g., \"#RRGGBB\".",
-      "pattern": "^#?[0-9A-Fa-f]{6}$"
+      "description": "Hex color code for theming, e.g., \"#RRGGBB\" or \"RRGGBB\".",
+      "pattern": "^#?[0-9A-Fa-f]{6}$",
+      "examples": [
+        "#FF5733",
+        "FF5733"
+      ]
     },
     "max_tries": {
       "type": "integer",
       "description": "Maximum number of attempts to find a quote.",
       "minimum": 1,
-      "default": 30
+      "maximum": 100,
+      "default": 30,
+      "examples": [
+        10,
+        50
+      ]
     },
     "log_file": {
       "type": "string",
       "description": "Path to the log file.",
-      "default": "getquotes.log"
+      "default": "getquotes.log",
+      "examples": [
+        "logs/app.log",
+        "/var/log/getquotes.log"
+      ]
     }
   },
   "required": ["authors", "theme_color"],
