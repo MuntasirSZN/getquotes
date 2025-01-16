@@ -1,4 +1,4 @@
-name: 🛠️ SARIF Analysis
+name: ✅ Analysis
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     - cron: '36 9 * * 2'
     
 jobs:
-  upload-sarif:
+  analyze:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
