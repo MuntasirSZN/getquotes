@@ -1,11 +1,13 @@
 name: 🛠️ SARIF Analysis
 
 on:
-  workflow_run:
-    workflows: ["main"]
-    branches: [main]
-    types: [completed]
-
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '36 9 * * 2'
+    
 jobs:
   upload-sarif:
     runs-on: ubuntu-latest
