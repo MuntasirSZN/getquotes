@@ -1,5 +1,6 @@
 mod common;
 
+use common::setup_temp_home;
 use getquotes::logger::initialize_logger;
 use std::fs;
 use std::fs::create_dir_all;
@@ -12,7 +13,7 @@ pub fn test_logger_init() -> Result<(), Box<dyn std::error::Error + Send + Sync>
     let log_path = log_dir.join("test.log");
 
     // Initialize logger with the test log file
-    initialize_logger(&log_path.to_str().unwrap().to_string())?;
+    initialize_logger(log_path.to_str().unwrap())?;
     log::info!("Test log message");
 
     // Wait for logging to complete
