@@ -10,12 +10,10 @@ use clap::Parser;
 use colored::*;
 use git_rev::revision_string;
 use log::{debug, error, info, warn};
-use rand::prelude::SliceRandom;
 use rand::{thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 
-// Retrieve the commit hash at compile time
 const GIT_HASH: &str = revision_string!();
 
 #[derive(Parser, Debug)]
@@ -24,16 +22,16 @@ const GIT_HASH: &str = revision_string!();
     about = "getquotes: A fully featured CLI tool to fetch and display quotes from Wikiquote"
 )]
 pub struct Args {
-    #[arg(long, help = "Specify a list of authors to fetch quotes from")]
+    #[arg(help = "Specify a list of authors to fetch quotes from")]
     pub authors: Option<String>,
 
-    #[arg(long, help = "Set the theme color for the displayed quotes")]
+    #[arg(help = "Set the theme color for the displayed quotes")]
     pub theme_color: Option<String>,
 
-    #[arg(long, help = "Set the maximum number of tries to fetch a quote")]
+    #[arg(help = "Set the maximum number of tries to fetch a quote")]
     pub max_tries: Option<usize>,
 
-    #[arg(long, help = "Specify the log file path")]
+    #[arg(help = "Specify the log file path")]
     pub log_file: Option<String>,
 
     #[arg(long, help = "Enable rainbow mode for random quote colors")]
@@ -44,7 +42,8 @@ pub struct Args {
 
     #[arg(long, help = "Run in offline mode, using cached quotes")]
     pub offline: bool,
-    #[arg(long, help = "Show version information and exit")]
+
+    #[arg(long, help = "Print version information")]
     pub version: bool,
 }
 
@@ -108,25 +107,6 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
             }
         }
     };
-
-    if args.offline {
-        let quotes = cache::get_cached_quotes()?;
-        if let Some((auth, quote)) = quotes.choose(&mut rng) {
-            let colorized_quote = format!("\"{}\"", quote).truecolor(color.0, color.1, color.2);
-            let dash = "-";
-            println!(
-                "{}\n\n {:>99}{}",
-                colorized_quote.bold(),
-                dash.bold().green(),
-                auth.green()
-            );
-            info!("Quote successfully displayed from cache.");
-            return Ok(());
-        } else {
-            error!("No quotes available in cache.");
-            return Err("No quotes available in cache.".into());
-        }
-    }
 
     // Create an HTTP client
     let client = Client::new();

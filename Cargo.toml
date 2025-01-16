@@ -26,14 +26,13 @@ env_logger = "0.11.6"
 log = "0.4.25"
 chrono = "0.4.39"
 rusqlite = { version = "0.32.1", features = ["bundled"] }
-clap = { version = "4", features = ["derive"] }
+clap = { version = "4.4.7", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
 git_rev = "0.1.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.14"
 
 [dev-dependencies]
-mockito = "1.6.1"
 tempdir = "0.3.7"
 
 [profile.release]
