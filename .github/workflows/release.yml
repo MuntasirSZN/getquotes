@@ -39,6 +39,9 @@ jobs:
         with:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
+  
+      - name: 📦 Cache Rust dependencies
+        uses: Swatinem/rust-cache@v1
 
       - name: 🔧 Setup Android build environment
         if: matrix.target == 'aarch64-linux-android'
