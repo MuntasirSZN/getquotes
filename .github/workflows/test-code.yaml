@@ -63,6 +63,7 @@ jobs:
             export CC=${{ env.CC_aarch64_linux_android }}
             export AR=${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
           fi
+          cargo run -- --init-cache
           cargo nextest run --target ${{ matrix.target }}
 
       - name: 📊 Upload Test Results (Optional)
