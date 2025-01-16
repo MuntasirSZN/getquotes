@@ -27,6 +27,28 @@ cargo build --release
 
 ---
 
+## 🛠️ Configuration
+
+GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
+
+```json
+{
+  "authors": ["Albert Einstein", "Isaac Newton"],
+  "theme_color": "#FF5733",
+  "max_tries": 50,
+  "log_file": "custom_getquotes.log"
+}
+```
+
+### Properties
+
+- **authors**: An array of author names to fetch quotes from. At least one author must be specified.
+- **theme_color**: A hex color code (with or without a leading #) for theming the output.
+- **max_tries**: The maximum number of attempts to find a quote (between 1 and 100, default is 30).
+- **log_file**: The path to the log file (default is "getquotes.log").
+
+---
+
 ## 🛠️ Usage
 
 ### Basic Usage
@@ -44,6 +66,14 @@ You can specify authors to fetch quotes from:
 ```bash
 getquotes --authors "Albert Einstein,Mahatma Gandhi"
 ```
+
+### Theme Color
+
+Set the theme color using the configuration file or environment variables. Command-line options for theme color are not available.
+
+### Log File
+
+Specify the log file path in the configuration file or use the default "getquotes.log".
 
 ### Rainbow Mode 🌈
 
@@ -69,6 +99,14 @@ Initialize the quote cache for offline mode:
 getquotes --init-cache
 ```
 
+### Configuration File
+
+Specify the path to the configuration file using the `--config` option:
+
+```bash
+getquotes --config /path/to/config.json
+```
+
 ### Help
 
 Display help information:
@@ -79,46 +117,13 @@ getquotes --help
 
 ---
 
-## 📂 Project Structure
-
-```
-getquotes/
-├── Cargo.lock
-├── Cargo.toml
-├── CHANGELOG.md
-├── config.schema.json
-├── man/
-│   ├── getquotes.ps1xml
-│   └── getquotes.1
-├── README.md
-├── src/
-│   ├── background.rs
-│   ├── cache.rs
-│   ├── config.rs
-│   ├── lib.rs
-│   ├── logger.rs
-│   ├── main.rs
-│   ├── quotes.rs
-│   ├── tests.rs
-│   └── types.rs
-└── tests/
-    ├── cache_tests.rs
-    ├── common/
-    │   └── mod.rs
-    ├── config_tests.rs
-    ├── integration_tests.rs
-    ├── logger_tests.rs
-    └── quotes_tests.rs
-```
-
----
-
 ## 🚀 Features
 
 - **Fetch Quotes**: Get random quotes from Wikiquote. 📜
 - **Custom Authors**: Specify authors to fetch quotes from. 🖋️
 - **Rainbow Mode**: Display quotes in random colors. 🌈
 - **Offline Mode**: Use cached quotes when offline. 📴
+- **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
 ---
@@ -133,6 +138,10 @@ We welcome contributions from the community! If you'd like to contribute, please
 1. Submit a pull request. 🚀
 
 Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contribution Guidelines](CONTRIBUTING.md).
+
+### Configuration Schema
+
+The configuration schema is defined in `config.schema.json`. Any contributions affecting the configuration should update this schema accordingly.
 
 ---
 
