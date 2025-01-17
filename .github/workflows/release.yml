@@ -122,3 +122,15 @@ jobs:
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: Update AUR package
           ssh_keyscan_types: rsa,ecdsa,ed25519
+      - name: 💱 Generate Changelog
+        run: |
+          sudo apt install golang-go
+          go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
+          git-chglog -o CHANGELOG.md
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add CHANGELOG.md
+          git commit -m "📝 Update CHANGELOG.md"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
