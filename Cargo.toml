@@ -2,7 +2,7 @@
 name = "getquotes"
 version = "0.1.1"
 edition = "2021"
-authors = ["Muntasir Mahmud <muntasir.joypurhat@gmail.com>"]
+authors = ["MuntasirSZN <muntasir.joypurhat@gmail.com>"]
 description = "A command line tool to get quotes from the WikiQuotes"
 license = "MIT"
 documentation = "https://github.com/MuntasirSZN/getquotes"
