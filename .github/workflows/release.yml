@@ -123,17 +123,12 @@ jobs:
         id: decrypt-ssh-key
         run: |
           # Save the encrypted SSH key to a file
-          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > id_rsa_encrypted
-
-          # Decrypt the SSH key using the passphrase
-          openssl enc -d -aes-256-cbc -pbkdf2 -in id_rsa_encrypted -out id_rsa -k "${{ secrets.AUR_SSH_PASSPHRASE }}"
-
+          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > id_rsa
           # Set permissions for the SSH key
           chmod 600 id_rsa
-
           # Add the key to the SSH agent
           eval "$(ssh-agent -s)"
-          ssh-add id_rsa
+          echo "${{ secrets.AUR_SSH_PASSPHRASE }}" | ssh-add id_rsa
       - name: 💠 Publish To Aur
         uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
         with:
