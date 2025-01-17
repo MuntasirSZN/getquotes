@@ -108,7 +108,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: 📦 Release To crates.io
         run: |
-          cargo publish --allow-dirty --token {{ secrets.CRATES_IO_TOKEN }}
+          cargo publish --allow-dirty --token ${{ secrets.CRATES_IO_TOKEN }}
       - name: 🔒 Update PKGBUILD sha256 checksums
         run: |
           ./update_checksums.sh
