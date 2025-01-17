@@ -136,3 +136,4 @@ jobs:
         with:
           add: "CHANGELOG.md"
           message: "📝 Update CHANGELOG.md"
+          push: "origin main --force"
