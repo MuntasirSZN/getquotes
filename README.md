@@ -17,6 +17,20 @@ You can install **GetQuotes** using `cargo`, the Rust package manager:
 cargo install getquotes
 ```
 
+If you are on Arch Linux, you can install from the AUR:
+
+```bash
+yay -S getquotes # or paru -S getquotes
+```
+
+Use a aur helper like `yay` or `paru`. If you want the latest (possibly error prone and unstable), run:
+
+```bash
+yay -S getquotes-git
+```
+
+It will build from latest commit. Please open an issue if you find any problems.
+
 Alternatively, you can clone the repository and build it from source:
 
 ```bash
