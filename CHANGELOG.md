@@ -1,6 +1,31 @@
 
-<a name="v0.1.1"></a>
-## [v0.1.1](https://github.com/MuntasirSZN/getquotes/compare/v0.1.0...v0.1.1) (2025-01-16)
+<a name="v0.2.2"></a>
+## [v0.2.2](https://github.com/MuntasirSZN/getquotes/compare/v0.2.1...v0.2.2) (2025-01-17)
+
+### Fix
+
+* pkgbuild ci
+* pkgbuild ci
+
+
+<a name="v0.2.1"></a>
+## [v0.2.1](https://github.com/MuntasirSZN/getquotes/compare/v0.2.0...v0.2.1) (2025-01-17)
+
+### Feat
+
+* fresh start
+
+
+<a name="v0.2.0"></a>
+## [v0.2.0](https://github.com/MuntasirSZN/getquotes/compare/v0.1.2...v0.2.0) (2025-01-17)
+
+### Feat
+
+* fresh start
+
+
+<a name="v0.1.2"></a>
+## [v0.1.2](https://github.com/MuntasirSZN/getquotes/compare/v0.1.0...v0.1.2) (2025-01-17)
 
 ### Build
 
@@ -9,6 +34,7 @@
 ### Chore
 
 * **release:** 0.1.1
+* **workflow:** update to v3
 
 ### Feat
 
@@ -16,6 +42,7 @@
 
 ### Fix
 
+* my name in cargo.toml
 * sqlite
 * everything
 * everything
@@ -23,6 +50,10 @@
 * **tests:** Final fix
 * **tests:** Checking
 * **tests:** trying
+* **workflow:** again
+* **workflow:** again
+* **workflow:** Now better feat: PKGBUILD
+* **workflow:** Now better feat: PKGBUILD
 
 
 <a name="v0.1.0"></a>
