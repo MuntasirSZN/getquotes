@@ -4,7 +4,6 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
-
 jobs:
   build:
     name: 💠 Build for ${{ matrix.target }}
@@ -76,7 +75,6 @@ jobs:
         with:
           name: getquotes-${{ matrix.target }}
           path: release/getquotes-${{ matrix.target }}*
-
   release:
     name: 🚀 Create Release
     runs-on: ubuntu-latest
@@ -119,16 +117,6 @@ jobs:
       - name: 🔒 Update PKGBUILD sha256 checksums
         run: |
           ./update_checksums.sh
-      - name: 🔓 Decrypt SSH private key
-        id: decrypt-ssh-key
-        run: |
-          # Save the encrypted SSH key to a file
-          echo "${{ secrets.AUR_SSH_PRIVATE_KEY }}" > id_rsa
-          # Set permissions for the SSH key
-          chmod 600 id_rsa
-          # Add the key to the SSH agent
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.AUR_SSH_PASSPHRASE }}" | ssh-add id_rsa
       - name: 💠 Publish To Aur
         uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
         with:
@@ -136,7 +124,7 @@ jobs:
           pkgbuild: ./PKGBUILD
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
-          ssh_private_key: ${{ steps.decrypt-ssh-key.outputs.decrypted_key }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: Update AUR package
           ssh_keyscan_types: rsa,ecdsa,ed25519
       - name: 💱 Generate Changelog
