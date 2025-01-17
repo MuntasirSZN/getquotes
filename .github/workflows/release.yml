@@ -4,6 +4,7 @@ on:
     tags:
       - "v*"
   workflow_dispatch:
+
 jobs:
   build:
     name: 💠 Build for ${{ matrix.target }}
@@ -75,11 +76,16 @@ jobs:
         with:
           name: getquotes-${{ matrix.target }}
           path: release/getquotes-${{ matrix.target }}*
+
   release:
     name: 🚀 Create Release
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: 🔍 Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: 📥 Download artifacts
         uses: actions/download-artifact@v4
         with:
