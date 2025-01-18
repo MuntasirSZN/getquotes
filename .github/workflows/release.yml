@@ -117,7 +117,7 @@ jobs:
       - name: 🔒 Update PKGBUILD sha256 checksums and pkgver
         run: |
           cd ci
-          ./ci/pkgbuild-ci.sh
+          ./pkgbuild-ci.sh
           cd ..
       - name: 💠 Publish To Aur
         uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
