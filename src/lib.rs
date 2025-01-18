@@ -8,13 +8,13 @@ pub mod types;
 use crate::config::{load_or_create_config, parse_hex_color};
 use clap::Parser;
 use colored::*;
-use git_rev::revision_string;
+use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
 use rand::{thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 
-const GIT_HASH: &str = revision_string!();
+const GIT_HASH: std::option::Option<&str> = try_revision_string!();
 
 #[derive(Parser, Debug)]
 #[command(name = "getquotes")]
@@ -84,7 +84,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         println!(
             "getquotes v{} (commit {})",
             env!("CARGO_PKG_VERSION"),
-            GIT_HASH
+            GIT_HASH.unwrap_or("")
         );
         return Ok(());
     }
