@@ -114,7 +114,7 @@ jobs:
         run: |
           rm -rf artifacts/
           cargo publish --allow-dirty --token ${{ secrets.CRATES_IO_TOKEN }}
-      - name: 🔒 Update PKGBUILD sha256 checksums
+      - name: 🔒 Update PKGBUILD sha256 checksums and pkgver
         run: |
           ./pkgbuild-ci.sh
       - name: 💠 Publish To Aur
@@ -131,9 +131,9 @@ jobs:
         run: |
           docker pull quay.io/git-chglog/git-chglog:latest
           docker run -v "$PWD":/workdir quay.io/git-chglog/git-chglog -o CHANGELOG.md
-      - name: 💫 Commit Changelog
+      - name: 💫 Commit Changelog And PKGBUILD
         uses: EndBug/add-and-commit@v9
         with:
-          add: "CHANGELOG.md"
+          add: "CHANGELOG.md PKGBUILD"
           message: "📝 Update CHANGELOG.md"
           push: "origin main --force"
