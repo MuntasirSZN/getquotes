@@ -7,31 +7,22 @@
 
 **GetQuotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
 
----
+______________________________________________________________________
 
 ## 📥 Installation
 
-You can install **GetQuotes** using `cargo`, the Rust package manager:
+| Repository | Command To Install | Version |
+| ---------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://crates.io/crates/getquotes) |
+| AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://aur.archlinux.org/packages/getquotes) |
+| AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://aur.archlinux.org/packages/getquotes-git) |
 
-```bash
-cargo install getquotes
-```
+> [!Note]
+> If you are on Arch Linux, you can install GetQuotes from the AUR using `yay` or `paru`.
 
-If you are on Arch Linux, you can install from the AUR:
+### Manual Installation
 
-```bash
-yay -S getquotes # or paru -S getquotes
-```
-
-Use a aur helper like `yay` or `paru`. If you want the latest (possibly error prone and unstable), run:
-
-```bash
-yay -S getquotes-git
-```
-
-It will build from latest commit. Please open an issue if you find any problems.
-
-Alternatively, you can clone the repository and build it from source:
+You can clone the repository and build it from source:
 
 ```bash
 git clone https://github.com/MuntasirSZN/getquotes.git
@@ -39,7 +30,30 @@ cd getquotes
 cargo build --release
 ```
 
----
+Then, copy the binary to your `PATH`:
+
+```bash
+cp target/release/getquotes /usr/local/bin
+```
+
+Manpages are included in the repository and can be installed using:
+
+```bash
+sudo cp man/getquotes.1 /usr/share/man/man1
+sudo mandb # To update the manpage database
+```
+
+If you are on windows, you can use the ps1xml file, which is a like a manpage for windows powershell. Use the `Get-Help` command to view the manpage.
+
+```ps1
+copy .\man\getquotes.ps1xml $env:PSModulePath\getquotes.ps1xml
+Get-Help getquotes
+```
+
+> [!Important]
+> If you are building for android from source, you need the Android NDK installed and the `ANDROID_NDK_HOME` environment variable set to the NDK path.
+
+______________________________________________________________________
 
 ## 🛠️ Configuration
 
@@ -61,7 +75,7 @@ GetQuotes can be configured using a JSON configuration file. The configuration f
 - **max_tries**: The maximum number of attempts to find a quote (between 1 and 100, default is 30).
 - **log_file**: The path to the log file (default is "getquotes.log").
 
----
+______________________________________________________________________
 
 ## 🛠️ Usage
 
@@ -129,7 +143,7 @@ Display help information:
 getquotes --help
 ```
 
----
+______________________________________________________________________
 
 ## 🚀 Features
 
@@ -140,7 +154,7 @@ getquotes --help
 - **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
----
+______________________________________________________________________
 
 ## 🤝 Contributing
 
@@ -157,13 +171,13 @@ Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contri
 
 The configuration schema is defined in `config.schema.json`. Any contributions affecting the configuration should update this schema accordingly.
 
----
+______________________________________________________________________
 
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+______________________________________________________________________
 
 ## 🙏 Acknowledgments
 
@@ -171,7 +185,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Rust Community**: For the amazing ecosystem and tools. 🦀
 - **Inspiration**: This project was inspired by the need for a simple, daily dose of inspiration. 🌟
 
----
+______________________________________________________________________
 
 ## 📬 Contact
 
@@ -179,12 +193,12 @@ If you have any questions, feel free to reach out:
 
 - **MuntasirSZN**: [GitHub](https://github.com/MuntasirSZN) | [Email](mailto:muntasir.joypurhat@gmail.com)
 
----
+______________________________________________________________________
 
 ## 🌟 Show Your Support
 
 If you find this project useful, please give it a ⭐️ on [GitHub](https://github.com/MuntasirSZN/getquotes)!
 
----
+______________________________________________________________________
 
 Happy quoting! 🎉
