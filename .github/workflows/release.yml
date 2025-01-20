@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: 'main'
+          ref: "main"
       - name: 📥 Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -133,11 +133,8 @@ jobs:
         run: |
           docker pull quay.io/git-chglog/git-chglog:latest
           docker run -v "$PWD":/workdir quay.io/git-chglog/git-chglog -o CHANGELOG.md
-          git remote remove origin
-          git remote add origin https://github.com/MuntasirSZN/getquotes.git
       - name: 💫 Commit Changelog And PKGBUILD
         uses: EndBug/add-and-commit@v9
         with:
           add: "CHANGELOG.md packages/aur/getquotes/PKGBUILD"
           message: "📝 Update CHANGELOG.md And PKGBUILD"
-          push: "origin main --force"
