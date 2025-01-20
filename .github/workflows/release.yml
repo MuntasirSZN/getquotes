@@ -31,8 +31,6 @@ jobs:
         with:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
-      - name: 📦 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v1
       - name: 🤖 Setup Android build environment
         if: matrix.target == 'aarch64-linux-android'
         run: |
@@ -84,6 +82,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: 'main'
       - name: 📥 Download artifacts
         uses: actions/download-artifact@v4
         with:
@@ -140,5 +139,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           add: "CHANGELOG.md packages/aur/getquotes/PKGBUILD"
-          message: "📝 Update CHANGELOG.md"
+          message: "📝 Update CHANGELOG.md And PKGBUILD"
           push: "origin main --force"
