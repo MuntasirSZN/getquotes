@@ -1,4 +1,54 @@
 
+<a name="v0.2.8"></a>
+
+## [v0.2.8](https://github.com/MuntasirSZN/getquotes/compare/v0.2.7...v0.2.8) (2025-01-20)
+
+### 🐞 Bug Fixes
+
+- **workflow:** again
+  
+  
+<a name="v0.2.7"></a>
+
+## [v0.2.7](https://github.com/MuntasirSZN/getquotes/compare/v0.2.6...v0.2.7) (2025-01-20)
+
+### Build
+
+- **deps:** bump rusqlite from 0.32.1 to 0.33.0
+  - **deps:** bump serde_json from 1.0.135 to 1.0.137
+  
+  ### 🐞 Bug Fixes
+
+- **script:** handle pkgver only fix(workflow): use updpkgsums chore(release): update to 0.2.7
+  
+  
+<a name="v0.2.6"></a>
+
+## [v0.2.6](https://github.com/MuntasirSZN/getquotes/compare/v0.2.5...v0.2.6) (2025-01-18)
+
+### Chore
+
+- **release:** v0.2.6
+  
+  
+<a name="v0.2.5"></a>
+
+## [v0.2.5](https://github.com/MuntasirSZN/getquotes/compare/v0.2.4...v0.2.5) (2025-01-18)
+
+### Chore
+
+- **release:** v0.2.5
+  
+  ### ✨ Features
+
+- better changelog
+  - All packages are in packages dir feat: CI scripts are in ci dir feat: Experimental homebrew (working currently) fix(workflow): Comply with changes
+  
+  ### 🐞 Bug Fixes
+
+- **workflow:** try
+  
+  
 <a name="v0.2.4"></a>
 
 ## [v0.2.4](https://github.com/MuntasirSZN/getquotes/compare/v0.2.3...v0.2.4) (2025-01-18)
