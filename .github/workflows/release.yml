@@ -114,7 +114,7 @@ jobs:
         run: |
           rm -rf artifacts/
           cargo publish --allow-dirty --token ${{ secrets.CRATES_IO_TOKEN }}
-      - name: 🔒 Update PKGBUILD sha256 checksums and pkgver
+      - name: 🔒 Update PKGBUILD pkgver
         run: |
           cd ci
           ./pkgbuild-ci.sh
@@ -124,6 +124,7 @@ jobs:
         with:
           pkgname: getquotes
           pkgbuild: ./packages/aur/getquotes/PKGBUILD
+          updpkgsums: true,
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
@@ -133,6 +134,7 @@ jobs:
         run: |
           docker pull quay.io/git-chglog/git-chglog:latest
           docker run -v "$PWD":/workdir quay.io/git-chglog/git-chglog -o CHANGELOG.md
+          git remote remove origin
           git remote add origin https://github.com/MuntasirSZN/getquotes.git
       - name: 💫 Commit Changelog And PKGBUILD
         uses: EndBug/add-and-commit@v9
