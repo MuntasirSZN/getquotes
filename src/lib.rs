@@ -13,6 +13,7 @@ use log::{debug, error, info, warn};
 use rand::{rng as thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
+use crate::config::Config;
 
 const GIT_HASH: std::option::Option<&str> = try_revision_string!();
 
@@ -52,15 +53,11 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let mut cfg = load_or_create_config()?;
 
     // Update config with CLI options
-    cfg.authors = args
-        .authors
-        .unwrap_or_default()
+    if let Some(authors_str) = args.authors {
+    cfg.authors = authors_str
         .split(',')
         .map(|s| s.trim().to_string())
         .collect();
-    if cfg.authors.is_empty() {
-        error!("No authors configured.");
-        return Err("No authors configured.".into());
     }
 
     if let Some(theme_color) = args.theme_color {
@@ -107,6 +104,11 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
             }
         }
     };
+
+    if args.offline {
+        info!("Running in offline mode");
+        return display_offline_quote(&cfg, color);
+    }
 
     // Create an HTTP client
     let client = Client::new();
@@ -174,4 +176,47 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         max_tries
     );
     Err("Failed to retrieve a quote.".into())
+}
+
+fn display_offline_quote(cfg: &Config, color: (u8, u8, u8)) -> Result<(), Box<dyn StdError + Send + Sync>> {
+    let cached_quotes = cache::get_cached_quotes()?;
+
+    if cached_quotes.is_empty() {
+        error!("No cached quotes available for offline mode");
+        return Err("No cached quotes available for offline mode. Please run with --init-cache first.".into());
+    }
+
+    let mut rng = thread_rng();
+
+    // Filter quotes by configured authors if specified
+    let filtered_quotes: Vec<_> = if !cfg.authors.is_empty() {
+        cached_quotes
+            .into_iter()
+            .filter(|(author, _)| cfg.authors.contains(author))
+            .collect()
+    } else {
+        cached_quotes
+    };
+
+    if filtered_quotes.is_empty() {
+        error!("No cached quotes found for configured authors");
+        return Err("No cached quotes available from configured authors. Try running --init-cache again or check your author list.".into());
+    }
+
+    // Select a random quote from filtered list
+    let quote_idx = rng.random_range(0..filtered_quotes.len());
+    let (author, quote) = &filtered_quotes[quote_idx];
+
+    // Display the randomly selected quote
+    let colorized_quote = format!("\"{}\"", quote).truecolor(color.0, color.1, color.2);
+    let dash = "-";
+
+    println!(
+        "{}\n\n {:>99}{}",
+        colorized_quote.bold(),
+        dash.bold().green(),
+        author.green()
+    );
+    info!("Offline quote successfully displayed from author: {}", author);
+    Ok(())
 }
