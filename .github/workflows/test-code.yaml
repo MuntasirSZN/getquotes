@@ -46,7 +46,7 @@ jobs:
 
       - name: 📦 Install
         run: cargo install cargo-nextest
-        
+
       - name: 🤖 Setup Android build environment
         if: matrix.target == 'aarch64-linux-android'
         run: |
