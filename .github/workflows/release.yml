@@ -62,17 +62,21 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path release
           Copy-Item "target/${{ matrix.target }}/release/getquotes.exe" -Destination "release/getquotes-${{ matrix.target }}.exe"
+          # Archive for Windows
+          Compress-Archive -Path "release/getquotes-${{ matrix.target }}.exe", "man/getquotes.ps1xml", "LICENSE" -DestinationPath "release/getquotes-${{ matrix.target }}.zip"
       - name: 📁 Package binary (Unix)
         if: "!contains(matrix.target, 'windows')"
         shell: bash
         run: |
           mkdir -p release
           cp "target/${{ matrix.target }}/release/getquotes" "release/getquotes-${{ matrix.target }}"
+          # Archive for Unix
+          tar -czvf "release/getquotes-${{ matrix.target }}.tar.gz" -C release "getquotes-${{ matrix.target }}" -C ../ "man/getquotes.1" "LICENSE"
       - name: 📤 Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: getquotes-${{ matrix.target }}
-          path: release/getquotes-${{ matrix.target }}*
+          path: release/getquotes-${{ matrix.target }}.*
   release:
     name: 🚀 Create Release
     runs-on: ubuntu-latest
@@ -99,12 +103,12 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            artifacts/getquotes-x86_64-unknown-linux-gnu/getquotes-x86_64-unknown-linux-gnu
-            artifacts/getquotes-x86_64-apple-darwin/getquotes-x86_64-apple-darwin
-            artifacts/getquotes-aarch64-apple-darwin/getquotes-aarch64-apple-darwin
-            artifacts/getquotes-x86_64-pc-windows-gnu/getquotes-x86_64-pc-windows-gnu.exe
-            artifacts/getquotes-x86_64-pc-windows-msvc/getquotes-x86_64-pc-windows-msvc.exe
-            artifacts/getquotes-aarch64-linux-android/getquotes-aarch64-linux-android
+            artifacts/getquotes-x86_64-unknown-linux-gnu/getquotes-x86_64-unknown-linux-gnu.tar.gz
+            artifacts/getquotes-x86_64-apple-darwin/getquotes-x86_64-apple-darwin.tar.gz
+            artifacts/getquotes-aarch64-apple-darwin/getquotes-aarch64-apple-darwin.tar.gz
+            artifacts/getquotes-x86_64-pc-windows-gnu/getquotes-x86_64-pc-windows-gnu.zip
+            artifacts/getquotes-x86_64-pc-windows-msvc/getquotes-x86_64-pc-windows-msvc.zip
+            artifacts/getquotes-aarch64-linux-android/getquotes-aarch64-linux-android.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 🦀 Install Rust
