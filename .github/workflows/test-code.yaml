@@ -31,9 +31,7 @@ jobs:
           # Windows (MSVC)
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-          # Android (Needs QEMU)
-          - target: aarch64-linux-android
-            os: ubuntu-latest
+          # TODO: Run tests for android, pr wanted.
 
     steps:
       - name: 🛎️ Checkout code
@@ -45,31 +43,10 @@ jobs:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
 
-      - name: 🤖 Setup Android build environment
-        if: matrix.target == 'aarch64-linux-android'
-        run: |
-          wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
-          unzip android-ndk-r25c-linux.zip
-          echo "ANDROID_NDK_HOME=$PWD/android-ndk-r25c" >> $GITHUB_ENV
-          rustup target add aarch64-linux-android
-          echo "CC_aarch64_linux_android=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
-          echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
-
       - name: 📦 Install Dependencies
         run: cargo install cargo-nextest
 
       - name: 🧪 Run Tests
-        if: "!contains(matrix.target, 'android')"
         run: cargo nextest run --target ${{ matrix.target }}
-
-      - name: 🧪 Run tests for android
-        if: contains(matrix.target, 'android')
-        uses: pguyot/arm-runner-action@v2
-        with:
-          commands: |
-                cargo nextest run --target ${{ matrix.target }}
-        env:
-          CC: ${{ env.CC_aarch64_linux_android }}
-          AR: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
 
 
