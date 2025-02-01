@@ -59,7 +59,8 @@ jobs:
         if: matrix.target == 'aarch64-linux-android'
         run: |
           sudo apt update
-          sudo apt install -y qemu-user-static
+          sudo apt install -y qemu-user-static binfmt-support
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: 📦 Install Dependencies
         run: cargo install cargo-nextest
@@ -71,7 +72,8 @@ jobs:
       - name: 🧪 Run Tests in QEMU (Android)
         if: contains(matrix.target, 'android')
         run: |
-          qemu-aarch64-static cargo nextest run --target ${{ matrix.target }}
+          qemu-aarch64-static /bin/bash -c "cargo nextest run --target aarch64-linux-android"
         env:
           CC: ${{ env.CC_aarch64_linux_android }}
           AR: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
+
