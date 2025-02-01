@@ -1,6 +1,7 @@
-name: ⌛ Test Code With Nextest
+name: ⌛ Test Code
 
 on:
+  workflow_call:
   push:
     branches:
       - main
@@ -10,7 +11,7 @@ on:
 
 jobs:
   test:
-    name: 🧪 Test with Nextest on ${{ matrix.target }}
+    name: 🧪 Test on ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -41,8 +42,8 @@ jobs:
           target: ${{ matrix.target }}
           components: rustfmt, clippy
 
-      - name: 📦 Install Nextest
+      - name: 📦 Install
         run: cargo install cargo-nextest
 
-      - name: 🧪 Run Nextest
+      - name: 🧪 Run Test For ${{ matrix.target }}
         run: cargo nextest run --target ${{ matrix.target }}
