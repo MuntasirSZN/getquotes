@@ -6,38 +6,8 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    name: 🧪 Test with Nextest on ${{ matrix.target }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          # Linux
-          - target: x86_64-unknown-linux-gnu
-            os: ubuntu-latest
-          # macOS (Intel)
-          - target: x86_64-apple-darwin
-            os: macos-latest
-          # macOS (ARM/M1)
-          - target: aarch64-apple-darwin
-            os: macos-latest
-          # Windows (GNU)
-          - target: x86_64-pc-windows-gnu
-            os: windows-latest
-          # Windows (MSVC)
-          - target: x86_64-pc-windows-msvc
-            os: windows-latest
-    steps:
-      - name: 🛎️ Checkout code
-        uses: actions/checkout@v3
-      - name: 🦀 Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          target: ${{ matrix.target }}
-          components: rustfmt, clippy
-      - name: 📦 Install Nextest
-        run: cargo install cargo-nextest
-      - name: 🧪 Run Nextest
-        run: cargo nextest run --target ${{ matrix.target }}
+    uses: ./.github/workflows/test-code.yaml
+    name: 🧪 Test Code
   build:
     name: 💠 Build for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
