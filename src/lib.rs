@@ -10,7 +10,7 @@ use clap::Parser;
 use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{thread_rng, Rng};
+use rand::{rng as thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 
@@ -93,9 +93,9 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
 
     let color = if cfg.rainbow_mode {
         // Generate random RGB values
-        let r: u8 = rng.gen();
-        let g: u8 = rng.gen();
-        let b: u8 = rng.gen();
+        let r: u8 = rng.random();
+        let g: u8 = rng.random();
+        let b: u8 = rng.random();
         (r, g, b)
     } else {
         // Use parsed theme color
@@ -119,7 +119,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     for attempt in 1..=max_tries {
         debug!("Attempt {}/{}", attempt, max_tries);
         // Pick a random author from config
-        let author_idx = rng.gen_range(0..cfg.authors.len());
+        let author_idx = rng.random_range(0..cfg.authors.len());
         let author = &cfg.authors[author_idx];
 
         info!("Attempting to fetch quote for author: {}", author);
@@ -141,7 +141,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                             };
 
                         if !quotes.is_empty() {
-                            let random_quote = &quotes[rng.gen_range(0..quotes.len())];
+                            let random_quote = &quotes[rng.random_range(0..quotes.len())];
                             found_quote = Some((author.to_string(), random_quote.clone()));
                             break;
                         }

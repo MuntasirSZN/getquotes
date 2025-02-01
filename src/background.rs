@@ -13,7 +13,7 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
     if cfg.authors.is_empty() {
         return Err("No authors configured for caching.".into());
     }
-    let author_idx = rand::thread_rng().gen_range(0..cfg.authors.len());
+    let author_idx = rand::rng().random_range(0..cfg.authors.len());
     let author = &cfg.authors[author_idx];
 
     match get_author_sections(&client, author).await {
