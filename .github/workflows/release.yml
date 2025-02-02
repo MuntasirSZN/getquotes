@@ -148,3 +148,4 @@ jobs:
         with:
           add: "CHANGELOG.md packages/aur/getquotes/PKGBUILD"
           message: "📝 Update CHANGELOG.md And PKGBUILD"
+          default_author: github_actions
