@@ -11,6 +11,7 @@ jobs:
   build:
     name: 💠 Build for ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
+    needs: test
     strategy:
       matrix:
         include:
