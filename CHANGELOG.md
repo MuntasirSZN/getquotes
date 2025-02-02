@@ -1,4 +1,35 @@
 
+<a name="v0.3.1"></a>
+
+## [v0.3.1](https://github.com/MuntasirSZN/getquotes/compare/v0.3.0...v0.3.1) (2025-02-02)
+
+### 🐞 Bug Fixes
+
+- **workflow:** test code first
+  - **workflow:** test code first
+  
+  
+<a name="v0.3.0"></a>
+
+## [v0.3.0](https://github.com/MuntasirSZN/getquotes/compare/v0.2.8...v0.3.0) (2025-02-02)
+
+### Build
+
+- **deps:** bump serde_json from 1.0.137 to 1.0.138
+  - **deps:** bump rand from 0.8.5 to 0.9.0
+  - **deps:** bump clap from 4.5.26 to 4.5.27
+  
+  ### Chore
+
+- **release:** v0.3.0
+  
+  ### 🐞 Bug Fixes
+
+- **caching:** now cache is used perfectly
+  - **rng:** depreacated funcs
+  - **workflow:** test code first
+  
+  
 <a name="v0.2.8"></a>
 
 ## [v0.2.8](https://github.com/MuntasirSZN/getquotes/compare/v0.2.7...v0.2.8) (2025-01-20)
