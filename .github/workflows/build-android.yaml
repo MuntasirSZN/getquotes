@@ -17,14 +17,15 @@ jobs:
         run: |
           wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
           unzip android-ndk-r25c-linux.zip
-          echo "NDK_HOME=$PWD/android-ndk-r25c" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$PWD/android-ndk-r25c" >> $GITHUB_ENV
           rustup target add aarch64-linux-android
-          echo "CC_android=$NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+          echo "CC_aarch64_linux_android=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
+          echo "CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$PWD/android-ndk-r25c/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> $GITHUB_ENV
       - name: 🛠️ Build Android Binary
         run: cargo build --target aarch64-linux-android --release
         env:
-          CC: ${{ env.CC_android }}
-          AR: ${{ env.NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
+          CC: ${{ env.CC_aarch64_linux_android }}
+          AR: ${{ env.ANDROID_NDK_HOME }}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
       - name: 📦 Package Artifacts (tar.gz)
         shell: bash
         run: |
