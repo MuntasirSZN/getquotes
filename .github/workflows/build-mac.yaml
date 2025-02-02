@@ -3,7 +3,7 @@ on:
   workflow_call:
 jobs:
   build-macos:
-    name: 🍎 Build macOS
+    name: 🍎 Build macOS For ${{ matrix.target }}
     runs-on: macos-latest
     strategy:
       matrix:

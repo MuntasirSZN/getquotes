@@ -3,7 +3,7 @@ on:
   workflow_call:
 jobs:
   build-windows:
-    name: 🪟 Build Windows
+    name: 🪟 Build Windows For ${{ matrix.target }}
     runs-on: windows-latest
     strategy:
       matrix:

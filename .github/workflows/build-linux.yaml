@@ -3,7 +3,7 @@ on:
   workflow_call:
 jobs:
   build-linux:
-    name: 🐧 Build Linux
+    name: 🐧 Build Linux For x86_64-unknown-linux-gnu
     runs-on: ubuntu-latest
     steps:
       - name: 🔍 Checkout Code

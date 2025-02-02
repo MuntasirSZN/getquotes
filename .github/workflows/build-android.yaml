@@ -3,7 +3,7 @@ on:
   workflow_call:
 jobs:
   build-android:
-    name: 🤖 Build Android
+    name: 🤖 Build Android For aarch64-linux-android
     runs-on: ubuntu-latest
     steps:
       - name: 🔍 Checkout Code
