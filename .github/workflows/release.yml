@@ -80,7 +80,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: getquotes-${{ matrix.target }}
-          path: release/getquotes-${{ matrix.target }}.*
+          path: |
+            release/getquotes-${{ matrix.target }}.zip
+            release/getquotes-${{ matrix.target }}.tar.gz
   release:
     name: 🚀 Create Release
     runs-on: ubuntu-latest
