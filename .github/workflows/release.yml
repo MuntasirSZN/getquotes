@@ -69,10 +69,15 @@ jobs:
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: Update AUR package
           ssh_keyscan_types: rsa,ecdsa,ed25519
+      - name: 💫 Commit PKGBUILD
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "packages/aur/getquotes/PKGBUILD"
+          message: "📝 Update PKGBUILD"
   changelog:
     name: 📝 Update Changelog
     runs-on: ubuntu-latest
-    needs: [release-github]
+    needs: [release-github,release-aur,release-cargo]
     steps:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
@@ -85,5 +90,5 @@ jobs:
       - name: 💫 Commit Changelog And PKGBUILD
         uses: EndBug/add-and-commit@v9
         with:
-          add: "CHANGELOG.md packages/aur/getquotes/PKGBUILD"
-          message: "📝 Update CHANGELOG.md And PKGBUILD"
+          add: "CHANGELOG.md"
+          message: "📝 Update CHANGELOG.md"
