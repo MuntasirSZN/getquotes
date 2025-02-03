@@ -1,4 +1,32 @@
 
+<a name="v0.3.4"></a>
+
+## [v0.3.4](https://github.com/MuntasirSZN/getquotes/compare/v0.3.3...v0.3.4) (2025-02-03)
+
+### Chore
+
+- **release:** v0.3.4
+  
+  
+<a name="v0.3.3"></a>
+
+## [v0.3.3](https://github.com/MuntasirSZN/getquotes/compare/v0.3.2...v0.3.3) (2025-02-02)
+
+
+<a name="v0.3.2"></a>
+
+## [v0.3.2](https://github.com/MuntasirSZN/getquotes/compare/v0.3.1...v0.3.2) (2025-02-02)
+
+### Chore
+
+- **release:** v0.3.2
+  
+  ### ✨ Features
+
+- **workflow:** some verbosity
+  - **workflow:** done making granular
+  
+  
 <a name="v0.3.1"></a>
 
 ## [v0.3.1](https://github.com/MuntasirSZN/getquotes/compare/v0.3.0...v0.3.1) (2025-02-02)
