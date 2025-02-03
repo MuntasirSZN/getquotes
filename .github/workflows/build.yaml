@@ -1,0 +1,21 @@
+name: ⚒️ Build
+on:
+  workflow_call:
+jobs:
+  # ======================== Platform-Specific Build Jobs ======================== #
+  build-linux:
+    uses: ./.github/workflows/build-linux.yaml
+    name: 🏗️ Build For Linux
+    needs: test
+  build-android:
+    uses: ./.github/workflows/build-android.yaml
+    name: 🏗️ Build For Android
+    needs: test
+  build-macos:
+    uses: ./.github/workflows/build-mac.yaml
+    name: 🏗️ Build For MacOS
+    needs: test
+  build-windows:
+    uses: ./.github/workflows/build-windows.yaml
+    name: 🏗️ Build For Windows
+    needs: test
