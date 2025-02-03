@@ -11,14 +11,16 @@ jobs:
   build:
     uses: ./.github/workflows/build.yaml
     name: 🏗️ Build
+    needs: test
   # ================================ Release Job ================================ #
   release:
     uses: ./.github/workflows/create-release.yml
     name: 🚀 Release
+    needs: [build, test]
   changelog:
     name: 📝 Update Changelog
     runs-on: ubuntu-latest
-    needs: [release-github, release-aur, release-cargo]
+    needs: release
     steps:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
