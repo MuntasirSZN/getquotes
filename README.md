@@ -1,9 +1,9 @@
 # 📜 GetQuotes - Fetch Inspirational Quotes from the Command Line 🚀
 
-![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8)
+![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=)
 ![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge)
 ![GitHub stars](https://img.shields.io/github/stars/MuntasirSZN/getquotes?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=292324)
-![Last commit](https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)
+![Last commit](https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git)
 
 **GetQuotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
 
@@ -13,9 +13,9 @@ ______________________________________________________________________
 
 | Repository | Command To Install | Version |
 | ---------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://crates.io/crates/getquotes) |
-| AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://aur.archlinux.org/packages/getquotes) |
-| AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324)](https://aur.archlinux.org/packages/getquotes-git) |
+| Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=rust)](https://crates.io/crates/getquotes) |
+| AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=archlinux)](https://aur.archlinux.org/packages/getquotes) |
+| AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git)](https://aur.archlinux.org/packages/getquotes-git) |
 
 > [!Note]
 > If you are on Arch Linux, you can install GetQuotes from the AUR using `yay` or `paru`.
