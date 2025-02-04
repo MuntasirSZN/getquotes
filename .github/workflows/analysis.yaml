@@ -10,11 +10,10 @@ on:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       # Checkout the repository
       - name: 🛠️ Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Set up Rust toolchain
       - name: 🦀 Set up Rust toolchain
