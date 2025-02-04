@@ -1,21 +1,19 @@
-name: ✅ Analyze Code
+name: ✅ Lint Code
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
   schedule:
-    - cron: '36 9 * * 2'
+    - cron: '19 4 * * 2'
     
 jobs:
-  analyze:
+  lint:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       # Checkout the repository
       - name: 🛠️ Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Set up Rust toolchain
       - name: 🦀 Set up Rust toolchain
@@ -32,16 +30,24 @@ jobs:
 
       # Install clippy-sarif and sarif-fmt
       - name: ⬇️ Install clippy-sarif and sarif-fmt
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: cargo install clippy-sarif sarif-fmt
+
+      - name: 📎 Run Clippy
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          cargo clippy --all-targets --all-features
 
       # Run clippy and generate SARIF report
       - name: 🔍 Run Clippy and generate SARIF
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           cargo clippy --all-targets --all-features --message-format=json |
           clippy-sarif | tee results.sarif | sarif-fmt
 
       # Upload SARIF file
       - name: 📤 Upload SARIF file
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
