@@ -1,7 +1,7 @@
 # 📜 GetQuotes - Fetch Inspirational Quotes from the Command Line 🚀
 
-![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=)
-![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge)
+![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=MIT)
+![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge&logo=github)
 ![GitHub stars](https://img.shields.io/github/stars/MuntasirSZN/getquotes?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=292324)
 ![Last commit](https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git)
 
