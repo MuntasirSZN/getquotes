@@ -12,6 +12,6 @@ Please send the above info, along with any other information you feel is pertine
 
 In addition, you may request that the project provide you a patched release in advance of the release announcement, however, we can not guarantee that such information will be provided to you in advance of the public release and announcement.
 
-However, <muntasir.joypurhat@gmail.com> will email you at the same time the public announcement is made.
+However, I will email you at the same time the public announcement is made.
 We will let you know within a few weeks whether or not your report has been accepted or rejected.
 We ask that you please keep the report confidential until we have made a public announcement.
