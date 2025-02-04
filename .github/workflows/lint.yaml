@@ -8,7 +8,7 @@ on:
     - cron: '19 4 * * 2'
     
 jobs:
-  analyze:
+  lint:
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository
