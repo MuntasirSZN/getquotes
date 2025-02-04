@@ -5,6 +5,9 @@ on:
       - "v*"
   workflow_dispatch:
 jobs:
+  lint:
+    uses: ./.github/workflows/lint.yaml
+    name: 🔍 Lint Code
   test:
     uses: ./.github/workflows/test-code.yaml
     name: 🧪 Test Code
