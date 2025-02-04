@@ -4,12 +4,18 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
   schedule:
-    - cron: '36 9 * * 2'
+    - cron: '19 4 * * 2'
     
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
     steps:
       # Checkout the repository
       - name: 🛠️ Checkout code
