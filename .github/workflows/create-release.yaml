@@ -22,7 +22,8 @@ jobs:
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           files: |
-            artifacts/linux-x86_64/getquotes-x86_64-unknown-linux-gnu.tar.gz
+            artifacts/linux-x86_64-unknown-linux-gnu/getquotes-x86_64-unknown-linux-gnu.tar.gz
+            artifacts/linux-aarch64-unknown-linux-gnu/getquotes-aarch64-unknown-linux-gnu.tar.gz
             artifacts/android-arm64/getquotes-aarch64-linux-android.tar.gz
             artifacts/macos-x86_64-apple-darwin/getquotes-x86_64-apple-darwin.tar.gz
             artifacts/macos-aarch64-apple-darwin/getquotes-aarch64-apple-darwin.tar.gz
