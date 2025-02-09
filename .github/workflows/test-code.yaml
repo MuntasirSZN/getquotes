@@ -16,9 +16,12 @@ jobs:
     strategy:
       matrix:
         include:
-          # Linux
+          # Linux (x64)
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
+          # Linux (ARM)
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-24.04-arm
           # macOS (Intel)
           - target: x86_64-apple-darwin
             os: macos-latest
@@ -48,5 +51,3 @@ jobs:
 
       - name: 🧪 Run Tests
         run: cargo nextest run --target ${{ matrix.target }}
-
-

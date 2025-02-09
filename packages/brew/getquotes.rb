@@ -1,47 +1,45 @@
 class Getquotes < Formula
-  desc 'A tool to fetch quotes'
+  desc '💭 GetQuotes is a simple cli tool to get quotes in your terminal using WikiQuotes, Written In Rust🦀'
   homepage 'https://github.com/MuntasirSZN/getquotes'
-  version 'v0.2.4'
+  license 'MIT'
+  version 'v0.3.4'
 
   on_macos do
     if Hardware::CPU.arm?
-      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.2.4/getquotes-aarch64-apple-darwin'
-      sha256 '8e0f379520ef4d08a6c3d946dae1de120629e3ee30dd0c8fc0a4f4d25ec0fb0f'
+      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.3.4/getquotes-aarch64-apple-darwin.tar.gz'
+      sha256 'f832228f62862671229006edfb445b5ae4bd16264a90abf0ed6422998eed0cde'
     else
-      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.2.4/getquotes-x86_64-apple-darwin'
-      sha256 'ae92f1ee6850494d62634f659e9628adeca4e0e4f542944eb0b5d7a2bc9867c2'
+      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.3.4/getquotes-x86_64-apple-darwin.tar.gz'
+      sha256 '88798a2925837f6980733f10e72d5716862ea9c24b0d2191803698c57c01ab69'
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.2.4/getquotes-aarch64-linux-android'
-      sha256 '159a0f364ab581ad0f34f622514ea356e667c2577d9c21fa7418f0dfad9784db'
+      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.3.4/getquotes-aarch64-unknown-linux-gnu.tar.gz'
+      sha256 '6d4227ecaeee2eadccd2b62c48851ec1c300f0311175b0df40d8bed85d457fc2'
     else
-      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.2.4/getquotes-x86_64-unknown-linux-gnu'
-      sha256 '930d7099b41c15cc171278e5fab254d2c6968925256443846a3a4aed3a81e304'
+      url 'https://github.com/MuntasirSZN/getquotes/releases/download/v0.3.4/getquotes-x86_64-unknown-linux-gnu.tar.gz'
+      sha256 'b16842e6f1cc6ebf091a5122594e115bf46406c85a7ca8318433fe66067b4823'
     end
   end
 
   def install
-    if OS.mac?
-      if Hardware::CPU.arm?
-        bin.install 'getquotes-aarch64-apple-darwin' => 'getquotes'
-      else
-        bin.install 'getquotes-x86_64-apple-darwin' => 'getquotes'
-      end
-    elsif OS.linux?
-      if Hardware::CPU.arm?
-        bin.install 'getquotes-aarch64-linux-android' => 'getquotes'
-      else
-        bin.install 'getquotes-x86_64-unknown-linux-gnu' => 'getquotes'
-      end
-    else
-      # Handle other OS if necessary
-    end
+    bin.install 'getquotes'
+    man1.install 'man/getquotes.1'
   end
 
   test do
-    system "#{bin}/getquotes", '--version'
+    # Test version output
+    assert_match 'getquotes v', shell_output("#{bin}/getquotes --version")
+
+    # Test help output
+    assert_match 'Usage: getquotes', shell_output("#{bin}/getquotes --help")
+
+    # Verify man page installation
+    assert_predicate man1 / 'getquotes.1', :exist?
+
+    # Basic execution test
+    system "#{bin}/getquotes"
   end
 end
