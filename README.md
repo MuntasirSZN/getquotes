@@ -9,13 +9,14 @@
 </h4>
 
 **getquotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
+______________________________________________________________________
 
 ## 📖 Table of contents
 
 - [🚀 Features](#-features)
 - [📥 Installation](#-installation)
 - [🛠️ Configuration](#-configuration)
-- [🛠️ Usage](#-usage)
+- [🖱️ Usage](#-usage)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
@@ -83,7 +84,7 @@ ______________________________________________________________________
 
 ## 🛠️ Configuration
 
-GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
+getquotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
 
 ```json
 {
@@ -103,7 +104,7 @@ GetQuotes can be configured using a JSON configuration file. The configuration f
 
 ______________________________________________________________________
 
-## 🛠️ Usage
+## 🖱️ Usage
 
 ### Basic Usage
 
