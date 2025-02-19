@@ -55,7 +55,6 @@ body:
     "Steve Jobs"
   ]
 }
-
         ```
     validations:
       required: true
