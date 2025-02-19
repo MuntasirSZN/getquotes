@@ -8,8 +8,9 @@
   <img src="https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git" alt="Last commit">
 </h4>
 
-**getquotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
-______________________________________________________________________
+<p align="center">
+  <strong>getquotes</strong> is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
+</p>
 
 ## 📖 Table of contents
 
