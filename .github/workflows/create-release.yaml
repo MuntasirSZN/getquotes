@@ -31,21 +31,19 @@ jobs:
             artifacts/windows-x86_64-pc-windows-msvc/getquotes-x86_64-pc-windows-msvc.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
       - name: 🎴 Setup Node
         uses: actions/setup-node@v4
         with:
           registry-url: https://registry.npmjs.org/
           node-version: lts/*
-
       - name: 🌑 Create Release Notes
         run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   release-cargo:
     name: 🚀 Create Cargo Release
+    needs: [release-github]
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
@@ -58,7 +56,7 @@ jobs:
   release-aur:
     name: 🚀 Create AUR Release
     runs-on: ubuntu-latest
-    needs: [release-github, release-cargo]
+    needs: [release-github]
     steps:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
