@@ -1,8 +1,7 @@
-# Copied and slightly modified, from markview.nvim 
 name: 🐞 Bug report
 description: "Report a bug in getquotes."
 title: "🐞 Bug: "
-labels: [ "bug" ]
+labels: ["bug"]
 body:
   - type: checkboxes
     id: branch
@@ -11,7 +10,6 @@ body:
       options:
         - label: "dev"
         - label: "main"
-
   - type: textarea
     id: desc
     attributes:
@@ -20,7 +18,6 @@ body:
       placeholder: "Colors not working when..."
     validations:
       required: true
-
   - type: textarea
     id: repro
     attributes:
@@ -29,48 +26,43 @@ body:
       placeholder: "1. Open an app."
     validations:
       required: true
-
   - type: textarea
     id: minit
     attributes:
       label: "💻 Minimal init:"
       description: |
         The minimal config file to reproduce the issue.
-
         Put this in a file(e.g. `minit.json`) and do `getquotes --config minit.json` to run it.
       value: |
         ```json
-{
-  "$schema": "https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config.schema.json",
-  "authors": [
-    "Mahatma Gandhi",
-    "Albert Einstein",
-    "Martin Luther King, Jr.",
-    "Leonardo da Vinci",
-    "Walt Disney",
-    "Edgar Allan Poe",
-    "Sigmund Freud",
-    "Thomas A. Edison",
-    "Robin Williams",
-    "Steve Jobs"
-  ]
-}
+        {
+          "$schema": "https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config.schema.json",
+          "authors": [
+            "Mahatma Gandhi",
+            "Albert Einstein",
+            "Martin Luther King, Jr.",
+            "Leonardo da Vinci",
+            "Walt Disney",
+            "Edgar Allan Poe",
+            "Sigmund Freud",
+            "Thomas A. Edison",
+            "Robin Williams",
+            "Steve Jobs"
+          ]
+        }
         ```
     validations:
       required: true
-
   - type: textarea
     id: logs
     attributes:
       label: "📜 Logs:"
       description: |
         After Reproducing the bug, go to ~/.config/getquotes. You will see a new file `getquotes.log` has been created in your ~/.config/getquotes directory.
-
         Copy it's contents here.
       placeholder: "Logs..."
     validations:
       required: true
-
   - type: input
     id: getquotes-ver
     attributes:
@@ -79,7 +71,6 @@ body:
       placeholder: "getquotes --version"
     validations:
       required: true
-
   - type: textarea
     id: expected
     attributes:
