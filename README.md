@@ -16,8 +16,8 @@
 
 - [🚀 Features](#-features)
 - [📥 Installation](#-installation)
-- [🛠️ Configuration](#-configuration)
-- [🖱️ Usage](#-usage)
+- [🧭 Configuration](#-configuration)
+- [💡 Usage](#-usage)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
@@ -83,7 +83,7 @@ Get-Help getquotes
 
 ______________________________________________________________________
 
-## 🛠️ Configuration
+## 🧭 Configuration
 
 getquotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
 
@@ -105,7 +105,7 @@ getquotes can be configured using a JSON configuration file. The configuration f
 
 ______________________________________________________________________
 
-## 🖱️ Usage
+## 💡 Usage
 
 ### Basic Usage
 
