@@ -18,7 +18,7 @@ jobs:
     needs: test
   # ================================ Release Job ================================ #
   release:
-    uses: ./.github/workflows/create-release.yml
+    uses: ./.github/workflows/create-release.yaml
     name: 🚀 Release
     needs: [build, test]
   changelog:
