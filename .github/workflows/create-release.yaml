@@ -53,6 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 📦 Publish to crates.io
         run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }} --allow-dirty
+        env:
+           CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
   release-aur:
     name: 🚀 Create AUR Release
     runs-on: ubuntu-latest
@@ -79,6 +81,10 @@ jobs:
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_message: Update AUR package
           ssh_keyscan_types: rsa,ecdsa,ed25519
+        env:
+          AUR_USERNAME: ${{ secrets.AUR_USERNAME }}
+          AUR_EMAIL: ${{ secrets.AUR_EMAIL }}
+          AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
       - name: 💫 Commit PKGBUILD
         uses: EndBug/add-and-commit@v9
         with:
