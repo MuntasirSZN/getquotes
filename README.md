@@ -1,11 +1,41 @@
-# 📜 GetQuotes - Fetch Inspirational Quotes from the Command Line 🚀
+<h1 align="center">📜 getquotes</h1>
+<h4 align="center">Fetch Inspirational Quotes from the Command Line 🚀</h4>
 
-![License](https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=MIT)
-![GitHub issues](https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge&logo=github)
-![GitHub stars](https://img.shields.io/github/stars/MuntasirSZN/getquotes?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=292324)
-![Last commit](https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git)
+<h4 align="center">
+  <img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8&logo=homepage&labelColor=1E1E2E" alt="License">
+  <img src="https://img.shields.io/github/issues/MuntasirSZN/getquotes?colorA=363a4f&colorB=f5a97f&style=for-the-badge&logo=github&labelColor=1E1E2E" alt="GitHub issues">
+  <img src="https://img.shields.io/github/stars/MuntasirSZN/getquotes?style=for-the-badge&logo=andela&color=FFB686&logoColor=D9E0EE&labelColor=1E1E2E" alt="GitHub stars">
+  <img src="https://img.shields.io/github/last-commit/MuntasirSZN/getquotes?&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=git" alt="Last commit">
+  <img alt="Repo size" src="https://img.shields.io/github/languages/code-size/MuntasirSZN/getquotes?style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDggNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0%2BPHBhdGggc3Ryb2tlPSIjQ0JBNkY3IiBmaWxsPSIjQ0JBNkY3IiBkPSJNOTYgMEM0MyAwIDAgNDMgMCA5NkwwIDQxNmMwIDUzIDQzIDk2IDk2IDk2bDI4OCAwIDMyIDBjMTcuNyAwIDMyLTE0LjMgMzItMzJzLTE0LjMtMzItMzItMzJsMC02NGMxNy43IDAgMzItMTQuMyAzMi0zMmwwLTMyMGMwLTE3LjctMTQuMy0zMi0zMi0zMkwzODQgMCA5NiAwem0wIDM4NGwyNTYgMCAwIDY0TDk2IDQ0OGMtMTcuNyAwLTMyLTE0LjMtMzItMzJzMTQuMy0zMiAzMi0zMnptMzItMjQwYzAtOC44IDcuMi0xNiAxNi0xNmwxOTIgMGM4LjggMCAxNiA3LjIgMTYgMTZzLTcuMiAxNi0xNiAxNmwtMTkyIDBjLTguOCAwLTE2LTcuMi0xNi0xNnptMTYgNDhsMTkyIDBjOC44IDAgMTYgNy4yIDE2IDE2cy03LjIgMTYtMTYgMTZsLTE5MiAwYy04LjggMC0xNi03LjItMTYtMTZzNy4yLTE2IDE2LTE2eiIvPjwvc3ZnPg%3D%3D&logoColor=CBA6F7&labelColor=1e1e2e&color=B4BEFE">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/MuntasirSZN/getquotes?include_prereleases&sort=semver&display_name=release&style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNy4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjUgRm9udGljb25zLCBJbmMuLS0%2BPHBhdGggZmlsbD0iI0Y1RTBEQyIgc3Ryb2tlPSIjRjVFMERDIiBkPSJNMzQ1IDM5LjFMNDcyLjggMTY4LjRjNTIuNCA1MyA1Mi40IDEzOC4yIDAgMTkxLjJMMzYwLjggNDcyLjljLTkuMyA5LjQtMjQuNSA5LjUtMzMuOSAuMnMtOS41LTI0LjUtLjItMzMuOUw0MzguNiAzMjUuOWMzMy45LTM0LjMgMzMuOS04OS40IDAtMTIzLjdMMzEwLjkgNzIuOWMtOS4zLTkuNC05LjItMjQuNiAuMi0zMy45czI0LjYtOS4yIDMzLjkgLjJ6TTAgMjI5LjVMMCA4MEMwIDUzLjUgMjEuNSAzMiA0OCAzMmwxNDkuNSAwYzE3IDAgMzMuMyA2LjcgNDUuMyAxOC43bDE2OCAxNjhjMjUgMjUgMjUgNjUuNSAwIDkwLjVMMjc3LjMgNDQyLjdjLTI1IDI1LTY1LjUgMjUtOTAuNSAwbC0xNjgtMTY4QzYuNyAyNjIuNyAwIDI0Ni41IDAgMjI5LjV6TTE0NCAxNDRhMzIgMzIgMCAxIDAgLTY0IDAgMzIgMzIgMCAxIDAgNjQgMHoiLz48L3N2Zz4%3D&labelColor=1E1E2E&color=45475A">
+</h4>
 
-**GetQuotes** is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
+<p align="center">
+  <strong>getquotes</strong> is a powerful command-line tool written in Rust that fetches and displays inspirational quotes directly from Wikiquote. Whether you're looking for motivation, wisdom, or just a quick pick-me-up, GetQuotes has got you covered. 🌟
+</p>
+
+## 📖 Table of contents
+
+- [🚀 Features](#-features)
+- [📥 Installation](#-installation)
+- [🧭 Configuration](#-configuration)
+- [💡 Usage](#-usage)
+- [🤝 Contributing](#-contributing)
+- [📜 License](#-license)
+- [🙏 Acknowledgments](#-acknowledgments)
+- [📬 Contact](#-contact)
+- [🌟 Show Your Support](#-show-your-support)
+
+______________________________________________________________________
+
+## 🚀 Features
+
+- **Fetch Quotes**: Get random quotes from Wikiquote. 📜
+- **Custom Authors**: Specify authors to fetch quotes from. 🖋️
+- **Rainbow Mode**: Display quotes in random colors. 🌈
+- **Offline Mode**: Use cached quotes when offline. 📴
+- **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
+- **Lightweight**: Fast and efficient, written in Rust. ⚡
 
 ______________________________________________________________________
 
@@ -13,12 +43,13 @@ ______________________________________________________________________
 
 | Repository | Command To Install | Version |
 | ---------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=rust)](https://crates.io/crates/getquotes) |
-| AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=archlinux)](https://aur.archlinux.org/packages/getquotes) |
-| AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=292324&logo=git)](https://aur.archlinux.org/packages/getquotes-git) |
+| Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=rust)](https://crates.io/crates/getquotes) |
+| AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=archlinux)](https://aur.archlinux.org/packages/getquotes) |
+| AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=git)](https://aur.archlinux.org/packages/getquotes-git) |
+| Homebrew | `brew install MuntasirSZN/programs/getquotes` | [![Homebrew](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/MuntasirSZN/homebrew-programs/master/Info/g/getquotes.json&query=$.versions.stable&label=Homebrew&labelColor=1E1E2E&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&logo=homebrew)](https://github.com/MuntasirSZN/homebrew-programs)
 
 > [!Note]
-> If you are on Arch Linux, you can install GetQuotes from the AUR using `yay` or `paru`.
+> You can install getquotes from the AUR using `yay` or `paru`, or any other AUR helper.
 
 ### Manual Installation
 
@@ -55,9 +86,9 @@ Get-Help getquotes
 
 ______________________________________________________________________
 
-## 🛠️ Configuration
+## 🧭 Configuration
 
-GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
+getquotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
 
 ```json
 {
@@ -77,7 +108,7 @@ GetQuotes can be configured using a JSON configuration file. The configuration f
 
 ______________________________________________________________________
 
-## 🛠️ Usage
+## 💡 Usage
 
 ### Basic Usage
 
@@ -145,17 +176,6 @@ getquotes --help
 
 ______________________________________________________________________
 
-## 🚀 Features
-
-- **Fetch Quotes**: Get random quotes from Wikiquote. 📜
-- **Custom Authors**: Specify authors to fetch quotes from. 🖋️
-- **Rainbow Mode**: Display quotes in random colors. 🌈
-- **Offline Mode**: Use cached quotes when offline. 📴
-- **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
-- **Lightweight**: Fast and efficient, written in Rust. ⚡
-
-______________________________________________________________________
-
 ## 🤝 Contributing
 
 We welcome contributions from the community! If you'd like to contribute, please follow these steps:
@@ -198,7 +218,3 @@ ______________________________________________________________________
 ## 🌟 Show Your Support
 
 If you find this project useful, please give it a ⭐️ on [GitHub](https://github.com/MuntasirSZN/getquotes)!
-
-______________________________________________________________________
-
-Happy quoting! 🎉

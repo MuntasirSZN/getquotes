@@ -1,0 +1,81 @@
+name: 🐞 Bug report
+description: "Report a bug in getquotes."
+title: "🐞 Bug: "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    id: branch
+    attributes:
+      label: "🤖 Which branch are you using?"
+      options:
+        - label: "dev"
+        - label: "main"
+  - type: textarea
+    id: desc
+    attributes:
+      label: "📜 Issue description:"
+      description: "Describe the issue in a *clear* and *concise* way. You should also attach `images`/`gifs` if it's a visual bug."
+      placeholder: "Colors not working when..."
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: "📑 Reproduction steps:"
+      description: "Give step by step instructions on how to recreate the issue using the `minimal init`."
+      placeholder: "1. Open an app."
+    validations:
+      required: true
+  - type: textarea
+    id: minit
+    attributes:
+      label: "💻 Minimal init:"
+      description: |
+        The minimal config file to reproduce the issue.
+        Put this in a file(e.g. `minit.json`) and do `getquotes --config minit.json` to run it.
+      value: |
+        ```json
+        {
+          "$schema": "https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config.schema.json",
+          "authors": [
+            "Mahatma Gandhi",
+            "Albert Einstein",
+            "Martin Luther King, Jr.",
+            "Leonardo da Vinci",
+            "Walt Disney",
+            "Edgar Allan Poe",
+            "Sigmund Freud",
+            "Thomas A. Edison",
+            "Robin Williams",
+            "Steve Jobs"
+          ]
+        }
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: "📜 Logs:"
+      description: |
+        After Reproducing the bug, go to ~/.config/getquotes. You will see a new file `getquotes.log` has been created in your ~/.config/getquotes directory.
+        Copy it's contents here.
+      placeholder: "Logs..."
+    validations:
+      required: true
+  - type: input
+    id: getquotes-ver
+    attributes:
+      label: "Getquotes version:"
+      description: "Getquotes version."
+      placeholder: "getquotes --version"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "✅ Expected behavior:"
+      description: "The expected behavior."
+      placeholder: "Getquotes should..."
+    validations:
+      required: true
