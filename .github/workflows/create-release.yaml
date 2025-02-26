@@ -112,10 +112,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: 📦 Bump Homebrew Formula
-        uses: dawidd6/action-homebrew-bump-formula@v4
-        with:
-          token: ${{ secrets.TOKEN }}
-          tap: MuntasirSZN/homebrew-programs
-          formula: getquotes
         env:
-          TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          git clone https://github.com/MuntasirSZN/hombrew-programs.git
+          ./ci/brew-ci.sh
