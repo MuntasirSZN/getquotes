@@ -21,6 +21,14 @@ jobs:
     uses: ./.github/workflows/create-release.yaml
     name: 🚀 Release
     needs: [build, test]
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+      AUR_USERNAME: ${{ secrets.AUR_USERNAME }}
+      AUR_EMAIL: ${{ secrets.AUR_EMAIL }}
+      AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+      TOKEN: ${{ secrets.TOKEN }}
+
   changelog:
     name: 📝 Update Changelog
     runs-on: ubuntu-latest
