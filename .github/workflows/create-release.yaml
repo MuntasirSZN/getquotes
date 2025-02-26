@@ -1,6 +1,19 @@
 name: ⚒️ Create Release
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      CRATES_IO_TOKEN:
+        required: true
+      AUR_USERNAME:
+        required: true
+      AUR_EMAIL:
+        required: true
+      AUR_SSH_PRIVATE_KEY:
+        required: true
+      TOKEN:
+        required: true
 jobs:
   release-github:
     name: 🚀 Create GitHub Release
