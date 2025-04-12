@@ -71,8 +71,10 @@ sed -i.bak -E '/getquotes-x86_64-unknown-linux-gnu\.tar\.gz/ { n; s/sha256 "[^"]
 rm "${FORMULA_FILE}.bak"
 
 # 5. Commit and push changes directly.
-COMMIT_MSG="getquotes ${LATEST_TAG}"
+COMMIT_MSG="chore: update getquotes ${LATEST_TAG}"
 echo "Committing changes: ${COMMIT_MSG}"
+git config user.name github-actions[bot]
+git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 git add "${FORMULA_FILE}"
 git commit -m "${COMMIT_MSG}"
 
