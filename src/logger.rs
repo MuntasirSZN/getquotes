@@ -1,6 +1,6 @@
 use dirs::home_dir;
 use std::error::Error as StdError;
-use std::fs::{create_dir_all, OpenOptions};
+use std::fs::{OpenOptions, create_dir_all};
 
 pub fn initialize_logger(log_file: &str) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let home = home_dir()
