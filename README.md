@@ -166,6 +166,21 @@ Specify the path to the configuration file using the `--config` option:
 getquotes --config /path/to/config.json
 ```
 
+### Completions
+
+You can generate shell completions for various shells:
+
+```bash
+getquotes --completions <shell>
+```
+Where shell can be one of the following:
+
+- bash
+- zsh
+- fish
+- powershell
+- elvish
+
 ### Help
 
 Display help information:
