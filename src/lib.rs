@@ -1,52 +1,23 @@
 pub mod background;
 pub mod cache;
+pub mod cli;
 pub mod config;
 pub mod logger;
 pub mod quotes;
 pub mod types;
 
+use crate::cli::Args;
+use crate::config::Config;
 use crate::config::{load_or_create_config, parse_hex_color};
-use clap::Parser;
+use clap::CommandFactory;
+use clap_complete::generate;
 use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{rng as thread_rng, Rng};
+use rand::{Rng, rng as thread_rng};
 use reqwest::Client;
 use std::error::Error as StdError;
-use crate::config::Config;
-
-const GIT_HASH: std::option::Option<&str> = try_revision_string!();
-
-#[derive(Parser, Debug)]
-#[command(name = "getquotes")]
-#[command(
-    about = "getquotes: A fully featured CLI tool to fetch and display quotes from Wikiquote"
-)]
-pub struct Args {
-    #[arg(help = "Specify a list of authors to fetch quotes from")]
-    pub authors: Option<String>,
-
-    #[arg(help = "Set the theme color for the displayed quotes")]
-    pub theme_color: Option<String>,
-
-    #[arg(help = "Set the maximum number of tries to fetch a quote")]
-    pub max_tries: Option<usize>,
-
-    #[arg(help = "Specify the log file path")]
-    pub log_file: Option<String>,
-
-    #[arg(long, help = "Enable rainbow mode for random quote colors")]
-    pub rainbow_mode: bool,
-
-    #[arg(long, help = "Initialize the quote cache for offline mode")]
-    pub init_cache: bool,
-
-    #[arg(long, help = "Run in offline mode, using cached quotes")]
-    pub offline: bool,
-
-    #[arg(long, help = "Print version information")]
-    pub version: bool,
-}
+use std::io;
 
 pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     // Load or create config file
@@ -54,10 +25,10 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
 
     // Update config with CLI options
     if let Some(authors_str) = args.authors {
-    cfg.authors = authors_str
-        .split(',')
-        .map(|s| s.trim().to_string())
-        .collect();
+        cfg.authors = authors_str
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .collect();
     }
 
     if let Some(theme_color) = args.theme_color {
@@ -69,6 +40,11 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     if let Some(log_file) = args.log_file {
         cfg.log_file = log_file;
     }
+    if let Some(shell) = args.completion {
+        let mut cmd = Args::command();
+        generate(shell, &mut cmd, "getquotes", &mut io::stdout());
+        return Ok(());
+    }
     cfg.rainbow_mode = args.rainbow_mode;
 
     // Initialize logger
@@ -77,11 +53,13 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
 
     debug!("Loaded config: {:?}", cfg);
 
+    const GIT_HASH: std::option::Option<&str> = try_revision_string!();
+
     if args.version {
         println!(
-            "getquotes v{} (commit {})",
+            "getquotes v{} \n Commit {}",
             env!("CARGO_PKG_VERSION"),
-            GIT_HASH.unwrap_or("")
+            GIT_HASH.unwrap_or("Hash Not Found")
         );
         return Ok(());
     }
@@ -178,12 +156,18 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     Err("Failed to retrieve a quote.".into())
 }
 
-fn display_offline_quote(cfg: &Config, color: (u8, u8, u8)) -> Result<(), Box<dyn StdError + Send + Sync>> {
+fn display_offline_quote(
+    cfg: &Config,
+    color: (u8, u8, u8),
+) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let cached_quotes = cache::get_cached_quotes()?;
 
     if cached_quotes.is_empty() {
         error!("No cached quotes available for offline mode");
-        return Err("No cached quotes available for offline mode. Please run with --init-cache first.".into());
+        return Err(
+            "No cached quotes available for offline mode. Please run with --init-cache first."
+                .into(),
+        );
     }
 
     let mut rng = thread_rng();
@@ -217,6 +201,9 @@ fn display_offline_quote(cfg: &Config, color: (u8, u8, u8)) -> Result<(), Box<dy
         dash.bold().green(),
         author.green()
     );
-    info!("Offline quote successfully displayed from author: {}", author);
+    info!(
+        "Offline quote successfully displayed from author: {}",
+        author
+    );
     Ok(())
 }

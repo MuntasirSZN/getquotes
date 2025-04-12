@@ -5,7 +5,8 @@ mod quotes;
 mod types;
 
 use clap::Parser;
-use getquotes::{run, Args};
+use getquotes::cli::Args;
+use getquotes::run;
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::sync::Arc;

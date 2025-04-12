@@ -115,5 +115,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git clone https://github.com/MuntasirSZN/hombrew-programs.git
+          git clone https://github.com/MuntasirSZN/homebrew-programs.git
           ./ci/brew-ci.sh
