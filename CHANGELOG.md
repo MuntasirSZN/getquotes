@@ -1,13 +1,65 @@
 
+<a name="v0.4.0"></a>
+
+## [v0.4.0](https://github.com/MuntasirSZN/getquotes/compare/v0.3.7...v0.4.0) (2025-04-12)
+
+### ✨ Features
+
+- completions, shorthands
+  - brew ci script
+  
+  ### 🐞 Bug Fixes
+
+- **ci:** use actions bot
+  
+  
+<a name="v0.3.7"></a>
+
+## [v0.3.7](https://github.com/MuntasirSZN/getquotes/compare/v0.3.6...v0.3.7) (2025-02-26)
+
+### 🐞 Bug Fixes
+
+- env
+  
+  
+<a name="v0.3.6"></a>
+
+## [v0.3.6](https://github.com/MuntasirSZN/getquotes/compare/v0.3.5...v0.3.6) (2025-02-26)
+
+### ✨ Features
+
+- homebrew and somenotes
+  - **aur:** conflicts field, bump to 0.3.5, aarch64 support
+  - **ci:** brew updater
+  - **docs:** add TODO.md and .bacon-locations(bacon lsp)
+  
+  ### 🐞 Bug Fixes
+
+- **ci:** environment vars
+  
+  
+<a name="v0.3.5"></a>
+
+## [v0.3.5](https://github.com/MuntasirSZN/getquotes/compare/v0.3.4...v0.3.5) (2025-02-19)
+
+### ✨ Features
+
+- **package:** Ready For Homebrew
+  
+  ### 🐞 Bug Fixes
+
+- **lockfile:** cargo
+  - **workflows:** dependency loop
+  - **workflows:** needs test
+  - **workflows:** tiny fix
+  - **workflows:** final 3 step fix
+  
+  
 <a name="v0.3.4"></a>
 
 ## [v0.3.4](https://github.com/MuntasirSZN/getquotes/compare/v0.3.3...v0.3.4) (2025-02-03)
 
-### Chore
 
-- **release:** v0.3.4
-  
-  
 <a name="v0.3.3"></a>
 
 ## [v0.3.3](https://github.com/MuntasirSZN/getquotes/compare/v0.3.2...v0.3.3) (2025-02-02)
@@ -17,11 +69,7 @@
 
 ## [v0.3.2](https://github.com/MuntasirSZN/getquotes/compare/v0.3.1...v0.3.2) (2025-02-02)
 
-### Chore
-
-- **release:** v0.3.2
-  
-  ### ✨ Features
+### ✨ Features
 
 - **workflow:** some verbosity
   - **workflow:** done making granular
@@ -41,17 +89,7 @@
 
 ## [v0.3.0](https://github.com/MuntasirSZN/getquotes/compare/v0.2.8...v0.3.0) (2025-02-02)
 
-### Build
-
-- **deps:** bump serde_json from 1.0.137 to 1.0.138
-  - **deps:** bump rand from 0.8.5 to 0.9.0
-  - **deps:** bump clap from 4.5.26 to 4.5.27
-  
-  ### Chore
-
-- **release:** v0.3.0
-  
-  ### 🐞 Bug Fixes
+### 🐞 Bug Fixes
 
 - **caching:** now cache is used perfectly
   - **rng:** depreacated funcs
@@ -71,12 +109,7 @@
 
 ## [v0.2.7](https://github.com/MuntasirSZN/getquotes/compare/v0.2.6...v0.2.7) (2025-01-20)
 
-### Build
-
-- **deps:** bump rusqlite from 0.32.1 to 0.33.0
-  - **deps:** bump serde_json from 1.0.135 to 1.0.137
-  
-  ### 🐞 Bug Fixes
+### 🐞 Bug Fixes
 
 - **script:** handle pkgver only fix(workflow): use updpkgsums chore(release): update to 0.2.7
   
@@ -85,20 +118,12 @@
 
 ## [v0.2.6](https://github.com/MuntasirSZN/getquotes/compare/v0.2.5...v0.2.6) (2025-01-18)
 
-### Chore
 
-- **release:** v0.2.6
-  
-  
 <a name="v0.2.5"></a>
 
 ## [v0.2.5](https://github.com/MuntasirSZN/getquotes/compare/v0.2.4...v0.2.5) (2025-01-18)
 
-### Chore
-
-- **release:** v0.2.5
-  
-  ### ✨ Features
+### ✨ Features
 
 - better changelog
   - All packages are in packages dir feat: CI scripts are in ci dir feat: Experimental homebrew (working currently) fix(workflow): Comply with changes
@@ -112,11 +137,7 @@
 
 ## [v0.2.4](https://github.com/MuntasirSZN/getquotes/compare/v0.2.3...v0.2.4) (2025-01-18)
 
-### Chore
-
-- **release:** v0.2.4
-  
-  ### 🐞 Bug Fixes
+### 🐞 Bug Fixes
 
 - **git-rev:** Dont panic!(), just return empty string
   - **readme:** Add versions, and some notes
@@ -178,16 +199,7 @@
 
 ## [v0.1.1](https://github.com/MuntasirSZN/getquotes/compare/v0.1.0...v0.1.1) (2025-01-17)
 
-### Build
-
-- **deps:** bump log from 0.4.22 to 0.4.25
-  
-  ### Chore
-
-- **release:** 0.1.1
-  - **workflow:** update to v3
-  
-  ### ✨ Features
+### ✨ Features
 
 - Add AUR
   
