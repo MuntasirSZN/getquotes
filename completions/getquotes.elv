@@ -26,6 +26,8 @@ set edit:completion:arg-completer[getquotes] = {|@words|
             cand --max-tries 'Set the maximum number of tries to fetch a quote'
             cand -l 'Specify the log file path'
             cand --log-file 'Specify the log file path'
+            cand -C 'Use a custom configuration file'
+            cand --config 'Use a custom configuration file'
             cand -c 'Generate shell completion script'
             cand --completion 'Generate shell completion script'
             cand -r 'Enable rainbow mode for random quote colors'

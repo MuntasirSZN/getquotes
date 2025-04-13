@@ -29,6 +29,8 @@ Register-ArgumentCompleter -Native -CommandName 'getquotes' -ScriptBlock {
             [CompletionResult]::new('--max-tries', '--max-tries', [CompletionResultType]::ParameterName, 'Set the maximum number of tries to fetch a quote')
             [CompletionResult]::new('-l', '-l', [CompletionResultType]::ParameterName, 'Specify the log file path')
             [CompletionResult]::new('--log-file', '--log-file', [CompletionResultType]::ParameterName, 'Specify the log file path')
+            [CompletionResult]::new('-C', '-C ', [CompletionResultType]::ParameterName, 'Use a custom configuration file')
+            [CompletionResult]::new('--config', '--config', [CompletionResultType]::ParameterName, 'Use a custom configuration file')
             [CompletionResult]::new('-c', '-c', [CompletionResultType]::ParameterName, 'Generate shell completion script')
             [CompletionResult]::new('--completion', '--completion', [CompletionResultType]::ParameterName, 'Generate shell completion script')
             [CompletionResult]::new('-r', '-r', [CompletionResultType]::ParameterName, 'Enable rainbow mode for random quote colors')

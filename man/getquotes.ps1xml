@@ -19,6 +19,12 @@ Run in offline mode using previously cached quotes. Requires prior cache initial
 .PARAMETER init-cache
 Initialize or update the quote cache for offline use.
 
+.PARAMETER completions
+Generate shell completions for the specified shell.
+
+.PARAMETER config
+Use custom configuration settings from a specified file.
+
 .EXAMPLE
 getquotes
 Fetches and displays a random quote.
@@ -39,9 +45,13 @@ Uses cached quotes in offline mode.
 getquotes --init-cache
 Initializes the quote cache.
 
+.EXAMPLE
+getquotes --completions bash
+Generates bash shell completions and prints them.
+
 .NOTES
 Author: Muntasir Mahmud
-Version: 0.1.0
+Version: 0.4.0
 GitHub: https://github.com/MuntasirSZN/getquotes
 
 .LINK

@@ -19,7 +19,7 @@ _getquotes() {
 
     case "${cmd}" in
         getquotes)
-            opts="-a -t -m -l -r -i -o -v -c -h --authors --theme-color --max-tries --log-file --rainbow-mode --init-cache --offline --version --completion --help"
+            opts="-a -t -m -l -r -i -o -v -C -c -h --authors --theme-color --max-tries --log-file --rainbow-mode --init-cache --offline --version --config --completion --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -54,6 +54,14 @@ _getquotes() {
                     return 0
                     ;;
                 -l)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --config)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -C)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;

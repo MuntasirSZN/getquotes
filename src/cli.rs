@@ -39,6 +39,9 @@ pub struct Args {
     #[arg(long, short, help = "Print version information")]
     pub version: bool,
 
+    #[arg(long, short = 'C', help = "Use a custom configuration file")]
+    pub config: Option<String>,
+
     #[arg(long, short, help = "Generate shell completion script")]
     pub completion: Option<Shell>,
 }

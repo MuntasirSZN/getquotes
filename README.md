@@ -162,6 +162,9 @@ getquotes --init-cache
 
 Specify the path to the configuration file using the `--config` option:
 
+> [!NOTE]
+> If file doesn't exist, it will be created with default values.
+
 ```bash
 getquotes --config /path/to/config.json
 ```

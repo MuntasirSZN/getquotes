@@ -2,6 +2,7 @@ complete -c getquotes -s a -l authors -d 'Specify a list of authors to fetch quo
 complete -c getquotes -s t -l theme-color -d 'Set the theme color for the displayed quotes' -r
 complete -c getquotes -s m -l max-tries -d 'Set the maximum number of tries to fetch a quote' -r
 complete -c getquotes -s l -l log-file -d 'Specify the log file path' -r
+complete -c getquotes -s C -l config -d 'Use a custom configuration file' -r
 complete -c getquotes -s c -l completion -d 'Generate shell completion script' -r -f -a "bash\t''
 elvish\t''
 fish\t''

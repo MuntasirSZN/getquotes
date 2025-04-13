@@ -23,8 +23,11 @@ Use cached quotes when offline.
 \fB\-i\fR, \fB\-\-init\-cache\fR
 Initialize the quote cache for offline mode.
 .TP
-\fB\-c\fR, \fB\-\-config\fR \fIFILE\fR
-Specify the path to the configuration file.
+\fB\-C\fR, \fB\-\-config\fR \fIFILE\fR
+Use a custom configuration file instead of the default one. It will create it at the specified path if it doesn't exist.
+.TP
+\fB\-c\fR, \fB\-\-completion\fR \fISHELL\fR
+Generate shell completion script for the specified shell. Supported shells: bash, zsh, fish, powershell, elvish
 .SH CONFIGURATION
 GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in \fIconfig.schema.json\fR. Example configuration:
 .nf
@@ -42,14 +45,9 @@ getquotes \-\-authors "Albert Einstein,Mahatma Gandhi"
 getquotes \-\-rainbow\-mode
 getquotes \-\-offline
 .fi
-.SH SEE ALSO
-Wikiquote(1), Cargo(1)
 .SH COPYRIGHT
 This project is licensed under the MIT License. See the LICENSE file for details.
 .SH AUTHORS
 MuntasirSZN <muntasir.joypurhat@gmail.com>
 .SH REPORTING BUGS
 Report bugs on the GitHub Issues Page: https://github.com/MuntasirSZN/getquotes/issues
-.SH ACKNOWLEDGMENTS
-- Wikiquote for providing the quotes.
-- Rust Community for the amazing ecosystem and tools.

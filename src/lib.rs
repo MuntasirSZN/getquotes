@@ -8,20 +8,24 @@ pub mod types;
 
 use crate::cli::Args;
 use crate::config::Config;
-use crate::config::{load_or_create_config, parse_hex_color};
+use crate::config::{load_or_create_config, load_or_create_config_from_path, parse_hex_color};
 use clap::CommandFactory;
 use clap_complete::generate;
 use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{Rng, rng as thread_rng};
+use rand::{rng as thread_rng, Rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::io;
 
 pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     // Load or create config file
-    let mut cfg = load_or_create_config()?;
+    let mut cfg = if let Some(config_path) = &args.config {
+        load_or_create_config_from_path(config_path)?
+    } else {
+        load_or_create_config()?
+    };
 
     // Update config with CLI options
     if let Some(authors_str) = args.authors {

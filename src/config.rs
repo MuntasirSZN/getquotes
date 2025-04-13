@@ -2,7 +2,7 @@ use dirs::home_dir;
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::error::Error as StdError;
-use std::fs::{File, create_dir_all};
+use std::fs::{create_dir_all, File};
 use std::io::{BufReader, BufWriter};
 use std::path::PathBuf;
 
@@ -80,6 +80,34 @@ pub fn get_config_path() -> Result<PathBuf, Box<dyn StdError + Send + Sync>> {
     create_dir_all(&config_dir)?;
     let config_path = config_dir.join("config.json");
     Ok(config_path)
+}
+pub fn load_or_create_config_from_path(
+    path: &str,
+) -> Result<Config, Box<dyn StdError + Send + Sync>> {
+    let config_path = PathBuf::from(path);
+    if !config_path.exists() {
+        if let Some(parent_dir) = config_path.parent() {
+            create_dir_all(parent_dir)?;
+        }
+        let default_config = Config {
+            authors: default_authors(),
+            theme_color: default_theme_color(),
+            max_tries: default_max_tries(),
+            log_file: default_log_file(),
+            rainbow_mode: default_rainbow_mode(),
+        };
+        let file = File::create(&config_path)?;
+        let writer = BufWriter::new(file);
+        serde_json::to_writer_pretty(writer, &default_config)?;
+        info!("Config file created at: {:?}", config_path);
+        return Ok(default_config);
+    }
+
+    let file = File::open(&config_path)?;
+    let reader = BufReader::new(file);
+    let config: Config = serde_json::from_reader(reader)?;
+    info!("Config file loaded from: {:?}", config_path);
+    Ok(config)
 }
 
 pub fn parse_hex_color(hex_str: &str) -> Option<(u8, u8, u8)> {
