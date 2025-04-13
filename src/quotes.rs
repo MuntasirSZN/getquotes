@@ -4,13 +4,19 @@ use reqwest::Client;
 use scraper::{Html, Selector};
 use std::error::Error as StdError;
 
+// Get API base URL from environment or use default
+fn get_api_base_url() -> String {
+    std::env::var("WIKIQUOTE_API_URL").unwrap_or_else(|_| "https://en.wikiquote.org".to_string())
+}
+
 pub async fn get_author_sections(
     client: &Client,
     author: &str,
 ) -> Result<Option<(String, Vec<Section>)>, Box<dyn StdError + Send + Sync>> {
     let author_encoded = urlencoding::encode(author);
     let api_url = format!(
-        "https://en.wikiquote.org/w/api.php?action=parse&format=json&prop=sections&page={}",
+        "{}/w/api.php?action=parse&format=json&prop=sections&page={}",
+        get_api_base_url(),
         author_encoded
     );
 
@@ -36,8 +42,10 @@ pub async fn fetch_quotes(
 ) -> Result<Vec<String>, Box<dyn StdError + Send + Sync>> {
     let title_encoded = urlencoding::encode(title);
     let api_url = format!(
-        "https://en.wikiquote.org/w/api.php?action=parse&format=json&prop=text&page={}&section={}",
-        title_encoded, section
+        "{}/w/api.php?action=parse&format=json&prop=text&page={}&section={}",
+        get_api_base_url(),
+        title_encoded,
+        section
     );
 
     trace!("Fetching quotes from URL: {}", api_url);

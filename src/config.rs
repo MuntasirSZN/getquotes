@@ -3,7 +3,7 @@ use log::info;
 use serde::{Deserialize, Serialize};
 use std::error::Error as StdError;
 use std::fs::{File, create_dir_all, read_to_string, write};
-use std::io::{BufReader, BufWriter};
+use std::io::BufReader;
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]

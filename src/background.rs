@@ -26,7 +26,7 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
                             let conn = Connection::open(db_path.to_str().unwrap())?;
                             match conn.execute(
                                 "INSERT OR IGNORE INTO quotes (author, quote) VALUES (?1, ?2)",
-                                &[&author, &quote],
+                                [author, &quote],
                             ) {
                                 Ok(_) => println!("Cached quote: {}", quote),
                                 Err(e) => eprintln!("Failed to cache quote: {}", e),
