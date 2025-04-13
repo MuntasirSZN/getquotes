@@ -11,8 +11,6 @@
   - [ ] Find A Free API that can give images of renowned authors.
 - [ ] Table like printing in CLI.
   - [ ] Implement image rendering first.
-- [ ] Refactor code for performance.
-- [ ] Add typos CLI.
 
 #### Low Priority
 
