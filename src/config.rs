@@ -2,7 +2,7 @@ use dirs::home_dir;
 use log::info;
 use serde::{Deserialize, Serialize};
 use std::error::Error as StdError;
-use std::fs::{create_dir_all, File};
+use std::fs::{File, create_dir_all, read_to_string, write};
 use std::io::{BufReader, BufWriter};
 use std::path::PathBuf;
 
@@ -59,16 +59,14 @@ pub fn load_or_create_config() -> Result<Config, Box<dyn StdError + Send + Sync>
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
         };
-        let file = File::create(&config_path)?;
-        let writer = BufWriter::new(file);
-        serde_json::to_writer_pretty(writer, &default_config)?;
+        let toml_string = toml::to_string_pretty(&default_config)?;
+        write(&config_path, toml_string)?;
         info!("Config file created at: {:?}", config_path);
         return Ok(default_config);
     }
 
-    let file = File::open(&config_path)?;
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader)?;
+    let toml_content = read_to_string(&config_path)?;
+    let config: Config = toml::from_str(&toml_content)?;
     info!("Config file loaded from: {:?}", config_path);
     Ok(config)
 }
@@ -78,9 +76,10 @@ pub fn get_config_path() -> Result<PathBuf, Box<dyn StdError + Send + Sync>> {
         .ok_or_else(|| Box::<dyn StdError + Send + Sync>::from("Unable to find home directory."))?;
     let config_dir = home.join(".config/getquotes");
     create_dir_all(&config_dir)?;
-    let config_path = config_dir.join("config.json");
+    let config_path = config_dir.join("config.toml");
     Ok(config_path)
 }
+
 pub fn load_or_create_config_from_path(
     path: &str,
 ) -> Result<Config, Box<dyn StdError + Send + Sync>> {
@@ -96,16 +95,14 @@ pub fn load_or_create_config_from_path(
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
         };
-        let file = File::create(&config_path)?;
-        let writer = BufWriter::new(file);
-        serde_json::to_writer_pretty(writer, &default_config)?;
+        let toml_string = toml::to_string_pretty(&default_config)?;
+        write(&config_path, toml_string)?;
         info!("Config file created at: {:?}", config_path);
         return Ok(default_config);
     }
 
-    let file = File::open(&config_path)?;
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader)?;
+    let toml_content = read_to_string(&config_path)?;
+    let config: Config = toml::from_str(&toml_content)?;
     info!("Config file loaded from: {:?}", config_path);
     Ok(config)
 }
@@ -124,4 +121,37 @@ pub fn parse_hex_color(hex_str: &str) -> Option<(u8, u8, u8)> {
 
 pub fn default_rainbow_mode() -> bool {
     false
+}
+
+pub fn migrate_json_to_toml() -> Result<(), Box<dyn StdError + Send + Sync>> {
+    // Determine the JSON config path
+    let home = home_dir()
+        .ok_or_else(|| Box::<dyn StdError + Send + Sync>::from("Unable to find home directory."))?;
+    let config_dir = home.join(".config/getquotes");
+    let json_config_path = config_dir.join("config.json");
+
+    // Check if JSON config exists
+    if !json_config_path.exists() {
+        return Err("JSON config file not found. Nothing to migrate.".into());
+    }
+
+    // Read JSON config
+    let file = File::open(&json_config_path)?;
+    let reader = BufReader::new(file);
+    let config: Config = serde_json::from_reader(reader)?;
+
+    // Write as TOML
+    let config_path = get_config_path()?;
+    let toml_string = toml::to_string_pretty(&config)?;
+    write(&config_path, toml_string)?;
+
+    info!("Config migrated from JSON to TOML: {:?}", config_path);
+
+    // Don't delete the old JSON file - let the user do that manually if they wish
+    info!(
+        "Migration complete. The original JSON config file still exists at: {:?}",
+        json_config_path
+    );
+
+    Ok(())
 }

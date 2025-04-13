@@ -1,4 +1,4 @@
-.TH "GETQUOTES" "1" "10 October 2023" "1.0" "User Commands"
+.TH "GETQUOTES" "1" "13 April 2024" "0.4.0" "User Commands"
 .SH NAME
 getquotes \- fetch and display inspirational quotes from Wikiquote
 .SH SYNOPSIS
@@ -24,19 +24,33 @@ Use cached quotes when offline.
 Initialize the quote cache for offline mode.
 .TP
 \fB\-C\fR, \fB\-\-config\fR \fIFILE\fR
-Use a custom configuration file instead of the default one. It will create it at the specified path if it doesn't exist.
+Use a custom TOML configuration file instead of the default one. It will create it at the specified path if it doesn't exist.
 .TP
 \fB\-c\fR, \fB\-\-completion\fR \fISHELL\fR
 Generate shell completion script for the specified shell. Supported shells: bash, zsh, fish, powershell, elvish
+.TP
+\fB\-M\fR, \fB\-\-migrate\-config\fR
+Migrate JSON config to TOML format (will be removed in next major release)
 .SH CONFIGURATION
-GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in \fIconfig.schema.json\fR. Example configuration:
+GetQuotes can be configured using a TOML configuration file. Example configuration:
 .nf
-{
-  "authors": ["Albert Einstein", "Isaac Newton"],
-  "theme_color": "#FF5733",
-  "max_tries": 50,
-  "log_file": "custom_getquotes.log"
-}
+# List of authors to fetch quotes from
+authors = [
+    "Albert Einstein",
+    "Isaac Newton"
+]
+
+# Theme color in hex format
+theme_color = "#FF5733"
+
+# Maximum number of attempts to fetch a quote
+max_tries = 50
+
+# Log file path
+log_file = "custom_getquotes.log"
+
+# Enable rainbow mode for random colors
+rainbow_mode = false
 .fi
 .SH EXAMPLES
 .nf

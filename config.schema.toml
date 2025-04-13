@@ -1,0 +1,69 @@
+# Schema for GetQuotes configuration
+# This schema follows the Taplo schema format, based on JSON Schema
+
+"$schema" = "https://json-schema.org/draft-07/schema"
+title = "GetQuotes Configuration"
+description = "Configuration settings for the GetQuotes application."
+type = "object"
+
+[properties]
+[properties.authors]
+type = "array"
+description = "List of authors to fetch quotes from."
+minItems = 1
+
+[[properties.authors.examples]]
+["Albert Einstein", "Isaac Newton"]
+
+[properties.authors.items]
+type = "string"
+description = "Name of an author."
+
+[properties.theme_color]
+type = "string"
+description = "Hex color code for theming, e.g., \"#RRGGBB\" or \"RRGGBB\"."
+pattern = "^#?[0-9A-Fa-f]{6}$"
+
+[[properties.theme_color.examples]]
+"#FF5733"
+
+[[properties.theme_color.examples]]
+"FF5733"
+
+[properties.max_tries]
+type = "integer"
+description = "Maximum number of attempts to find a quote."
+minimum = 1
+maximum = 100
+default = 30
+
+[[properties.max_tries.examples]]
+10
+
+[[properties.max_tries.examples]]
+50
+
+[properties.log_file]
+type = "string"
+description = "Path to the log file."
+default = "getquotes.log"
+
+[[properties.log_file.examples]]
+"logs/app.log"
+
+[[properties.log_file.examples]]
+"/var/log/getquotes.log"
+
+[properties.rainbow_mode]
+type = "boolean"
+description = "Enable rainbow mode for random quote colors."
+default = false
+
+[[properties.rainbow_mode.examples]]
+true
+
+[[properties.rainbow_mode.examples]]
+false
+
+required = ["authors", "theme_color"]
+additionalProperties = false

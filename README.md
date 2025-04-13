@@ -34,7 +34,7 @@ ______________________________________________________________________
 - **Custom Authors**: Specify authors to fetch quotes from. 🖋️
 - **Rainbow Mode**: Display quotes in random colors. 🌈
 - **Offline Mode**: Use cached quotes when offline. 📴
-- **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
+- **Configurable**: Customize theme color, log file, and more via a TOML configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
 ______________________________________________________________________
@@ -88,15 +88,26 @@ ______________________________________________________________________
 
 ## 🧭 Configuration
 
-getquotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
+getquotes can be configured using a TOML configuration file. The configuration file should adhere to the schema defined in `config.schema.toml`, which can be validated using [Taplo](https://taplo.tamasfe.dev/). Here's an example of a configuration file:
 
-```json
-{
-  "authors": ["Albert Einstein", "Isaac Newton"],
-  "theme_color": "#FF5733",
-  "max_tries": 50,
-  "log_file": "custom_getquotes.log"
-}
+```toml
+# List of authors to fetch quotes from
+authors = [
+    "Albert Einstein",
+    "Isaac Newton"
+]
+
+# Theme color in hex format
+theme_color = "#FF5733"
+
+# Maximum number of attempts to fetch a quote
+max_tries = 50
+
+# Log file path
+log_file = "custom_getquotes.log"
+
+# Enable rainbow mode for random colors
+rainbow_mode = false
 ```
 
 ### Properties
@@ -166,8 +177,19 @@ Specify the path to the configuration file using the `--config` option:
 > If file doesn't exist, it will be created with default values.
 
 ```bash
-getquotes --config /path/to/config.json
+getquotes --config /path/to/config.toml
 ```
+
+### Migrate Configuration
+
+If you have an existing JSON configuration file, you can migrate it to TOML format with:
+
+```bash
+getquotes --migrate-config
+```
+
+> [!NOTE]
+> This feature will be removed in the next major release.
 
 ### Completions
 

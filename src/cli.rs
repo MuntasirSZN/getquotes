@@ -39,9 +39,16 @@ pub struct Args {
     #[arg(long, short, help = "Print version information")]
     pub version: bool,
 
-    #[arg(long, short = 'C', help = "Use a custom configuration file")]
+    #[arg(long, short = 'C', help = "Use a custom TOML configuration file")]
     pub config: Option<String>,
 
     #[arg(long, short, help = "Generate shell completion script")]
     pub completion: Option<Shell>,
+
+    #[arg(
+        long,
+        short = 'M',
+        help = "Migrate JSON config to TOML format (will be removed in next major release)"
+    )]
+    pub migrate_config: bool,
 }

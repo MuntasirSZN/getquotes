@@ -23,7 +23,10 @@ Initialize or update the quote cache for offline use.
 Generate shell completions for the specified shell.
 
 .PARAMETER config
-Use custom configuration settings from a specified file.
+Use custom configuration settings from a specified TOML file.
+
+.PARAMETER migrate-config
+Migrate JSON config to TOML format (will be removed in next major release).
 
 .EXAMPLE
 getquotes
@@ -48,6 +51,10 @@ Initializes the quote cache.
 .EXAMPLE
 getquotes --completions bash
 Generates bash shell completions and prints them.
+
+.EXAMPLE
+getquotes --migrate-config
+Migrates configuration from JSON to TOML format.
 
 .NOTES
 Author: Muntasir Mahmud

@@ -23,8 +23,8 @@ _getquotes() {
 '--max-tries=[Set the maximum number of tries to fetch a quote]:MAX_TRIES:_default' \
 '-l+[Specify the log file path]:LOG_FILE:_default' \
 '--log-file=[Specify the log file path]:LOG_FILE:_default' \
-'-C+[Use a custom configuration file]:CONFIG:_default' \
-'--config=[Use a custom configuration file]:CONFIG:_default' \
+'-C+[Use a custom TOML configuration file]:CONFIG:_default' \
+'--config=[Use a custom TOML configuration file]:CONFIG:_default' \
 '-c+[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh)' \
 '--completion=[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh)' \
 '-r[Enable rainbow mode for random quote colors]' \
@@ -35,6 +35,8 @@ _getquotes() {
 '--offline[Run in offline mode, using cached quotes]' \
 '-v[Print version information]' \
 '--version[Print version information]' \
+'-M[Migrate JSON config to TOML format (will be removed in next major release)]' \
+'--migrate-config[Migrate JSON config to TOML format (will be removed in next major release)]' \
 '-h[Print help]' \
 '--help[Print help]' \
 && ret=0

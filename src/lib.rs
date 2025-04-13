@@ -14,12 +14,27 @@ use clap_complete::generate;
 use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{rng as thread_rng, Rng};
+use rand::{Rng, rng as thread_rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::io;
 
 pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
+    // Handle migration from JSON to TOML if requested
+    if args.migrate_config {
+        match config::migrate_json_to_toml() {
+            Ok(_) => {
+                println!("Successfully migrated configuration from JSON to TOML format.");
+                println!("The original JSON config file has been preserved.");
+                return Ok(());
+            }
+            Err(e) => {
+                eprintln!("Failed to migrate config: {}", e);
+                return Err(e);
+            }
+        }
+    }
+
     // Load or create config file
     let mut cfg = if let Some(config_path) = &args.config {
         load_or_create_config_from_path(config_path)?
