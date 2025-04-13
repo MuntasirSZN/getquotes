@@ -116,4 +116,5 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           git clone https://github.com/MuntasirSZN/homebrew-programs.git
+          git config --global url."https://${TOKEN}@github.com/".insteadOf "https://github.com/"
           ./ci/brew-ci.sh
