@@ -113,7 +113,7 @@ jobs:
           fetch-depth: 0
       - name: 📦 Bump Homebrew Formula
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
           git clone https://github.com/MuntasirSZN/homebrew-programs.git
           ./ci/brew-ci.sh
