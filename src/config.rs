@@ -1,6 +1,6 @@
-use dirs::home_dir;
 use log::info;
 use serde::{Deserialize, Serialize};
+use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::{File, create_dir_all, read_to_string, write};
 use std::io::BufReader;

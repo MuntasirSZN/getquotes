@@ -1,4 +1,4 @@
-use dirs::home_dir;
+use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::{OpenOptions, create_dir_all};
 use std::io::{self, Write};
