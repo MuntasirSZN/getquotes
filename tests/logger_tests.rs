@@ -13,7 +13,7 @@ fn test_initialize_logger() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
     initialize_logger(&log_file)?;
 
-    let home = std::env::var("HOME").unwrap();
+    let home = std::env::home_dir();
     let expected_log_path = Path::new(&home).join(".config/getquotes").join(&log_file);
 
     assert!(

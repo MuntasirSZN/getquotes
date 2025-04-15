@@ -38,7 +38,7 @@ fn test_run_with_version_flag() -> Result<(), Box<dyn std::error::Error + Send +
 #[test]
 fn test_run_with_migrate_config() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     common::setup_temp_home()?;
-    let home = std::env::var("HOME").unwrap();
+    let home = std::env::home_dir();
     let config_dir = Path::new(&home).join(".config/getquotes");
     let json_config_path = config_dir.join("config.json");
 

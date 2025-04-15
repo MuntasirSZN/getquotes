@@ -182,7 +182,7 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
 #[test]
 fn test_migrate_json_to_toml() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     common::setup_temp_home()?;
-    let home = std::env::var("HOME").unwrap();
+    let home = std::env::home_dir();
     let config_dir = Path::new(&home).join(".config/getquotes");
     let json_config_path = config_dir.join("config.json");
     let toml_config_path = config_dir.join("config.toml");
