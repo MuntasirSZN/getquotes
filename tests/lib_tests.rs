@@ -5,7 +5,7 @@ use getquotes::cli::Args;
 use getquotes::config::Config;
 use getquotes::run;
 use std::fs::{self, write};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tokio::runtime::Runtime;
 
 #[test]
@@ -39,7 +39,9 @@ fn test_run_with_version_flag() -> Result<(), Box<dyn std::error::Error + Send +
 fn test_run_with_migrate_config() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     common::setup_temp_home()?;
     let home = std::env::home_dir();
-    let config_dir = Path::new(&home).join(".config/getquotes");
+    let config_dir = home
+        .map(|path| path.join(".config/getquotes"))
+        .unwrap_or_else(|| PathBuf::from("~/.config/getquotes"));
     let json_config_path = config_dir.join("config.json");
 
     fs::create_dir_all(&config_dir)?;

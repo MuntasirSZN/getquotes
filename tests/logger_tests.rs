@@ -14,7 +14,10 @@ fn test_initialize_logger() -> Result<(), Box<dyn std::error::Error + Send + Syn
     initialize_logger(&log_file)?;
 
     let home = std::env::home_dir();
-    let expected_log_path = Path::new(&home).join(".config/getquotes").join(&log_file);
+    let expected_log_path = home.as_ref().map_or_else(
+        || Path::new("").join(&log_file),
+        |h| Path::new(h).join(".config/getquotes").join(&log_file),
+    );
 
     assert!(
         expected_log_path.exists(),

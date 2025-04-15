@@ -6,7 +6,7 @@ use getquotes::config::{
     migrate_json_to_toml, parse_hex_color,
 };
 use std::fs::{self};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tempdir::TempDir;
 
 #[test]
@@ -183,7 +183,9 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
 fn test_migrate_json_to_toml() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     common::setup_temp_home()?;
     let home = std::env::home_dir();
-    let config_dir = Path::new(&home).join(".config/getquotes");
+    let config_dir = home
+        .map(|path| path.join(".config/getquotes"))
+        .unwrap_or_else(|| PathBuf::from("~/.config/getquotes"));
     let json_config_path = config_dir.join("config.json");
     let toml_config_path = config_dir.join("config.toml");
 
