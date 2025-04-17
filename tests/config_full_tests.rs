@@ -6,7 +6,7 @@ use getquotes::config::{
     migrate_json_to_toml, parse_hex_color,
 };
 use std::fs::{self};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use tempdir::TempDir;
 
 #[test]

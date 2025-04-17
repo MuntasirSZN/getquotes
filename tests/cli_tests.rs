@@ -1,6 +1,6 @@
 use clap::{CommandFactory, Parser};
-use clap_complete::Shell;
 use getquotes::cli::Args;
+use getquotes::cli::Shell;
 
 #[test]
 fn test_cli_arguments() {

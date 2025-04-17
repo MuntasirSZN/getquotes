@@ -5,7 +5,7 @@ use getquotes::cli::Args;
 use getquotes::config::Config;
 use getquotes::run;
 use std::fs::{self, write};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use tokio::runtime::Runtime;
 
 #[test]
@@ -98,7 +98,7 @@ fn test_run_with_completion() -> Result<(), Box<dyn std::error::Error + Send + S
         offline: false,
         version: false,
         config: None,
-        completion: Some(clap_complete::Shell::Bash),
+        completion: Some(getquotes::cli::Shell::Bash),
         migrate_config: false,
     };
 
