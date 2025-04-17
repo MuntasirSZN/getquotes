@@ -20,7 +20,6 @@ use std::error::Error as StdError;
 use std::io;
 
 pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
-    // Handle migration from JSON to TOML if requested
     if args.migrate_config {
         match config::migrate_json_to_toml() {
             Ok(_) => {
@@ -35,14 +34,12 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         }
     }
 
-    // Load or create config file
     let mut cfg = if let Some(config_path) = &args.config {
         load_or_create_config_from_path(config_path)?
     } else {
         load_or_create_config()?
     };
 
-    // Update config with CLI options
     if let Some(authors_str) = args.authors {
         cfg.authors = authors_str
             .split(',')

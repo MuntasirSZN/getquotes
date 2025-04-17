@@ -23,10 +23,9 @@
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
-- [📬 Contact](#-contact)
 - [🌟 Show Your Support](#-show-your-support)
 
-______________________________________________________________________
+---
 
 ## 🚀 Features
 
@@ -37,7 +36,7 @@ ______________________________________________________________________
 - **Configurable**: Customize theme color, log file, and more via a TOML configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
-______________________________________________________________________
+---
 
 ## 📥 Installation
 
@@ -84,7 +83,7 @@ Get-Help getquotes
 > [!Important]
 > If you are building for android from source, you need the Android NDK installed and the `ANDROID_NDK_HOME` environment variable set to the NDK path.
 
-______________________________________________________________________
+---
 
 ## 🧭 Configuration
 
@@ -117,104 +116,32 @@ rainbow_mode = false
 - **max_tries**: The maximum number of attempts to find a quote (between 1 and 100, default is 30).
 - **log_file**: The path to the log file (default is "getquotes.log").
 
-______________________________________________________________________
+---
 
 ## 💡 Usage
 
-### Basic Usage
+```sh
+A simple cli tool to get quotes in your terminal using WikiQuotes
 
-To fetch and display a random quote, simply run:
+Usage: getquotes [OPTIONS]
 
-```bash
-getquotes
+Options:
+  -a, --authors <AUTHORS>          Specify a list of authors to fetch quotes from
+  -t, --theme-color <THEME_COLOR>  Set the theme color for the displayed quotes
+  -m, --max-tries <MAX_TRIES>      Set the maximum number of tries to fetch a quote
+  -l, --log-file <LOG_FILE>        Specify the log file path
+  -r, --rainbow-mode               Enable rainbow mode for random quote colors
+  -i, --init-cache                 Initialize the quote cache for offline mode
+  -o, --offline                    Run in offline mode, using cached quotes
+  -v, --version                    Print version information
+  -C, --config <CONFIG>            Use a custom TOML configuration file
+  -c, --completion <COMPLETION>    Generate shell completion script [possible values: bash, elvish, fish, powershell, zsh, nushell]
+  -M, --migrate-config             Migrate JSON config to TOML format (will be removed in next major release)
+  -h, --help                       Print help
+
+MuntasirSZN <muntasir.joypurhat@gmail.com>
 ```
-
-### Customizing Quotes
-
-You can specify authors to fetch quotes from:
-
-```bash
-getquotes --authors "Albert Einstein,Mahatma Gandhi"
-```
-
-### Theme Color
-
-Set the theme color using the configuration file or environment variables. Command-line options for theme color are not available.
-
-### Log File
-
-Specify the log file path in the configuration file or use the default "getquotes.log".
-
-### Rainbow Mode 🌈
-
-Enable rainbow mode for a colorful display:
-
-```bash
-getquotes --rainbow-mode
-```
-
-### Offline Mode
-
-Run in offline mode using cached quotes:
-
-```bash
-getquotes --offline
-```
-
-### Initialize Cache
-
-Initialize the quote cache for offline mode:
-
-```bash
-getquotes --init-cache
-```
-
-### Configuration File
-
-Specify the path to the configuration file using the `--config` option:
-
-> [!NOTE]
-> If file doesn't exist, it will be created with default values.
-
-```bash
-getquotes --config /path/to/config.toml
-```
-
-### Migrate Configuration
-
-If you have an existing JSON configuration file, you can migrate it to TOML format with:
-
-```bash
-getquotes --migrate-config
-```
-
-> [!NOTE]
-> This feature will be removed in the next major release.
-
-### Completions
-
-You can generate shell completions for various shells:
-
-```bash
-getquotes --completions <shell>
-```
-Where shell can be one of the following:
-
-- bash
-- zsh
-- fish
-- powershell
-- elvish
-
-### Help
-
-Display help information:
-
-```bash
-getquotes --help
-```
-
-______________________________________________________________________
+---
 
 ## 🤝 Contributing
 
@@ -229,15 +156,15 @@ Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contri
 
 ### Configuration Schema
 
-The configuration schema is defined in `config.schema.json`. Any contributions affecting the configuration should update this schema accordingly.
+The configuration schema is defined in `config.schema.toml`. Any contributions affecting the configuration should update this schema accordingly.
 
-______________________________________________________________________
+---
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-______________________________________________________________________
+---
 
 ## 🙏 Acknowledgments
 
@@ -245,15 +172,7 @@ ______________________________________________________________________
 - **Rust Community**: For the amazing ecosystem and tools. 🦀
 - **Inspiration**: This project was inspired by the need for a simple, daily dose of inspiration. 🌟
 
-______________________________________________________________________
-
-## 📬 Contact
-
-If you have any questions, feel free to reach out:
-
-- **MuntasirSZN**: [GitHub](https://github.com/MuntasirSZN) | [Email](mailto:muntasir.joypurhat@gmail.com)
-
-______________________________________________________________________
+---
 
 ## 🌟 Show Your Support
 

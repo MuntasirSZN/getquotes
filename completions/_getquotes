@@ -25,8 +25,8 @@ _getquotes() {
 '--log-file=[Specify the log file path]:LOG_FILE:_default' \
 '-C+[Use a custom TOML configuration file]:CONFIG:_default' \
 '--config=[Use a custom TOML configuration file]:CONFIG:_default' \
-'-c+[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh)' \
-'--completion=[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh)' \
+'-c+[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
+'--completion=[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
 '-r[Enable rainbow mode for random quote colors]' \
 '--rainbow-mode[Enable rainbow mode for random quote colors]' \
 '-i[Initialize the quote cache for offline mode]' \

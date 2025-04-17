@@ -66,11 +66,11 @@ _getquotes() {
                     return 0
                     ;;
                 --completion)
-                    COMPREPLY=($(compgen -W "bash elvish fish powershell zsh" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "bash elvish fish powershell zsh nushell" -- "${cur}"))
                     return 0
                     ;;
                 -c)
-                    COMPREPLY=($(compgen -W "bash elvish fish powershell zsh" -- "${cur}"))
+                    COMPREPLY=($(compgen -W "bash elvish fish powershell zsh nushell" -- "${cur}"))
                     return 0
                     ;;
                 *)

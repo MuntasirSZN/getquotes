@@ -7,7 +7,8 @@ complete -c getquotes -s c -l completion -d 'Generate shell completion script' -
 elvish\t''
 fish\t''
 powershell\t''
-zsh\t''"
+zsh\t''
+nushell\t''"
 complete -c getquotes -s r -l rainbow-mode -d 'Enable rainbow mode for random quote colors'
 complete -c getquotes -s i -l init-cache -d 'Initialize the quote cache for offline mode'
 complete -c getquotes -s o -l offline -d 'Run in offline mode, using cached quotes'
