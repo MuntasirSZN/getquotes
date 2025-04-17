@@ -1,55 +1,52 @@
-.TH "GETQUOTES" "1" "10 October 2023" "1.0" "User Commands"
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH getquotes 1  "getquotes " 
 .SH NAME
-getquotes \- fetch and display inspirational quotes from Wikiquote
+getquotes \- A simple cli tool to get quotes in your terminal using WikiQuotes
 .SH SYNOPSIS
-.B getquotes
-[.I OPTIONS]
+\fBgetquotes\fR [\fB\-a\fR|\fB\-\-authors\fR] [\fB\-t\fR|\fB\-\-theme\-color\fR] [\fB\-m\fR|\fB\-\-max\-tries\fR] [\fB\-l\fR|\fB\-\-log\-file\fR] [\fB\-r\fR|\fB\-\-rainbow\-mode\fR] [\fB\-i\fR|\fB\-\-init\-cache\fR] [\fB\-o\fR|\fB\-\-offline\fR] [\fB\-v\fR|\fB\-\-version\fR] [\fB\-C\fR|\fB\-\-config\fR] [\fB\-c\fR|\fB\-\-completion\fR] [\fB\-M\fR|\fB\-\-migrate\-config\fR] [\fB\-h\fR|\fB\-\-help\fR] 
 .SH DESCRIPTION
-getquotes is a command-line tool written in Rust that fetches and displays inspirational quotes from Wikiquote. It allows users to fetch quotes from specific authors, enable colorful output, and use cached quotes in offline mode.
+A simple cli tool to get quotes in your terminal using WikiQuotes
 .SH OPTIONS
 .TP
-\fB\-h\fR, \fB\-\-help\fR
-Display help information.
+\fB\-a\fR, \fB\-\-authors\fR=\fIAUTHORS\fR
+Specify a list of authors to fetch quotes from
 .TP
-\fB\-a\fR, \fB\-\-authors\fR \fIAUTHORS\fR
-Fetch quotes from specified authors (comma-separated list).
+\fB\-t\fR, \fB\-\-theme\-color\fR=\fITHEME_COLOR\fR
+Set the theme color for the displayed quotes
+.TP
+\fB\-m\fR, \fB\-\-max\-tries\fR=\fIMAX_TRIES\fR
+Set the maximum number of tries to fetch a quote
+.TP
+\fB\-l\fR, \fB\-\-log\-file\fR=\fILOG_FILE\fR
+Specify the log file path
 .TP
 \fB\-r\fR, \fB\-\-rainbow\-mode\fR
-Enable rainbow mode for colorful display.
-.TP
-\fB\-o\fR, \fB\-\-offline\fR
-Use cached quotes when offline.
+Enable rainbow mode for random quote colors
 .TP
 \fB\-i\fR, \fB\-\-init\-cache\fR
-Initialize the quote cache for offline mode.
+Initialize the quote cache for offline mode
 .TP
-\fB\-c\fR, \fB\-\-config\fR \fIFILE\fR
-Specify the path to the configuration file.
-.SH CONFIGURATION
-GetQuotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in \fIconfig.schema.json\fR. Example configuration:
-.nf
-{
-  "authors": ["Albert Einstein", "Isaac Newton"],
-  "theme_color": "#FF5733",
-  "max_tries": 50,
-  "log_file": "custom_getquotes.log"
-}
-.fi
-.SH EXAMPLES
-.nf
-getquotes
-getquotes \-\-authors "Albert Einstein,Mahatma Gandhi"
-getquotes \-\-rainbow\-mode
-getquotes \-\-offline
-.fi
-.SH SEE ALSO
-Wikiquote(1), Cargo(1)
-.SH COPYRIGHT
-This project is licensed under the MIT License. See the LICENSE file for details.
+\fB\-o\fR, \fB\-\-offline\fR
+Run in offline mode, using cached quotes
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print version information
+.TP
+\fB\-C\fR, \fB\-\-config\fR=\fICONFIG\fR
+Use a custom TOML configuration file
+.TP
+\fB\-c\fR, \fB\-\-completion\fR=\fICOMPLETION\fR
+Generate shell completion script
+.br
+
+.br
+[\fIpossible values: \fRbash, elvish, fish, powershell, zsh, nushell]
+.TP
+\fB\-M\fR, \fB\-\-migrate\-config\fR
+Migrate JSON config to TOML format (will be removed in next major release)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
 .SH AUTHORS
 MuntasirSZN <muntasir.joypurhat@gmail.com>
-.SH REPORTING BUGS
-Report bugs on the GitHub Issues Page: https://github.com/MuntasirSZN/getquotes/issues
-.SH ACKNOWLEDGMENTS
-- Wikiquote for providing the quotes.
-- Rust Community for the amazing ecosystem and tools.

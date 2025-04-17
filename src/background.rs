@@ -1,12 +1,12 @@
+use crate::cache::get_database_path;
 use crate::config::load_or_create_config;
 use crate::quotes::{fetch_quotes, get_author_sections};
 use rand::Rng;
 use reqwest::Client;
 use rusqlite::Connection;
 use std::error::Error as StdError;
-use tokio::time;
 use std::sync::Arc;
-use crate::cache::get_database_path;
+use tokio::time;
 
 pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let cfg = load_or_create_config()?;
@@ -26,14 +26,17 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
                             let conn = Connection::open(db_path.to_str().unwrap())?;
                             match conn.execute(
                                 "INSERT OR IGNORE INTO quotes (author, quote) VALUES (?1, ?2)",
-                                &[&author, &quote],
+                                [author, &quote],
                             ) {
                                 Ok(_) => println!("Cached quote: {}", quote),
                                 Err(e) => eprintln!("Failed to cache quote: {}", e),
                             }
                         }
                     }
-                    Err(e) => eprintln!("Failed to fetch quotes for section {}: {}", section.index, e),
+                    Err(e) => eprintln!(
+                        "Failed to fetch quotes for section {}: {}",
+                        section.index, e
+                    ),
                 }
             }
         }

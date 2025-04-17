@@ -1,0 +1,9 @@
+# Taplo configuration for GetQuotes
+# This file helps Taplo validate TOML files against our schema
+
+[schema]
+# Associate schema with TOML files in the project
+[schema.associations]
+"config.toml" = "config.schema.toml"
+".config/getquotes/config.toml" = "config.schema.toml"
+"**/getquotes/*.toml" = "config.schema.toml"

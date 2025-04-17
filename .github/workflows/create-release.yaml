@@ -1,6 +1,17 @@
 name: ⚒️ Create Release
 on:
   workflow_call:
+    secrets:
+      CRATES_IO_TOKEN:
+        required: true
+      AUR_USERNAME:
+        required: true
+      AUR_EMAIL:
+        required: true
+      AUR_SSH_PRIVATE_KEY:
+        required: true
+      TOKEN:
+        required: true
 jobs:
   release-github:
     name: 🚀 Create GitHub Release
@@ -101,10 +112,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: 📦 Bump Homebrew Formula
-        uses: dawidd6/action-homebrew-bump-formula@v4
-        with:
-          token: ${{ secrets.TOKEN }}
-          tap: MuntasirSZN/homebrew-programs
-          formula: getquotes
         env:
           TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          git clone https://github.com/MuntasirSZN/homebrew-programs.git
+          git config --global url."https://${TOKEN}@github.com/".insteadOf "https://github.com/"
+          ./ci/brew-ci.sh

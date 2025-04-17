@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p release
           cp target/${{ matrix.target }}/release/getquotes release/
-          tar -czvf getquotes-${{ matrix.target }}.tar.gz -C release getquotes -C ../ man/getquotes.1 LICENSE
+          tar -czvf getquotes-${{ matrix.target }}.tar.gz -C release getquotes -C ../ man/getquotes.1 LICENSE completions/
       - name: 🚢 Upload Linux Artifact
         uses: actions/upload-artifact@v4
         with:

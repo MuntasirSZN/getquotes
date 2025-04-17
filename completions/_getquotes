@@ -1,0 +1,55 @@
+#compdef getquotes
+
+autoload -U is-at-least
+
+_getquotes() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+'-a+[Specify a list of authors to fetch quotes from]:AUTHORS:_default' \
+'--authors=[Specify a list of authors to fetch quotes from]:AUTHORS:_default' \
+'-t+[Set the theme color for the displayed quotes]:THEME_COLOR:_default' \
+'--theme-color=[Set the theme color for the displayed quotes]:THEME_COLOR:_default' \
+'-m+[Set the maximum number of tries to fetch a quote]:MAX_TRIES:_default' \
+'--max-tries=[Set the maximum number of tries to fetch a quote]:MAX_TRIES:_default' \
+'-l+[Specify the log file path]:LOG_FILE:_default' \
+'--log-file=[Specify the log file path]:LOG_FILE:_default' \
+'-C+[Use a custom TOML configuration file]:CONFIG:_default' \
+'--config=[Use a custom TOML configuration file]:CONFIG:_default' \
+'-c+[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
+'--completion=[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
+'-r[Enable rainbow mode for random quote colors]' \
+'--rainbow-mode[Enable rainbow mode for random quote colors]' \
+'-i[Initialize the quote cache for offline mode]' \
+'--init-cache[Initialize the quote cache for offline mode]' \
+'-o[Run in offline mode, using cached quotes]' \
+'--offline[Run in offline mode, using cached quotes]' \
+'-v[Print version information]' \
+'--version[Print version information]' \
+'-M[Migrate JSON config to TOML format (will be removed in next major release)]' \
+'--migrate-config[Migrate JSON config to TOML format (will be removed in next major release)]' \
+'-h[Print help]' \
+'--help[Print help]' \
+&& ret=0
+}
+
+(( $+functions[_getquotes_commands] )) ||
+_getquotes_commands() {
+    local commands; commands=()
+    _describe -t commands 'getquotes commands' commands "$@"
+}
+
+if [ "$funcstack[1]" = "_getquotes" ]; then
+    _getquotes "$@"
+else
+    compdef _getquotes getquotes
+fi

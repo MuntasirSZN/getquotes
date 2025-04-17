@@ -1,39 +1,51 @@
 [package]
 name = "getquotes"
-version = "0.3.5"
-edition = "2021"
+version = "0.4.0"
+edition = "2024"
 authors = ["MuntasirSZN <muntasir.joypurhat@gmail.com>"]
-description = "A command line tool to get quotes from the WikiQuotes"
+description = "A simple cli tool to get quotes in your terminal using WikiQuotes"
 license = "MIT"
 documentation = "https://github.com/MuntasirSZN/getquotes"
 readme = "README.md"
 repository = "https://github.com/MuntasirSZN/getquotes"
 keywords = ["quotes", "wikiquote", "command-line", "cli", "rust"]
 
+build = "build.rs"
+
 [dependencies]
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "blocking"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+toml = "0.8.12"
 tokio = { version = "1", features = ["full"] }
 rand = "0.9"
 urlencoding = "2.1.3"
-scraper = "0.22.0"
+scraper = "0.23.1"
 colored = "3.0.0"
-dirs = "6.0.0"
 html-escape = "0.2.13"
 logger = "0.4.0"
-env_logger = "0.11.6"
-log = "0.4.26"
-chrono = "0.4.39"
-rusqlite = { version = "0.33.0", features = ["bundled"] }
-clap = { version = "4.5.30", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
+env_logger = "0.11.8"
+log = "0.4.27"
+chrono = "0.4.40"
+rusqlite = { version = "0.34.0", features = ["bundled"] }
+clap = { version = "4.5.35", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
 git_rev = "0.1.0"
+clap_complete = "4.5.47"
+clap_complete_nushell = "4.5.5"
 
-[target.'cfg(target_os = "android")'.dependencies]
-android_logger = "0.14"
+[build-dependencies]
+clap = { version = "4.5.35", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
+clap_complete = "4.5.47"
+clap_complete_nushell = "4.5.5"
+clap_mangen = "0.2.26"
 
 [dev-dependencies]
 tempdir = "0.3.7"
+mockito = "1.2.0"
+lazy_static = "1.4.0"
+
+[target.'cfg(target_os = "android")'.dependencies]
+android_logger = "0.15"
 
 [profile.release]
 lto = true

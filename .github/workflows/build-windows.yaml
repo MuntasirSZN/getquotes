@@ -23,7 +23,7 @@ jobs:
         shell: pwsh
         run: |
           Compress-Archive `
-            -Path "target/${{ matrix.target }}/release/getquotes.exe", "man/getquotes.ps1xml", "LICENSE" `
+            -Path "target/${{ matrix.target }}/release/getquotes.exe", "man/getquotes.ps1xml", "LICENSE", "completions/"`
             -DestinationPath "getquotes-${{ matrix.target }}.zip"
       - name: 🚢 Upload Windows Artifact
         uses: actions/upload-artifact@v4

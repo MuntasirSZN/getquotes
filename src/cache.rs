@@ -1,5 +1,5 @@
-use dirs::home_dir;
 use rusqlite::{Connection, Result};
+use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::create_dir_all;
 use std::path::PathBuf;

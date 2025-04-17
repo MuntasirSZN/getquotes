@@ -23,10 +23,9 @@
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
 - [🙏 Acknowledgments](#-acknowledgments)
-- [📬 Contact](#-contact)
 - [🌟 Show Your Support](#-show-your-support)
 
-______________________________________________________________________
+---
 
 ## 🚀 Features
 
@@ -34,10 +33,10 @@ ______________________________________________________________________
 - **Custom Authors**: Specify authors to fetch quotes from. 🖋️
 - **Rainbow Mode**: Display quotes in random colors. 🌈
 - **Offline Mode**: Use cached quotes when offline. 📴
-- **Configurable**: Customize theme color, log file, and more via a JSON configuration file. 🛠️
+- **Configurable**: Customize theme color, log file, and more via a TOML configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
-______________________________________________________________________
+---
 
 ## 📥 Installation
 
@@ -84,19 +83,30 @@ Get-Help getquotes
 > [!Important]
 > If you are building for android from source, you need the Android NDK installed and the `ANDROID_NDK_HOME` environment variable set to the NDK path.
 
-______________________________________________________________________
+---
 
 ## 🧭 Configuration
 
-getquotes can be configured using a JSON configuration file. The configuration file should adhere to the schema defined in `config.schema.json`. Here's an example of a configuration file:
+getquotes can be configured using a TOML configuration file. The configuration file should adhere to the schema defined in `config.schema.toml`, which can be validated using [Taplo](https://taplo.tamasfe.dev/). Here's an example of a configuration file:
 
-```json
-{
-  "authors": ["Albert Einstein", "Isaac Newton"],
-  "theme_color": "#FF5733",
-  "max_tries": 50,
-  "log_file": "custom_getquotes.log"
-}
+```toml
+# List of authors to fetch quotes from
+authors = [
+    "Albert Einstein",
+    "Isaac Newton"
+]
+
+# Theme color in hex format
+theme_color = "#FF5733"
+
+# Maximum number of attempts to fetch a quote
+max_tries = 50
+
+# Log file path
+log_file = "custom_getquotes.log"
+
+# Enable rainbow mode for random colors
+rainbow_mode = false
 ```
 
 ### Properties
@@ -106,75 +116,32 @@ getquotes can be configured using a JSON configuration file. The configuration f
 - **max_tries**: The maximum number of attempts to find a quote (between 1 and 100, default is 30).
 - **log_file**: The path to the log file (default is "getquotes.log").
 
-______________________________________________________________________
+---
 
 ## 💡 Usage
 
-### Basic Usage
-
-To fetch and display a random quote, simply run:
-
-```bash
-getquotes
 ```
+A simple cli tool to get quotes in your terminal using WikiQuotes
 
-### Customizing Quotes
+Usage: getquotes [OPTIONS]
 
-You can specify authors to fetch quotes from:
+Options:
+  -a, --authors <AUTHORS>          Specify a list of authors to fetch quotes from
+  -t, --theme-color <THEME_COLOR>  Set the theme color for the displayed quotes
+  -m, --max-tries <MAX_TRIES>      Set the maximum number of tries to fetch a quote
+  -l, --log-file <LOG_FILE>        Specify the log file path
+  -r, --rainbow-mode               Enable rainbow mode for random quote colors
+  -i, --init-cache                 Initialize the quote cache for offline mode
+  -o, --offline                    Run in offline mode, using cached quotes
+  -v, --version                    Print version information
+  -C, --config <CONFIG>            Use a custom TOML configuration file
+  -c, --completion <COMPLETION>    Generate shell completion script [possible values: bash, elvish, fish, powershell, zsh, nushell]
+  -M, --migrate-config             Migrate JSON config to TOML format (will be removed in next major release)
+  -h, --help                       Print help
 
-```bash
-getquotes --authors "Albert Einstein,Mahatma Gandhi"
+MuntasirSZN <muntasir.joypurhat@gmail.com>
 ```
-
-### Theme Color
-
-Set the theme color using the configuration file or environment variables. Command-line options for theme color are not available.
-
-### Log File
-
-Specify the log file path in the configuration file or use the default "getquotes.log".
-
-### Rainbow Mode 🌈
-
-Enable rainbow mode for a colorful display:
-
-```bash
-getquotes --rainbow-mode
-```
-
-### Offline Mode
-
-Run in offline mode using cached quotes:
-
-```bash
-getquotes --offline
-```
-
-### Initialize Cache
-
-Initialize the quote cache for offline mode:
-
-```bash
-getquotes --init-cache
-```
-
-### Configuration File
-
-Specify the path to the configuration file using the `--config` option:
-
-```bash
-getquotes --config /path/to/config.json
-```
-
-### Help
-
-Display help information:
-
-```bash
-getquotes --help
-```
-
-______________________________________________________________________
+---
 
 ## 🤝 Contributing
 
@@ -189,15 +156,15 @@ Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contri
 
 ### Configuration Schema
 
-The configuration schema is defined in `config.schema.json`. Any contributions affecting the configuration should update this schema accordingly.
+The configuration schema is defined in `config.schema.toml`. Any contributions affecting the configuration should update this schema accordingly.
 
-______________________________________________________________________
+---
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-______________________________________________________________________
+---
 
 ## 🙏 Acknowledgments
 
@@ -205,15 +172,7 @@ ______________________________________________________________________
 - **Rust Community**: For the amazing ecosystem and tools. 🦀
 - **Inspiration**: This project was inspired by the need for a simple, daily dose of inspiration. 🌟
 
-______________________________________________________________________
-
-## 📬 Contact
-
-If you have any questions, feel free to reach out:
-
-- **MuntasirSZN**: [GitHub](https://github.com/MuntasirSZN) | [Email](mailto:muntasir.joypurhat@gmail.com)
-
-______________________________________________________________________
+---
 
 ## 🌟 Show Your Support
 
