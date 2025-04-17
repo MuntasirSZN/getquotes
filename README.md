@@ -120,7 +120,7 @@ rainbow_mode = false
 
 ## 💡 Usage
 
-```sh
+```
 A simple cli tool to get quotes in your terminal using WikiQuotes
 
 Usage: getquotes [OPTIONS]
