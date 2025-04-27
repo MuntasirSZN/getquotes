@@ -1,7 +1,27 @@
 
+<a name="v0.5.0"></a>
+
+## [v0.5.0](https://github.com/MuntasirSZN/getquotes/compare/v0.4.0...v0.5.0) (2025-04-27)
+
+### ✨ Features
+
+- loads of tests
+  - configuration file can now be specified via --config or -C
+  
+  ### 🐞 Bug Fixes
+
+- tests
+  - hombrew ci final
+  - homebrew ci part 1
+  - **tests:** properly handle Option<PathBuf>
+  - **tests:** use home_dir() from std instead of HOME env var
+  - **tests:** windows builds The reason is simple. The dirs crate uses windows apis to get the path, thus overriding it with temp_dir is impossible. std::env::home_dir was deprecated for a long long time. It was fixed in rust-lang/rust[#132515](https://github.com/MuntasirSZN/getquotes/issues/132515), but was still deprecated, thus showing warnings in edition 2024. In rust-lang/rust[#137327](https://github.com/MuntasirSZN/getquotes/issues/137327), it was undeprecated thus warnings won't show. Keep using the standard lib in this case. When next edition of rust releases, this will be solved.
+  - **tests:** format code and make it flexible to tests
+  
+  
 <a name="v0.4.0"></a>
 
-## [v0.4.0](https://github.com/MuntasirSZN/getquotes/compare/v0.3.7...v0.4.0) (2025-04-12)
+## [v0.4.0](https://github.com/MuntasirSZN/getquotes/compare/v0.3.7...v0.4.0) (2025-04-13)
 
 ### ✨ Features
 
@@ -10,7 +30,9 @@
   
   ### 🐞 Bug Fixes
 
-- **ci:** use actions bot
+- **ci:** windows build
+  - **ci:** archive part
+  - **ci:** use actions bot
   
   
 <a name="v0.3.7"></a>
