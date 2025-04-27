@@ -1,4 +1,14 @@
 
+<a name="v0.5.1"></a>
+
+## [v0.5.1](https://github.com/MuntasirSZN/getquotes/compare/v0.5.0...v0.5.1) (2025-04-27)
+
+### 🐞 Bug Fixes
+
+- use proper naming
+  - use proper naming
+  
+  
 <a name="v0.5.0"></a>
 
 ## [v0.5.0](https://github.com/MuntasirSZN/getquotes/compare/v0.4.0...v0.5.0) (2025-04-27)
