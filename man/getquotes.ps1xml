@@ -58,7 +58,7 @@ Migrates configuration from JSON to TOML format.
 
 .NOTES
 Author: Muntasir Mahmud
-Version: 0.5.1
+Version: 0.6.0
 GitHub: https://github.com/MuntasirSZN/getquotes
 
 .LINK

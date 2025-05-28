@@ -1,6 +1,6 @@
 # Maintainer: MuntasirSZN <muntasir.joypurhat@gmail.com>
 pkgname=getquotes
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A simple cli tool to get quotes in your terminal using WikiQuotes"
 arch=('x86_64' 'aarch64')
