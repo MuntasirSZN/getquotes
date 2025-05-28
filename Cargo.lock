@@ -524,7 +524,7 @@ dependencies = [
 
 [[package]]
 name = "getquotes"
-version = "0.5.1"
+version = "0.6.0"
 dependencies = [
  "android_logger",
  "clap",
