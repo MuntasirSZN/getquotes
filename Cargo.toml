@@ -36,7 +36,7 @@ jiff = "0.2.14"
 clap = { version = "4.5.39", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
 clap_complete = "4.5.52"
 clap_complete_nushell = "4.5.7"
-clap_mangen = "0.2.26"
+clap_mangen = "0.2.27"
 
 [dev-dependencies]
 tempdir = "0.3.7"
