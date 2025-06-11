@@ -707,7 +707,7 @@ dependencies = [
  "httparse",
  "language-tags",
  "log 0.3.9",
- "mime 0.2.6",
+ "mime",
  "num_cpus",
  "time",
  "traitobject",
@@ -1164,18 +1164,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "mime"
-version = "0.3.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
-
-[[package]]
 name = "mime_guess"
 version = "1.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "216929a5ee4dd316b1702eedf5e74548c123d370f47841ceaac38ca154690ca3"
 dependencies = [
- "mime 0.2.6",
+ "mime",
  "phf 0.7.24",
  "phf_codegen 0.7.24",
  "unicase",
@@ -1744,9 +1738,9 @@ dependencies = [
 
 [[package]]
 name = "reqwest"
-version = "0.12.19"
+version = "0.12.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a2f8e5513d63f2e5b386eb5106dc67eaf3f84e95258e210489136b8b92ad6119"
+checksum = "eabf4c97d9130e2bf606614eb937e86edac8292eaa6f422f995d7e8de1eb1813"
 dependencies = [
  "base64 0.22.1",
  "bytes",
@@ -1759,11 +1753,8 @@ dependencies = [
  "hyper 1.6.0",
  "hyper-rustls",
  "hyper-util",
- "ipnet",
  "js-sys",
  "log 0.4.27",
- "mime 0.3.17",
- "once_cell",
  "percent-encoding 2.3.1",
  "pin-project-lite",
  "quinn",
