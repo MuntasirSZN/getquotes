@@ -30,7 +30,7 @@ clap = { version = "4.5.40", features = ["std", "help", "cargo", "derive", "erro
 git_rev = "0.1.0"
 clap_complete = "4.5.54"
 clap_complete_nushell = "4.5.7"
-jiff = "0.2.14"
+jiff = "0.2.15"
 
 [build-dependencies]
 clap = { version = "4.5.40", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
