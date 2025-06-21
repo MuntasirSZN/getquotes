@@ -26,6 +26,7 @@ pub fn initialize_logger(log_file: &str) -> Result<(), Box<dyn StdError + Send +
     let file = io::LineWriter::new(file);
 
     // Create a new logger or get the existing one
+    #[cfg(not(target_os = "android"))]
     let logger = env_logger::Builder::from_default_env()
         .format(|buf, record| {
             writeln!(
@@ -37,6 +38,20 @@ pub fn initialize_logger(log_file: &str) -> Result<(), Box<dyn StdError + Send +
             )
         })
         .target(env_logger::Target::Pipe(Box::new(file)))
+        .build();
+
+    #[cfg(target_os = "android")]
+    let logger = android_logger::Builder::from_default_env()
+        .format(|buf, record| {
+            writeln!(
+                buf,
+                "{} [{}] - {}",
+                jiff::Zoned::now().strftime("%Y-%m-%dT%H:%M:%S"),
+                record.level(),
+                record.args()
+            )
+        })
+        .target(android_logger::Target::Pipe(Box::new(file)))
         .build();
 
     // Set the logger
