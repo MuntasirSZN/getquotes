@@ -1,8 +1,8 @@
 use std::error::Error;
-use tempdir::TempDir;
+use tempfile::TempDir;
 
 pub fn setup_temp_home() -> Result<TempDir, Box<dyn Error + Send + Sync>> {
-    let temp_dir = TempDir::new("getquotes_test")?;
+    let temp_dir = TempDir::new()?;
 
     #[cfg(windows)]
     unsafe {

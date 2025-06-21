@@ -7,7 +7,7 @@ use getquotes::config::{
 };
 use std::fs::{self};
 use std::path::PathBuf;
-use tempdir::TempDir;
+use tempfile::TempDir;
 
 #[test]
 fn test_default_config_values() {
@@ -142,7 +142,7 @@ fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::
 
 #[test]
 fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let temp_dir = TempDir::new("getquotes_config_test")?;
+    let temp_dir = TempDir::new()?;
     let custom_path = temp_dir.path().join("custom_config.toml");
 
     // The file doesn't exist yet
