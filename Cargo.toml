@@ -1,57 +1,80 @@
 [package]
 name = "getquotes"
 version = "0.6.0"
-edition = "2024"
 authors = ["MuntasirSZN <muntasir.joypurhat@gmail.com>"]
+edition = "2024"
 description = "A simple cli tool to get quotes in your terminal using WikiQuotes"
-license = "MIT"
 documentation = "https://github.com/MuntasirSZN/getquotes"
 readme = "README.md"
 repository = "https://github.com/MuntasirSZN/getquotes"
-keywords = ["quotes", "wikiquote", "command-line", "cli", "rust"]
-
+license = "MIT"
+keywords = ["cli", "command-line", "quotes", "rust", "wikiquote"]
 build = "build.rs"
 
+[package.metadata.android]
+build_targets = ["aarch64-linux-android"]
+
 [dependencies]
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "blocking"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-toml = "0.8.23"
-tokio = { version = "1", features = ["full"] }
-rand = "0.9"
-urlencoding = "2.1.3"
-scraper = "0.23.1"
-colored = "3.0.0"
-log = "0.4.27"
-rusqlite = { version = "0.36.0", features = ["bundled"] }
-clap = { version = "4.5.40", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
-git_rev = "0.1.0"
+clap = { version = "4.5.40", features = [
+  "cargo",
+  "color",
+  "derive",
+  "error-context",
+  "help",
+  "std",
+  "string",
+  "usage",
+  "wrap_help",
+] }
 clap_complete = "4.5.54"
 clap_complete_nushell = "4.5.7"
+colored = "3.0.0"
+git_rev = "0.1.0"
 jiff = "0.2.15"
+log = "0.4.27"
+rand = "0.9"
+reqwest = { version = "0.12", default-features = false, features = [
+  "blocking",
+  "json",
+  "rustls-tls",
+] }
+rusqlite = { version = "0.36.0", features = ["bundled"] }
+scraper = "0.23.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+toml = "0.8.23"
+urlencoding = "2.1.3"
+
+[dev-dependencies]
+lazy_static = "1.5.0"
+mockito = "1.7.0"
+tempfile = "3.20.0"
 
 [build-dependencies]
-clap = { version = "4.5.40", features = ["std", "help", "cargo", "derive", "error-context", "string", "color", "usage", "wrap_help"] }
+clap = { version = "4.5.40", features = [
+  "cargo",
+  "color",
+  "derive",
+  "error-context",
+  "help",
+  "std",
+  "string",
+  "usage",
+  "wrap_help",
+] }
 clap_complete = "4.5.54"
 clap_complete_nushell = "4.5.7"
 clap_mangen = "0.2.27"
 
-[dev-dependencies]
-mockito = "1.2.0"
-lazy_static = "1.4.0"
-tempfile = "3.20.0"
+[target.'cfg(not(target_os = "android"))'.dependencies]
+env_logger = "0.11.8"
 
 [target.'cfg(target_os = "android")'.dependencies]
 android_logger = "0.15"
 
-[target.'cfg(not(target_os = "android"))'.dependencies]
-env_logger = "0.11.8"
-
 [profile.release]
-lto = true
-strip = true
 opt-level = 3
+strip = true
+lto = true
 codegen-units = 1
-
-[package.metadata.android]
-build_targets = ["aarch64-linux-android"]
