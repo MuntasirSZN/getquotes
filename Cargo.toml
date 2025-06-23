@@ -1,6 +1,6 @@
 [package]
 name = "getquotes"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["MuntasirSZN <muntasir.joypurhat@gmail.com>"]
 edition = "2024"
 description = "A simple cli tool to get quotes in your terminal using WikiQuotes"
