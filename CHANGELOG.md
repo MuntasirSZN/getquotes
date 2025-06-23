@@ -1,4 +1,22 @@
 
+<a name="v0.6.1"></a>
+
+## [v0.6.1](https://github.com/MuntasirSZN/getquotes/compare/v0.6.0...v0.6.1) (2025-06-23)
+
+### 🐞 Bug Fixes
+
+- **security:** everything
+  
+  
+<a name="v0.6.0"></a>
+
+## [v0.6.0](https://github.com/MuntasirSZN/getquotes/compare/v0.5.1...v0.6.0) (2025-05-28)
+
+### 🐞 Bug Fixes
+
+- **cargo:** update dependencies to fix security vulnerabilities and use jiff instead of chrono
+  
+  
 <a name="v0.5.1"></a>
 
 ## [v0.5.1](https://github.com/MuntasirSZN/getquotes/compare/v0.5.0...v0.5.1) (2025-04-27)
