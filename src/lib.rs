@@ -4,11 +4,13 @@ pub mod cli;
 pub mod config;
 pub mod logger;
 pub mod quotes;
+pub mod throttle;
 pub mod types;
 
 use crate::cli::Args;
 use crate::config::Config;
 use crate::config::{load_or_create_config, load_or_create_config_from_path, parse_hex_color};
+use crate::throttle::ApiThrottler;
 use clap::CommandFactory;
 use clap_complete::generate;
 use colored::*;
@@ -28,7 +30,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                 return Ok(());
             }
             Err(e) => {
-                eprintln!("Failed to migrate config: {}", e);
+                eprintln!("Failed to migrate config: {e}");
                 return Err(e);
             }
         }
@@ -67,7 +69,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     logger::initialize_logger(&cfg.log_file)?;
     info!("Logger initialized. Log file: {}", cfg.log_file);
 
-    debug!("Loaded config: {:?}", cfg);
+    debug!("Loaded config: {cfg:?}");
 
     const GIT_HASH: std::option::Option<&str> = try_revision_string!();
 
@@ -104,21 +106,55 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         return display_offline_quote(&cfg, color);
     }
 
-    // Create an HTTP client
+    // Try cache first if prefer_cache is enabled (randomized data approach)
+    if cfg.prefer_cache {
+        info!("Trying to get quote from cache first (randomized data mode)");
+        match cache::get_random_cached_quote(&cfg.authors) {
+            Ok(Some((author, quote))) => {
+                // Successfully got a quote from cache
+                let colorized_quote = format!("\"{quote}\"").truecolor(color.0, color.1, color.2);
+                let dash = "-";
+
+                println!(
+                    "{}\n\n {:>99}{}",
+                    colorized_quote.bold(),
+                    dash.bold().green(),
+                    author.green()
+                );
+                info!("Quote successfully displayed from cache: {author}");
+                return Ok(());
+            }
+            Ok(None) => {
+                info!("No suitable quotes found in cache, falling back to API");
+            }
+            Err(err) => {
+                warn!("Failed to access cache: {err}, falling back to API");
+            }
+        }
+    }
+
+    // Create an HTTP client and throttler for API calls
     let client = Client::new();
-    info!("HTTP client initialized.");
+    let mut throttler = ApiThrottler::new(cfg.api_calls_per_minute);
+    info!(
+        "HTTP client initialized. API rate limit: {} calls/minute",
+        cfg.api_calls_per_minute
+    );
 
     // Attempt up to max_tries to find a quote
     let max_tries = cfg.max_tries;
     let mut rng = thread_rng();
 
     for attempt in 1..=max_tries {
-        debug!("Attempt {}/{}", attempt, max_tries);
+        debug!("Attempt {attempt}/{max_tries}");
         // Pick a random author from config
         let author_idx = rng.random_range(0..cfg.authors.len());
         let author = &cfg.authors[author_idx];
 
-        info!("Attempting to fetch quote for author: {}", author);
+        info!("Attempting to fetch quote for author: {author}");
+
+        // Apply throttling before making API call
+        throttler.throttle().await;
 
         // Get the page sections for the chosen author
         match quotes::get_author_sections(&client, author).await {
@@ -127,11 +163,15 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                     let mut found_quote = None;
                     for section in sections {
                         debug!("Fetching quotes from section: {}", section.line);
+
+                        // Apply throttling before making API call
+                        throttler.throttle().await;
+
                         let quotes =
                             match quotes::fetch_quotes(&client, &title, &section.index).await {
                                 Ok(q) => q,
                                 Err(err) => {
-                                    error!("Failed to fetch quotes for author {}: {}", author, err);
+                                    error!("Failed to fetch quotes for author {author}: {err}");
                                     continue;
                                 }
                             };
@@ -145,7 +185,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                     if let Some((auth_found, quote_found)) = found_quote {
                         // Apply the parsed hex color to the quote
                         let colorized_quote =
-                            format!("\"{}\"", quote_found).truecolor(color.0, color.1, color.2);
+                            format!("\"{quote_found}\"").truecolor(color.0, color.1, color.2);
                         let dash = "-";
 
                         // Print the quote and the author on a new line, right-aligned
@@ -155,20 +195,17 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                             dash.bold().green(),
                             auth_found.green()
                         );
-                        info!("Quote successfully displayed from author: {}", auth_found);
+                        info!("Quote successfully displayed from author: {auth_found}");
                         return Ok(());
                     }
                 }
             }
-            Ok(None) => warn!("No valid page found for author '{}', trying again.", author),
-            Err(err) => error!("Failed to get sections for author '{}': {}", author, err),
+            Ok(None) => warn!("No valid page found for author '{author}', trying again."),
+            Err(err) => error!("Failed to get sections for author '{author}': {err}"),
         }
     }
 
-    error!(
-        "Could not find a suitable quote after {} attempts.",
-        max_tries
-    );
+    error!("Could not find a suitable quote after {max_tries} attempts.");
     Err("Failed to retrieve a quote.".into())
 }
 
@@ -208,7 +245,7 @@ fn display_offline_quote(
     let (author, quote) = &filtered_quotes[quote_idx];
 
     // Display the randomly selected quote
-    let colorized_quote = format!("\"{}\"", quote).truecolor(color.0, color.1, color.2);
+    let colorized_quote = format!("\"{quote}\"").truecolor(color.0, color.1, color.2);
     let dash = "-";
 
     println!(
@@ -217,9 +254,6 @@ fn display_offline_quote(
         dash.bold().green(),
         author.green()
     );
-    info!(
-        "Offline quote successfully displayed from author: {}",
-        author
-    );
+    info!("Offline quote successfully displayed from author: {author}");
     Ok(())
 }

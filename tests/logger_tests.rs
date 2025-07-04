@@ -21,8 +21,7 @@ fn test_initialize_logger() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
     assert!(
         expected_log_path.exists(),
-        "Log file was not created at expected path: {:?}",
-        expected_log_path
+        "Log file was not created at expected path: {expected_log_path:?}"
     );
 
     // Write multiple log entries to ensure something gets written

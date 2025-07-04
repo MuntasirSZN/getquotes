@@ -128,6 +128,8 @@ fn test_run_with_offline_mode() -> Result<(), Box<dyn std::error::Error + Send +
         max_tries: getquotes::config::default_max_tries(),
         log_file: getquotes::config::default_log_file(),
         rainbow_mode: getquotes::config::default_rainbow_mode(),
+        prefer_cache: getquotes::config::default_prefer_cache(),
+        api_calls_per_minute: getquotes::config::default_api_calls_per_minute(),
     };
     let toml_string = toml::to_string_pretty(&config)?;
     write(&config_path, toml_string)?;

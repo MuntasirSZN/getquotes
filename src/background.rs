@@ -28,8 +28,8 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
                                 "INSERT OR IGNORE INTO quotes (author, quote) VALUES (?1, ?2)",
                                 [author, &quote],
                             ) {
-                                Ok(_) => println!("Cached quote: {}", quote),
-                                Err(e) => eprintln!("Failed to cache quote: {}", e),
+                                Ok(_) => println!("Cached quote: {quote}"),
+                                Err(e) => eprintln!("Failed to cache quote: {e}"),
                             }
                         }
                     }
@@ -40,8 +40,8 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
                 }
             }
         }
-        Ok(None) => println!("No valid page found for author '{}'.", author),
-        Err(e) => eprintln!("Failed to get sections for author '{}': {}", author, e),
+        Ok(None) => println!("No valid page found for author '{author}'."),
+        Err(e) => eprintln!("Failed to get sections for author '{author}': {e}"),
     }
     Ok(())
 }
@@ -49,7 +49,7 @@ pub async fn update_cache(client: Arc<Client>) -> Result<(), Box<dyn StdError + 
 pub async fn cache_quotes(client: Arc<Client>) {
     loop {
         if let Err(e) = update_cache(client.clone()).await {
-            eprintln!("Error updating cache: {}", e);
+            eprintln!("Error updating cache: {e}");
         }
         time::sleep(time::Duration::from_secs(24 * 3600)).await;
     }

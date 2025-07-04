@@ -20,7 +20,7 @@ pub async fn get_author_sections(
         author_encoded
     );
 
-    trace!("Fetching author sections from URL: {}", api_url);
+    trace!("Fetching author sections from URL: {api_url}");
     let res = client.get(&api_url).send().await?;
     if res.status().is_success() {
         let val: serde_json::Value = res.json().await?;
@@ -48,7 +48,7 @@ pub async fn fetch_quotes(
         section
     );
 
-    trace!("Fetching quotes from URL: {}", api_url);
+    trace!("Fetching quotes from URL: {api_url}");
     let res = client.get(&api_url).send().await?;
     if !res.status().is_success() {
         return Err(format!("Failed to fetch quotes: {}", res.status()).into());
