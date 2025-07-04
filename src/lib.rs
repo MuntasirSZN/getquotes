@@ -4,11 +4,13 @@ pub mod cli;
 pub mod config;
 pub mod logger;
 pub mod quotes;
+pub mod throttle;
 pub mod types;
 
 use crate::cli::Args;
 use crate::config::Config;
 use crate::config::{load_or_create_config, load_or_create_config_from_path, parse_hex_color};
+use crate::throttle::ApiThrottler;
 use clap::CommandFactory;
 use clap_complete::generate;
 use colored::*;
@@ -104,9 +106,37 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         return display_offline_quote(&cfg, color);
     }
 
-    // Create an HTTP client
+    // Try cache first if prefer_cache is enabled (randomized data approach)
+    if cfg.prefer_cache {
+        info!("Trying to get quote from cache first (randomized data mode)");
+        match cache::get_random_cached_quote(&cfg.authors) {
+            Ok(Some((author, quote))) => {
+                // Successfully got a quote from cache
+                let colorized_quote = format!("\"{}\"", quote).truecolor(color.0, color.1, color.2);
+                let dash = "-";
+
+                println!(
+                    "{}\n\n {:>99}{}",
+                    colorized_quote.bold(),
+                    dash.bold().green(),
+                    author.green()
+                );
+                info!("Quote successfully displayed from cache: {}", author);
+                return Ok(());
+            }
+            Ok(None) => {
+                info!("No suitable quotes found in cache, falling back to API");
+            }
+            Err(err) => {
+                warn!("Failed to access cache: {}, falling back to API", err);
+            }
+        }
+    }
+
+    // Create an HTTP client and throttler for API calls
     let client = Client::new();
-    info!("HTTP client initialized.");
+    let mut throttler = ApiThrottler::new(cfg.api_calls_per_minute);
+    info!("HTTP client initialized. API rate limit: {} calls/minute", cfg.api_calls_per_minute);
 
     // Attempt up to max_tries to find a quote
     let max_tries = cfg.max_tries;
@@ -120,6 +150,9 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
 
         info!("Attempting to fetch quote for author: {}", author);
 
+        // Apply throttling before making API call
+        throttler.throttle().await;
+
         // Get the page sections for the chosen author
         match quotes::get_author_sections(&client, author).await {
             Ok(Some((title, sections))) => {
@@ -127,6 +160,10 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                     let mut found_quote = None;
                     for section in sections {
                         debug!("Fetching quotes from section: {}", section.line);
+                        
+                        // Apply throttling before making API call
+                        throttler.throttle().await;
+                        
                         let quotes =
                             match quotes::fetch_quotes(&client, &title, &section.index).await {
                                 Ok(q) => q,

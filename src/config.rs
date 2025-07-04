@@ -17,6 +17,10 @@ pub struct Config {
     pub log_file: String,
     #[serde(default = "default_rainbow_mode")]
     pub rainbow_mode: bool,
+    #[serde(default = "default_prefer_cache")]
+    pub prefer_cache: bool,
+    #[serde(default = "default_api_calls_per_minute")]
+    pub api_calls_per_minute: usize,
 }
 
 pub fn default_theme_color() -> String {
@@ -29,6 +33,18 @@ pub fn default_max_tries() -> usize {
 
 pub fn default_log_file() -> String {
     String::from("getquotes.log")
+}
+
+pub fn default_rainbow_mode() -> bool {
+    false
+}
+
+pub fn default_prefer_cache() -> bool {
+    true
+}
+
+pub fn default_api_calls_per_minute() -> usize {
+    10
 }
 
 pub fn default_authors() -> Vec<String> {
@@ -58,6 +74,8 @@ pub fn load_or_create_config() -> Result<Config, Box<dyn StdError + Send + Sync>
             max_tries: default_max_tries(),
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
+            prefer_cache: default_prefer_cache(),
+            api_calls_per_minute: default_api_calls_per_minute(),
         };
         let toml_string = toml::to_string_pretty(&default_config)?;
         write(&config_path, toml_string)?;
@@ -94,6 +112,8 @@ pub fn load_or_create_config_from_path(
             max_tries: default_max_tries(),
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
+            prefer_cache: default_prefer_cache(),
+            api_calls_per_minute: default_api_calls_per_minute(),
         };
         let toml_string = toml::to_string_pretty(&default_config)?;
         write(&config_path, toml_string)?;
@@ -117,10 +137,6 @@ pub fn parse_hex_color(hex_str: &str) -> Option<(u8, u8, u8)> {
     let g = u8::from_str_radix(&clean_hex[2..4], 16).ok()?;
     let b = u8::from_str_radix(&clean_hex[4..6], 16).ok()?;
     Some((r, g, b))
-}
-
-pub fn default_rainbow_mode() -> bool {
-    false
 }
 
 pub fn migrate_json_to_toml() -> Result<(), Box<dyn StdError + Send + Sync>> {

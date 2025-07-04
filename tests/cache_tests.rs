@@ -1,6 +1,6 @@
 mod common;
 
-use getquotes::cache::{get_cached_quotes, get_database_path, init_cache};
+use getquotes::cache::{get_cached_quotes, get_database_path, init_cache, get_random_cached_quote};
 use rusqlite::{Connection, Result as SqliteResult};
 use std::path::PathBuf;
 
@@ -119,6 +119,57 @@ fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
     let empty_quotes = get_cached_quotes()?;
     assert_eq!(empty_quotes.len(), 0);
+
+    Ok(())
+}
+
+#[test]
+fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    common::setup_temp_home()?;
+
+    init_cache()?;
+
+    let db_path = get_database_path()?;
+    let conn = Connection::open(&db_path)?;
+
+    // Insert some test quotes
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Albert Einstein", "Imagination is more important than knowledge."],
+    )?;
+
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Albert Einstein", "Life is like riding a bicycle."],
+    )?;
+
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Mark Twain", "The secret of getting ahead is getting started."],
+    )?;
+
+    // Test getting random quote with author filter
+    let authors = vec!["Albert Einstein".to_string()];
+    let quote = get_random_cached_quote(&authors)?;
+    assert!(quote.is_some());
+    let (author, quote_text) = quote.unwrap();
+    assert_eq!(author, "Albert Einstein");
+    assert!(quote_text.contains("Imagination") || quote_text.contains("bicycle"));
+
+    // Test getting random quote with no filter
+    let no_filter: Vec<String> = vec![];
+    let quote = get_random_cached_quote(&no_filter)?;
+    assert!(quote.is_some());
+
+    // Test with non-existent author
+    let authors = vec!["Non-existent Author".to_string()];
+    let quote = get_random_cached_quote(&authors)?;
+    assert!(quote.is_none());
+
+    // Test with empty cache
+    conn.execute("DELETE FROM quotes", [])?;
+    let quote = get_random_cached_quote(&no_filter)?;
+    assert!(quote.is_none());
 
     Ok(())
 }

@@ -3,6 +3,7 @@ use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
+use rand::prelude::*;
 
 pub fn get_database_path() -> Result<PathBuf, Box<dyn StdError + Send + Sync>> {
     let home = home_dir().ok_or("Unable to find home directory.")?;
@@ -34,4 +35,34 @@ pub fn get_cached_quotes() -> Result<Vec<(String, String)>, Box<dyn StdError + S
         quotes.push(quote?);
     }
     Ok(quotes)
+}
+
+pub fn get_random_cached_quote(
+    authors: &[String],
+) -> Result<Option<(String, String)>, Box<dyn StdError + Send + Sync>> {
+    let cached_quotes = get_cached_quotes()?;
+    
+    if cached_quotes.is_empty() {
+        return Ok(None);
+    }
+
+    // Filter quotes by specified authors if provided
+    let filtered_quotes: Vec<_> = if !authors.is_empty() {
+        cached_quotes
+            .into_iter()
+            .filter(|(author, _)| authors.contains(author))
+            .collect()
+    } else {
+        cached_quotes
+    };
+
+    if filtered_quotes.is_empty() {
+        return Ok(None);
+    }
+
+    // Get a random quote
+    let mut rng = rand::rng();
+    let selected_quote = filtered_quotes.choose(&mut rng).cloned();
+    
+    Ok(selected_quote)
 }

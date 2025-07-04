@@ -2,7 +2,8 @@ mod common;
 
 use getquotes::cache::{get_cached_quotes, get_database_path, init_cache};
 use getquotes::config::{
-    Config, default_log_file, default_max_tries, default_rainbow_mode, default_theme_color,
+    Config, default_log_file, default_max_tries, default_rainbow_mode, default_theme_color, 
+    default_prefer_cache, default_api_calls_per_minute,
 };
 use mockito::Server;
 use reqwest::Client;
@@ -96,6 +97,8 @@ fn test_update_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             max_tries: default_max_tries(),
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
+            prefer_cache: default_prefer_cache(),
+            api_calls_per_minute: default_api_calls_per_minute(),
         };
 
         let author = &mock_config.authors[0];
