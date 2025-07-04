@@ -1,8 +1,8 @@
 ## High Priority
 
-- [ ] Change To Use Randomized Data
-  - [ ] Check this [link](https://github.com/XengShi/materialYouNewTab/issues/457#issuecomment-2587983130)
-- [ ] Don't nuke the API. Implement a threshold for API calls.
+- [x] Change To Use Randomized Data
+  - [x] Check this [link](https://github.com/XengShi/materialYouNewTab/issues/457#issuecomment-2587983130)
+- [x] Don't nuke the API. Implement a threshold for API calls.
   `Play spinner dots or similar animation at that time.`
 
 ### Medium Priority
