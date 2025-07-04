@@ -79,13 +79,13 @@ pub fn load_or_create_config() -> Result<Config, Box<dyn StdError + Send + Sync>
         };
         let toml_string = toml::to_string_pretty(&default_config)?;
         write(&config_path, toml_string)?;
-        info!("Config file created at: {:?}", config_path);
+        info!("Config file created at: {config_path:?}");
         return Ok(default_config);
     }
 
     let toml_content = read_to_string(&config_path)?;
     let config: Config = toml::from_str(&toml_content)?;
-    info!("Config file loaded from: {:?}", config_path);
+    info!("Config file loaded from: {config_path:?}");
     Ok(config)
 }
 
@@ -117,13 +117,13 @@ pub fn load_or_create_config_from_path(
         };
         let toml_string = toml::to_string_pretty(&default_config)?;
         write(&config_path, toml_string)?;
-        info!("Config file created at: {:?}", config_path);
+        info!("Config file created at: {config_path:?}");
         return Ok(default_config);
     }
 
     let toml_content = read_to_string(&config_path)?;
     let config: Config = toml::from_str(&toml_content)?;
-    info!("Config file loaded from: {:?}", config_path);
+    info!("Config file loaded from: {config_path:?}");
     Ok(config)
 }
 
@@ -161,12 +161,11 @@ pub fn migrate_json_to_toml() -> Result<(), Box<dyn StdError + Send + Sync>> {
     let toml_string = toml::to_string_pretty(&config)?;
     write(&config_path, toml_string)?;
 
-    info!("Config migrated from JSON to TOML: {:?}", config_path);
+    info!("Config migrated from JSON to TOML: {config_path:?}");
 
     // Don't delete the old JSON file - let the user do that manually if they wish
     info!(
-        "Migration complete. The original JSON config file still exists at: {:?}",
-        json_config_path
+        "Migration complete. The original JSON config file still exists at: {json_config_path:?}"
     );
 
     Ok(())

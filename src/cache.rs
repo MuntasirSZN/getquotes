@@ -1,9 +1,9 @@
+use rand::prelude::*;
 use rusqlite::{Connection, Result};
 use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::create_dir_all;
 use std::path::PathBuf;
-use rand::prelude::*;
 
 pub fn get_database_path() -> Result<PathBuf, Box<dyn StdError + Send + Sync>> {
     let home = home_dir().ok_or("Unable to find home directory.")?;
@@ -41,7 +41,7 @@ pub fn get_random_cached_quote(
     authors: &[String],
 ) -> Result<Option<(String, String)>, Box<dyn StdError + Send + Sync>> {
     let cached_quotes = get_cached_quotes()?;
-    
+
     if cached_quotes.is_empty() {
         return Ok(None);
     }
@@ -63,6 +63,6 @@ pub fn get_random_cached_quote(
     // Get a random quote
     let mut rng = rand::rng();
     let selected_quote = filtered_quotes.choose(&mut rng).cloned();
-    
+
     Ok(selected_quote)
 }

@@ -2,8 +2,8 @@ mod common;
 
 use getquotes::cache::{get_cached_quotes, get_database_path, init_cache};
 use getquotes::config::{
-    Config, default_log_file, default_max_tries, default_rainbow_mode, default_theme_color, 
-    default_prefer_cache, default_api_calls_per_minute,
+    Config, default_api_calls_per_minute, default_log_file, default_max_tries,
+    default_prefer_cache, default_rainbow_mode, default_theme_color,
 };
 use mockito::Server;
 use reqwest::Client;

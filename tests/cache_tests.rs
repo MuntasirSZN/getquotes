@@ -1,6 +1,6 @@
 mod common;
 
-use getquotes::cache::{get_cached_quotes, get_database_path, init_cache, get_random_cached_quote};
+use getquotes::cache::{get_cached_quotes, get_database_path, get_random_cached_quote, init_cache};
 use rusqlite::{Connection, Result as SqliteResult};
 use std::path::PathBuf;
 
@@ -135,7 +135,10 @@ fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send
     // Insert some test quotes
     conn.execute(
         "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
-        ["Albert Einstein", "Imagination is more important than knowledge."],
+        [
+            "Albert Einstein",
+            "Imagination is more important than knowledge.",
+        ],
     )?;
 
     conn.execute(
@@ -145,7 +148,10 @@ fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send
 
     conn.execute(
         "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
-        ["Mark Twain", "The secret of getting ahead is getting started."],
+        [
+            "Mark Twain",
+            "The secret of getting ahead is getting started.",
+        ],
     )?;
 
     // Test getting random quote with author filter

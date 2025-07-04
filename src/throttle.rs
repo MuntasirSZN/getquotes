@@ -34,8 +34,8 @@ impl ApiThrottler {
                 let wait_until = oldest_call + Duration::from_secs(60);
                 if wait_until > now {
                     let wait_duration = wait_until - now;
-                    println!("⏳ API rate limit reached. Waiting {:?}...", wait_duration);
-                    
+                    println!("⏳ API rate limit reached. Waiting {wait_duration:?}...");
+
                     // Show a simple spinner animation
                     let spinner_task = tokio::spawn(async move {
                         let chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
