@@ -30,7 +30,7 @@ clap_complete = "4.5.60"
 clap_complete_nushell = "4.5.10"
 colored = "3.0.0"
 git_rev = "0.1.0"
-jiff = "0.2.15"
+jiff = "0.2.16"
 log = "0.4.28"
 rand = "0.9"
 reqwest = { version = "0.12", default-features = false, features = [
