@@ -28,7 +28,7 @@ clap = { version = "4.5.54", features = [
 ] }
 clap_complete = "4.5.65"
 clap_complete_nushell = "4.5.10"
-colored = "3.0.0"
+colored = "3.1.1"
 git_rev = "0.1.0"
 jiff = "0.2.18"
 log = "0.4.29"
