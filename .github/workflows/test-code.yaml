@@ -47,7 +47,7 @@ jobs:
           components: rustfmt, clippy
 
       - name: 📦 Install Dependencies
-        run: cargo install cargo-nextest
+        run: cargo install cargo-nextest --locked
 
       - name: 🧪 Run Tests
         run: cargo nextest run --target ${{ matrix.target }}
