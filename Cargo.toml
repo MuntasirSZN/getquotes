@@ -32,7 +32,7 @@ colored = "3.1.1"
 git_rev = "0.1.0"
 jiff = "0.2.19"
 log = "0.4.29"
-rand = "0.9"
+rand = "0.10"
 reqwest = { version = "0.12", default-features = false, features = [
   "blocking",
   "json",
