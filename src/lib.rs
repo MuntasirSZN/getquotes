@@ -16,7 +16,7 @@ use clap_complete::generate;
 use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{Rng, rng as thread_rng};
+use rand::{RngExt, rng as thread_rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::io;
