@@ -1,7 +1,7 @@
 use crate::cache::get_database_path;
 use crate::config::load_or_create_config;
 use crate::quotes::{fetch_quotes, get_author_sections};
-use rand::Rng;
+use rand::RngExt;
 use reqwest::Client;
 use rusqlite::Connection;
 use std::error::Error as StdError;
