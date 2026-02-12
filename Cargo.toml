@@ -45,7 +45,7 @@ serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
 toml = "0.9.12"
 urlencoding = "2.1.3"
-env_logger = "0.11.8"
+env_logger = "0.11.9"
 
 [dev-dependencies]
 lazy_static = "1.5.0"
