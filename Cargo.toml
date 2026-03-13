@@ -27,7 +27,7 @@ clap = { version = "4.6.0", features = [
   "wrap_help",
 ] }
 clap_complete = "4.5.66"
-clap_complete_nushell = "4.5.10"
+clap_complete_nushell = "4.6.0"
 colored = "3.1.1"
 git_rev = "0.1.0"
 jiff = "0.2.23"
@@ -65,7 +65,7 @@ clap = { version = "4.6.0", features = [
   "wrap_help",
 ] }
 clap_complete = "4.5.66"
-clap_complete_nushell = "4.5.10"
+clap_complete_nushell = "4.6.0"
 clap_mangen = "0.2.33"
 
 [profile.release]
