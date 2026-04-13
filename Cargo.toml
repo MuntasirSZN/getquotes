@@ -26,7 +26,7 @@ clap = { version = "4.6.0", features = [
   "usage",
   "wrap_help",
 ] }
-clap_complete = "4.6.0"
+clap_complete = "4.6.1"
 clap_complete_nushell = "4.6.0"
 colored = "3.1.1"
 git_rev = "0.1.0"
@@ -64,7 +64,7 @@ clap = { version = "4.6.0", features = [
   "usage",
   "wrap_help",
 ] }
-clap_complete = "4.6.0"
+clap_complete = "4.6.1"
 clap_complete_nushell = "4.6.0"
 clap_mangen = "0.3.0"
 
