@@ -9,16 +9,16 @@ getquotes \- A simple cli tool to get quotes in your terminal using WikiQuotes
 A simple cli tool to get quotes in your terminal using WikiQuotes
 .SH OPTIONS
 .TP
-\fB\-a\fR, \fB\-\-authors\fR=\fIAUTHORS\fR
+\fB\-a\fR, \fB\-\-authors\fR \fI<AUTHORS>\fR
 Specify a list of authors to fetch quotes from
 .TP
-\fB\-t\fR, \fB\-\-theme\-color\fR=\fITHEME_COLOR\fR
+\fB\-t\fR, \fB\-\-theme\-color\fR \fI<THEME_COLOR>\fR
 Set the theme color for the displayed quotes
 .TP
-\fB\-m\fR, \fB\-\-max\-tries\fR=\fIMAX_TRIES\fR
+\fB\-m\fR, \fB\-\-max\-tries\fR \fI<MAX_TRIES>\fR
 Set the maximum number of tries to fetch a quote
 .TP
-\fB\-l\fR, \fB\-\-log\-file\fR=\fILOG_FILE\fR
+\fB\-l\fR, \fB\-\-log\-file\fR \fI<LOG_FILE>\fR
 Specify the log file path
 .TP
 \fB\-r\fR, \fB\-\-rainbow\-mode\fR
@@ -33,15 +33,29 @@ Run in offline mode, using cached quotes
 \fB\-v\fR, \fB\-\-version\fR
 Print version information
 .TP
-\fB\-C\fR, \fB\-\-config\fR=\fICONFIG\fR
+\fB\-C\fR, \fB\-\-config\fR \fI<CONFIG>\fR
 Use a custom TOML configuration file
 .TP
-\fB\-c\fR, \fB\-\-completion\fR=\fICOMPLETION\fR
+\fB\-c\fR, \fB\-\-completion\fR \fI<COMPLETION>\fR
 Generate shell completion script
 .br
 
 .br
-[\fIpossible values: \fRbash, elvish, fish, powershell, zsh, nushell]
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+bash
+.IP \(bu 2
+elvish
+.IP \(bu 2
+fish
+.IP \(bu 2
+powershell
+.IP \(bu 2
+zsh
+.IP \(bu 2
+nushell
+.RE
 .TP
 \fB\-M\fR, \fB\-\-migrate\-config\fR
 Migrate JSON config to TOML format (will be removed in next major release)
