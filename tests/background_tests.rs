@@ -21,7 +21,7 @@ lazy_static! {
 
 #[test]
 fn test_update_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 

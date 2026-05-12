@@ -39,10 +39,12 @@ pub fn initialize_logger(log_file: &str) -> Result<(), Box<dyn StdError + Send +
         .target(env_logger::Target::Pipe(Box::new(file)))
         .build();
 
-    // Set the logger
-    log::set_boxed_logger(Box::new(logger))
-        .map(|()| log::set_max_level(log::LevelFilter::Info))
-        .map_err(|e| Box::<dyn StdError + Send + Sync>::from(e.to_string()))?;
+    // Set the logger (silently ignore if one is already set, e.g. in tests)
+    if log::set_boxed_logger(Box::new(logger)).is_ok() {
+        log::set_max_level(log::LevelFilter::Info);
+    } else {
+        return Ok(());
+    }
 
     // Write an initialization message to ensure file has content
     log::info!("Logger initialized");

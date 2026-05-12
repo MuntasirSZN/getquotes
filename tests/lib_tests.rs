@@ -10,7 +10,7 @@ use tokio::runtime::Runtime;
 
 #[test]
 fn test_run_with_version_flag() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     let rt = Runtime::new()?;
 
@@ -37,7 +37,7 @@ fn test_run_with_version_flag() -> Result<(), Box<dyn std::error::Error + Send +
 
 #[test]
 fn test_run_with_migrate_config() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
     let home = std::env::home_dir();
     let config_dir = home
         .map(|path| path.join(".config/getquotes"))
@@ -84,7 +84,7 @@ fn test_run_with_migrate_config() -> Result<(), Box<dyn std::error::Error + Send
 
 #[test]
 fn test_run_with_completion() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     let rt = Runtime::new()?;
 
@@ -111,7 +111,7 @@ fn test_run_with_completion() -> Result<(), Box<dyn std::error::Error + Send + S
 
 #[test]
 fn test_run_with_offline_mode() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
     let db_path = getquotes::cache::get_database_path()?;
@@ -159,7 +159,7 @@ fn test_run_with_offline_mode() -> Result<(), Box<dyn std::error::Error + Send +
 
 #[test]
 fn test_run_with_custom_config() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let temp_dir = common::setup_temp_home()?;
+    let (_guard, temp_dir) = common::setup_temp_home()?;
 
     let custom_config_path = temp_dir.path().join("custom_config.toml");
     let custom_config = r#"

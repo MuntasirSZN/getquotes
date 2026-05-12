@@ -60,7 +60,7 @@ fn test_hex_color_parsing_invalid_formats() {
 
 #[test]
 fn test_get_config_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     let config_path = get_config_path()?;
 
@@ -74,7 +74,7 @@ fn test_get_config_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>
 
 #[test]
 fn test_load_or_create_config_new_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     // Get the config path and make sure it doesn't exist
     let config_path = get_config_path()?;
@@ -105,7 +105,7 @@ fn test_load_or_create_config_new_file() -> Result<(), Box<dyn std::error::Error
 #[test]
 fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
 {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     // Get the config path and create a custom config
     let config_path = get_config_path()?;
@@ -181,7 +181,7 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
 
 #[test]
 fn test_migrate_json_to_toml() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
     let home = std::env::home_dir();
     let config_dir = home
         .map(|path| path.join(".config/getquotes"))
@@ -229,7 +229,7 @@ fn test_migrate_json_to_toml() -> Result<(), Box<dyn std::error::Error + Send + 
 #[test]
 fn test_migrate_json_to_toml_missing_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
 {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     // Don't create a JSON file
 

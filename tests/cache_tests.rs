@@ -16,7 +16,7 @@ fn test_get_database_path() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
 #[test]
 fn test_init_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 
@@ -66,7 +66,7 @@ fn test_init_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
 #[test]
 fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 
@@ -125,7 +125,7 @@ fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
 #[test]
 fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 

@@ -18,10 +18,9 @@ pub async fn main() -> Result<(), Box<dyn StdError + Send + Sync>> {
 
     if args.init_cache {
         cache::init_cache()?;
-        let client_clone = client.clone();
-        tokio::spawn(async move {
-            background::cache_quotes(client_clone).await;
-        });
+        if let Err(e) = background::update_cache(client.clone()).await {
+            eprintln!("Warning: Failed to populate cache: {e}");
+        }
     }
 
     run(args).await

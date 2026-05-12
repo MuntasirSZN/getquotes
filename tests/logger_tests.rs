@@ -6,7 +6,7 @@ use std::path::Path;
 
 #[test]
 fn test_initialize_logger() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let temp_dir = common::setup_temp_home()?;
+    let (_guard, temp_dir) = common::setup_temp_home()?;
 
     // Make sure we're using a unique log file for this test
     let log_file = format!("test_logger_{}.log", std::process::id());
@@ -55,7 +55,7 @@ fn test_initialize_logger() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
 #[test]
 fn test_initialize_logger_custom_dir() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     let log_file = "custom/dir/test_logger.log";
 
