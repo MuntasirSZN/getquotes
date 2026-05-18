@@ -1,11 +1,6 @@
-mod background;
-mod cache;
-mod config;
-mod quotes;
-mod types;
-
 use clap::Parser;
 use getquotes::cli::Args;
+use getquotes::{background, cache};
 use getquotes::run;
 use reqwest::Client;
 use std::error::Error as StdError;
