@@ -1,3 +1,4 @@
+// TODO: Remove this allow, those are used actually. Needs investigation why clippy is mad.
 #![allow(dead_code)]
 
 use std::error::Error;

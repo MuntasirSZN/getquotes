@@ -6,7 +6,6 @@ use getquotes::config::{
     parse_hex_color,
 };
 use std::fs::{self};
-use std::path::PathBuf;
 use tempfile::TempDir;
 
 #[test]

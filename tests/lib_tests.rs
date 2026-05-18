@@ -5,7 +5,6 @@ use getquotes::cli::Args;
 use getquotes::config::Config;
 use getquotes::run;
 use std::fs::{self, write};
-use std::path::PathBuf;
 use tokio::runtime::Runtime;
 
 #[test]
