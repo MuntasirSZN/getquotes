@@ -13,5 +13,4 @@ complete -c getquotes -s r -l rainbow-mode -d 'Enable rainbow mode for random qu
 complete -c getquotes -s i -l init-cache -d 'Initialize the quote cache for offline mode'
 complete -c getquotes -s o -l offline -d 'Run in offline mode, using cached quotes'
 complete -c getquotes -s v -l version -d 'Print version information'
-complete -c getquotes -s M -l migrate-config -d 'Migrate JSON config to TOML format (will be removed in next major release)'
 complete -c getquotes -s h -l help -d 'Print help'

@@ -4,6 +4,8 @@ use getquotes::cache::{get_cached_quotes, get_database_path, get_random_cached_q
 use rusqlite::{Connection, Result as SqliteResult};
 use std::path::PathBuf;
 
+type QuoteTableInfo = (i32, String, String, i32, Option<String>, i32);
+
 #[test]
 fn test_get_database_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let db_path = get_database_path()?;
@@ -16,7 +18,7 @@ fn test_get_database_path() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
 #[test]
 fn test_init_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 
@@ -32,7 +34,7 @@ fn test_init_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     assert!(table_exists);
 
     let mut pragma_stmt = conn.prepare("PRAGMA table_info(quotes)")?;
-    let columns: SqliteResult<Vec<(i32, String, String, i32, Option<String>, i32)>> = pragma_stmt
+    let columns: SqliteResult<Vec<QuoteTableInfo>> = pragma_stmt
         .query_map([], |row| {
             Ok((
                 row.get(0)?, // cid
@@ -66,7 +68,7 @@ fn test_init_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
 #[test]
 fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 
@@ -125,7 +127,7 @@ fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Syn
 
 #[test]
 fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     init_cache()?;
 

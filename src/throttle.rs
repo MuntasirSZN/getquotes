@@ -29,28 +29,28 @@ impl ApiThrottler {
         }
 
         // Check if we need to wait
-        if self.call_times.len() >= self.max_calls_per_minute {
-            if let Some(&oldest_call) = self.call_times.front() {
-                let wait_until = oldest_call + Duration::from_secs(60);
-                if wait_until > now {
-                    let wait_duration = wait_until - now;
-                    println!("⏳ API rate limit reached. Waiting {wait_duration:?}...");
+        if self.call_times.len() >= self.max_calls_per_minute
+            && let Some(&oldest_call) = self.call_times.front()
+        {
+            let wait_until = oldest_call + Duration::from_secs(60);
+            if wait_until > now {
+                let wait_duration = wait_until - now;
+                println!("⏳ API rate limit reached. Waiting {wait_duration:?}...");
 
-                    // Show a simple spinner animation
-                    let spinner_task = tokio::spawn(async move {
-                        let chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-                        let mut i = 0;
-                        loop {
-                            print!("\r{} Please wait...", chars[i % chars.len()]);
-                            tokio::time::sleep(Duration::from_millis(100)).await;
-                            i += 1;
-                        }
-                    });
+                // Show a simple spinner animation
+                let spinner_task = tokio::spawn(async move {
+                    let chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+                    let mut i = 0;
+                    loop {
+                        print!("\r{} Please wait...", chars[i % chars.len()]);
+                        tokio::time::sleep(Duration::from_millis(100)).await;
+                        i += 1;
+                    }
+                });
 
-                    sleep(wait_duration).await;
-                    spinner_task.abort();
-                    print!("\r                    \r"); // Clear the spinner line
-                }
+                sleep(wait_duration).await;
+                spinner_task.abort();
+                print!("\r                    \r"); // Clear the spinner line
             }
         }
 

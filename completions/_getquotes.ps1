@@ -41,8 +41,6 @@ Register-ArgumentCompleter -Native -CommandName 'getquotes' -ScriptBlock {
             [CompletionResult]::new('--offline', '--offline', [CompletionResultType]::ParameterName, 'Run in offline mode, using cached quotes')
             [CompletionResult]::new('-v', '-v', [CompletionResultType]::ParameterName, 'Print version information')
             [CompletionResult]::new('--version', '--version', [CompletionResultType]::ParameterName, 'Print version information')
-            [CompletionResult]::new('-M', '-M ', [CompletionResultType]::ParameterName, 'Migrate JSON config to TOML format (will be removed in next major release)')
-            [CompletionResult]::new('--migrate-config', '--migrate-config', [CompletionResultType]::ParameterName, 'Migrate JSON config to TOML format (will be removed in next major release)')
             [CompletionResult]::new('-h', '-h', [CompletionResultType]::ParameterName, 'Print help')
             [CompletionResult]::new('--help', '--help', [CompletionResultType]::ParameterName, 'Print help')
             break

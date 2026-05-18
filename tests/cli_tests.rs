@@ -16,7 +16,6 @@ fn test_cli_arguments() {
     assert!(!default_args.version);
     assert_eq!(default_args.config, None);
     assert_eq!(default_args.completion, None);
-    assert!(!default_args.migrate_config);
 
     // Test setting authors
     let args = Args::parse_from(["getquotes", "--authors", "Author1,Author2"]);
@@ -65,10 +64,6 @@ fn test_cli_arguments() {
         panic!("Expected Some(Shell::Bash)");
     }
 
-    // Test setting migrate config
-    let args = Args::parse_from(["getquotes", "--migrate-config"]);
-    assert!(args.migrate_config);
-
     // Test short options
     let args = Args::parse_from([
         "getquotes",
@@ -86,7 +81,6 @@ fn test_cli_arguments() {
         "-v",
         "-C",
         "conf.toml",
-        "-M",
     ]);
     assert_eq!(args.authors, Some("Author1".to_string()));
     assert_eq!(args.theme_color, Some("#FF0000".to_string()));
@@ -97,7 +91,6 @@ fn test_cli_arguments() {
     assert!(args.offline);
     assert!(args.version);
     assert_eq!(args.config, Some("conf.toml".to_string()));
-    assert!(args.migrate_config);
 }
 
 #[test]

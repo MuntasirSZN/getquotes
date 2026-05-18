@@ -3,10 +3,9 @@ mod common;
 use getquotes::config::{
     default_authors, default_log_file, default_max_tries, default_rainbow_mode,
     default_theme_color, get_config_path, load_or_create_config, load_or_create_config_from_path,
-    migrate_json_to_toml, parse_hex_color,
+    parse_hex_color,
 };
 use std::fs::{self};
-use std::path::PathBuf;
 use tempfile::TempDir;
 
 #[test]
@@ -60,7 +59,7 @@ fn test_hex_color_parsing_invalid_formats() {
 
 #[test]
 fn test_get_config_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     let config_path = get_config_path()?;
 
@@ -74,7 +73,7 @@ fn test_get_config_path() -> Result<(), Box<dyn std::error::Error + Send + Sync>
 
 #[test]
 fn test_load_or_create_config_new_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     // Get the config path and make sure it doesn't exist
     let config_path = get_config_path()?;
@@ -105,7 +104,7 @@ fn test_load_or_create_config_new_file() -> Result<(), Box<dyn std::error::Error
 #[test]
 fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
 {
-    common::setup_temp_home()?;
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
 
     // Get the config path and create a custom config
     let config_path = get_config_path()?;
@@ -175,67 +174,6 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
     assert_eq!(reloaded_config.log_file, "path_custom.log");
     assert!(reloaded_config.rainbow_mode);
     assert_eq!(reloaded_config.authors, vec!["Custom Author From Path"]);
-
-    Ok(())
-}
-
-#[test]
-fn test_migrate_json_to_toml() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    common::setup_temp_home()?;
-    let home = std::env::home_dir();
-    let config_dir = home
-        .map(|path| path.join(".config/getquotes"))
-        .unwrap_or_else(|| PathBuf::from("~/.config/getquotes"));
-    let json_config_path = config_dir.join("config.json");
-    let toml_config_path = config_dir.join("config.toml");
-
-    // Create directory structure
-    fs::create_dir_all(&config_dir)?;
-
-    // Create a JSON config
-    let json_config = r#"{
-        "authors": ["JSON Author"],
-        "theme_color": "112233",
-        "max_tries": 15,
-        "log_file": "json.log",
-        "rainbow_mode": true
-    }"#;
-
-    fs::write(&json_config_path, json_config)?;
-    assert!(json_config_path.exists());
-
-    // Run the migration
-    migrate_json_to_toml()?;
-
-    // Verify TOML file was created
-    assert!(toml_config_path.exists());
-
-    // Verify the JSON file still exists
-    assert!(json_config_path.exists());
-
-    // Read and verify the TOML content
-    let toml_content = fs::read_to_string(&toml_config_path)?;
-    let config: getquotes::config::Config = toml::from_str(&toml_content)?;
-
-    assert_eq!(config.theme_color, "112233");
-    assert_eq!(config.max_tries, 15);
-    assert_eq!(config.log_file, "json.log");
-    assert!(config.rainbow_mode);
-    assert_eq!(config.authors, vec!["JSON Author"]);
-
-    Ok(())
-}
-
-#[test]
-fn test_migrate_json_to_toml_missing_file() -> Result<(), Box<dyn std::error::Error + Send + Sync>>
-{
-    common::setup_temp_home()?;
-
-    // Don't create a JSON file
-
-    // Try to migrate - should fail
-    let result = migrate_json_to_toml();
-    assert!(result.is_err());
 
     Ok(())
 }

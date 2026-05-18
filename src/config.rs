@@ -2,8 +2,7 @@ use log::info;
 use serde::{Deserialize, Serialize};
 use std::env::home_dir;
 use std::error::Error as StdError;
-use std::fs::{File, create_dir_all, read_to_string, write};
-use std::io::BufReader;
+use std::fs::{create_dir_all, read_to_string, write};
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -137,36 +136,4 @@ pub fn parse_hex_color(hex_str: &str) -> Option<(u8, u8, u8)> {
     let g = u8::from_str_radix(&clean_hex[2..4], 16).ok()?;
     let b = u8::from_str_radix(&clean_hex[4..6], 16).ok()?;
     Some((r, g, b))
-}
-
-pub fn migrate_json_to_toml() -> Result<(), Box<dyn StdError + Send + Sync>> {
-    // Determine the JSON config path
-    let home = home_dir()
-        .ok_or_else(|| Box::<dyn StdError + Send + Sync>::from("Unable to find home directory."))?;
-    let config_dir = home.join(".config/getquotes");
-    let json_config_path = config_dir.join("config.json");
-
-    // Check if JSON config exists
-    if !json_config_path.exists() {
-        return Err("JSON config file not found. Nothing to migrate.".into());
-    }
-
-    // Read JSON config
-    let file = File::open(&json_config_path)?;
-    let reader = BufReader::new(file);
-    let config: Config = serde_json::from_reader(reader)?;
-
-    // Write as TOML
-    let config_path = get_config_path()?;
-    let toml_string = toml::to_string_pretty(&config)?;
-    write(&config_path, toml_string)?;
-
-    info!("Config migrated from JSON to TOML: {config_path:?}");
-
-    // Don't delete the old JSON file - let the user do that manually if they wish
-    info!(
-        "Migration complete. The original JSON config file still exists at: {json_config_path:?}"
-    );
-
-    Ok(())
 }

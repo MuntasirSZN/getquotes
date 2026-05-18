@@ -4,6 +4,12 @@ use reqwest::Client;
 use scraper::{Html, Selector};
 use std::error::Error as StdError;
 
+const USER_AGENT: &str = concat!(
+    "getquotes/",
+    env!("CARGO_PKG_VERSION"),
+    " (+https://github.com/MuntasirSZN/getquotes)"
+);
+
 // Get API base URL from environment or use default
 fn get_api_base_url() -> String {
     std::env::var("WIKIQUOTE_API_URL").unwrap_or_else(|_| "https://en.wikiquote.org".to_string())
@@ -21,7 +27,11 @@ pub async fn get_author_sections(
     );
 
     trace!("Fetching author sections from URL: {api_url}");
-    let res = client.get(&api_url).send().await?;
+    let res = client
+        .get(&api_url)
+        .header(reqwest::header::USER_AGENT, USER_AGENT)
+        .send()
+        .await?;
     if res.status().is_success() {
         let val: serde_json::Value = res.json().await?;
         if val.get("parse").is_none() {
@@ -32,7 +42,11 @@ pub async fn get_author_sections(
         let some_sections = query.parse.sections.unwrap_or_default();
         return Ok(Some((page_title, some_sections)));
     }
-    Ok(None)
+    Err(format!(
+        "Failed to fetch author sections for '{author}': HTTP {}",
+        res.status()
+    )
+    .into())
 }
 
 pub async fn fetch_quotes(
@@ -49,7 +63,11 @@ pub async fn fetch_quotes(
     );
 
     trace!("Fetching quotes from URL: {api_url}");
-    let res = client.get(&api_url).send().await?;
+    let res = client
+        .get(&api_url)
+        .header(reqwest::header::USER_AGENT, USER_AGENT)
+        .send()
+        .await?;
     if !res.status().is_success() {
         return Err(format!("Failed to fetch quotes: {}", res.status()).into());
     }

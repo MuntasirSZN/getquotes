@@ -1,7 +1,9 @@
 mod common;
 
+use getquotes::quotes::{fetch_quotes, get_author_sections};
 use mockito::Server;
-use reqwest::blocking::Client;
+use reqwest::Client;
+use tokio::runtime::Runtime;
 
 #[test]
 fn test_get_author_sections_success() {
@@ -40,32 +42,21 @@ fn test_get_author_sections_success() {
         .expect(1)
         .create();
 
-    // Set environment variable to use our mock server
-    unsafe { std::env::set_var("WIKIQUOTE_API_URL", server.url()) };
+    let _api_guard = common::setup_api_url(&server.url());
 
+    let rt = Runtime::new().unwrap();
     let client = Client::new();
-    let author_encoded = urlencoding::encode("Albert Einstein");
-    let api_url = format!(
-        "{}/w/api.php?action=parse&format=json&prop=sections&page={}",
-        server.url(),
-        author_encoded
-    );
+    let result = rt
+        .block_on(get_author_sections(&client, "Albert Einstein"))
+        .unwrap();
 
-    let res = client.get(&api_url).send().unwrap();
-    assert!(res.status().is_success());
+    assert!(result.is_some());
+    let (title, sections) = result.unwrap();
+    assert_eq!(title, "Albert Einstein");
+    assert_eq!(sections.len(), 2);
+    assert_eq!(sections[0].line, "Quotes");
+    assert_eq!(sections[1].line, "Misattributed");
 
-    let val: serde_json::Value = res.json().unwrap();
-    assert!(val.get("parse").is_some());
-
-    let query: getquotes::types::QueryResult = serde_json::from_value(val).unwrap();
-    assert_eq!(query.parse.title, "Albert Einstein");
-
-    let some_sections = query.parse.sections.unwrap_or_default();
-    assert_eq!(some_sections.len(), 2);
-    assert_eq!(some_sections[0].line, "Quotes");
-    assert_eq!(some_sections[1].line, "Misattributed");
-
-    // Validate mock assertions before ending test
     mock.assert();
 }
 
@@ -94,20 +85,15 @@ fn test_get_author_sections_not_found() {
         )
         .create();
 
+    let _api_guard = common::setup_api_url(&server.url());
+
+    let rt = Runtime::new().unwrap();
     let client = Client::new();
-    let author_encoded = urlencoding::encode("NonExistentAuthor");
-    let api_url = format!(
-        "{}/w/api.php?action=parse&format=json&prop=sections&page={}",
-        server.url(),
-        author_encoded
-    );
+    let result = rt
+        .block_on(get_author_sections(&client, "NonExistentAuthor"))
+        .unwrap();
 
-    let res = client.get(&api_url).send().unwrap();
-    assert!(res.status().is_success());
-
-    let val: serde_json::Value = res.json().unwrap();
-    assert!(val.get("parse").is_none());
-    assert!(val.get("error").is_some());
+    assert!(result.is_none());
 
     mock.assert();
 }
@@ -141,41 +127,13 @@ fn test_fetch_quotes_success() {
         .expect(1)
         .create();
 
-    // Set environment variable to use our mock server
-    unsafe { std::env::set_var("WIKIQUOTE_API_URL", server.url()) };
+    let _api_guard = common::setup_api_url(&server.url());
 
+    let rt = Runtime::new().unwrap();
     let client = Client::new();
-    let title_encoded = urlencoding::encode("Albert Einstein");
-    let api_url = format!(
-        "{}/w/api.php?action=parse&format=json&prop=text&page={}&section={}",
-        server.url(),
-        title_encoded,
-        "1"
-    );
-
-    let res = client.get(&api_url).send().unwrap();
-    assert!(res.status().is_success());
-
-    let val: serde_json::Value = res.json().unwrap();
-    assert!(val.get("parse").is_some());
-
-    let html_content = val["parse"]["text"]["*"].as_str().unwrap_or("");
-    let document = scraper::Html::parse_document(html_content);
-
-    let selector = scraper::Selector::parse("li:not(li li)").unwrap();
-    let mut quotes = Vec::new();
-
-    for element in document.select(&selector) {
-        let text_content = element
-            .text()
-            .collect::<Vec<_>>()
-            .join(" ")
-            .trim()
-            .to_string();
-        if !text_content.is_empty() {
-            quotes.push(text_content);
-        }
-    }
+    let quotes = rt
+        .block_on(fetch_quotes(&client, "Albert Einstein", "1"))
+        .unwrap();
 
     assert_eq!(quotes.len(), 2);
     assert_eq!(quotes[0], "Quote 1");
@@ -213,41 +171,13 @@ fn test_fetch_quotes_empty() {
         .expect(1)
         .create();
 
-    // Set environment variable to use our mock server
-    unsafe { std::env::set_var("WIKIQUOTE_API_URL", server.url()) };
+    let _api_guard = common::setup_api_url(&server.url());
 
+    let rt = Runtime::new().unwrap();
     let client = Client::new();
-    let title_encoded = urlencoding::encode("Albert Einstein");
-    let api_url = format!(
-        "{}/w/api.php?action=parse&format=json&prop=text&page={}&section={}",
-        server.url(),
-        title_encoded,
-        "3"
-    );
-
-    let res = client.get(&api_url).send().unwrap();
-    assert!(res.status().is_success());
-
-    let val: serde_json::Value = res.json().unwrap();
-    assert!(val.get("parse").is_some());
-
-    let html_content = val["parse"]["text"]["*"].as_str().unwrap_or("");
-    let document = scraper::Html::parse_document(html_content);
-
-    let selector = scraper::Selector::parse("li:not(li li)").unwrap();
-    let mut quotes = Vec::new();
-
-    for element in document.select(&selector) {
-        let text_content = element
-            .text()
-            .collect::<Vec<_>>()
-            .join(" ")
-            .trim()
-            .to_string();
-        if !text_content.is_empty() {
-            quotes.push(text_content);
-        }
-    }
+    let quotes = rt
+        .block_on(fetch_quotes(&client, "Albert Einstein", "3"))
+        .unwrap();
 
     assert_eq!(quotes.len(), 0);
 
@@ -270,21 +200,13 @@ fn test_fetch_quotes_bad_response() {
         .expect(1)
         .create();
 
-    // Make sure to set the environment variable for the API URL
-    unsafe { std::env::set_var("WIKIQUOTE_API_URL", server.url()) };
+    let _api_guard = common::setup_api_url(&server.url());
 
+    let rt = Runtime::new().unwrap();
     let client = Client::new();
-    let title_encoded = urlencoding::encode("Albert Einstein");
-    let api_url = format!(
-        "{}/w/api.php?action=parse&format=json&prop=text&page={}&section={}",
-        server.url(),
-        title_encoded,
-        "4"
-    );
+    let result = rt.block_on(fetch_quotes(&client, "Albert Einstein", "4"));
 
-    let res = client.get(&api_url).send().unwrap();
-    assert_eq!(res.status().as_u16(), 501);
+    assert!(result.is_err());
 
-    // Verify the mock was called
     mock.assert();
 }
