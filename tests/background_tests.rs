@@ -3,8 +3,8 @@ mod common;
 use getquotes::background::update_cache;
 use getquotes::cache::{get_cached_quotes, get_database_path, init_cache};
 use getquotes::config::{
-    Config, default_api_calls_per_minute, default_log_file, default_max_tries, default_prefer_cache,
-    default_rainbow_mode, default_theme_color, get_config_path,
+    Config, default_api_calls_per_minute, default_log_file, default_max_tries,
+    default_prefer_cache, default_rainbow_mode, default_theme_color, get_config_path,
 };
 use mockito::Server;
 use reqwest::Client;
@@ -117,4 +117,3 @@ fn test_update_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     Ok(())
 }
-

@@ -13,7 +13,8 @@ fn api_url_mutex() -> &'static Mutex<()> {
     API_URL_MUTEX.get_or_init(|| Mutex::new(()))
 }
 
-pub fn setup_temp_home() -> Result<(MutexGuard<'static, ()>, TempDir), Box<dyn Error + Send + Sync>> {
+pub fn setup_temp_home() -> Result<(MutexGuard<'static, ()>, TempDir), Box<dyn Error + Send + Sync>>
+{
     let guard = home_mutex().lock().unwrap_or_else(|e| e.into_inner());
     let temp_dir = TempDir::new()?;
 

@@ -210,4 +210,3 @@ fn test_fetch_quotes_bad_response() {
 
     mock.assert();
 }
-
