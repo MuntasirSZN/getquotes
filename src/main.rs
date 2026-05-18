@@ -1,7 +1,7 @@
 use clap::Parser;
 use getquotes::cli::Args;
-use getquotes::{background, cache};
 use getquotes::run;
+use getquotes::{background, cache};
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::sync::Arc;
