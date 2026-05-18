@@ -38,8 +38,6 @@ set edit:completion:arg-completer[getquotes] = {|@words|
             cand --offline 'Run in offline mode, using cached quotes'
             cand -v 'Print version information'
             cand --version 'Print version information'
-            cand -M 'Migrate JSON config to TOML format (will be removed in next major release)'
-            cand --migrate-config 'Migrate JSON config to TOML format (will be removed in next major release)'
             cand -h 'Print help'
             cand --help 'Print help'
         }

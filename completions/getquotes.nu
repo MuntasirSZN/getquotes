@@ -16,7 +16,6 @@ module completions {
     --version(-v)             # Print version information
     --config(-C): string      # Use a custom TOML configuration file
     --completion(-c): string@"nu-complete getquotes completion" # Generate shell completion script
-    --migrate-config(-M)      # Migrate JSON config to TOML format (will be removed in next major release)
     --help(-h)                # Print help
   ]
 

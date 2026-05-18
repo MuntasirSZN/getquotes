@@ -136,7 +136,6 @@ Options:
   -v, --version                    Print version information
   -C, --config <CONFIG>            Use a custom TOML configuration file
   -c, --completion <COMPLETION>    Generate shell completion script [possible values: bash, elvish, fish, powershell, zsh, nushell]
-  -M, --migrate-config             Migrate JSON config to TOML format (will be removed in next major release)
   -h, --help                       Print help
 
 MuntasirSZN <muntasir.joypurhat@gmail.com>

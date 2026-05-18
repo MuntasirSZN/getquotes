@@ -207,11 +207,4 @@ pub struct Args {
 
     #[arg(long, short, help = "Generate shell completion script")]
     pub completion: Option<Shell>,
-
-    #[arg(
-        long,
-        short = 'M',
-        help = "Migrate JSON config to TOML format (will be removed in next major release)"
-    )]
-    pub migrate_config: bool,
 }

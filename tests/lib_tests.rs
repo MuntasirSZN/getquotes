@@ -25,59 +25,11 @@ fn test_run_with_version_flag() -> Result<(), Box<dyn std::error::Error + Send +
         version: true,
         config: None,
         completion: None,
-        migrate_config: false,
     };
 
     let result = rt.block_on(run(args));
 
     assert!(result.is_ok());
-
-    Ok(())
-}
-
-#[test]
-fn test_run_with_migrate_config() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let (_guard, _temp_dir) = common::setup_temp_home()?;
-    let home = std::env::home_dir();
-    let config_dir = home
-        .map(|path| path.join(".config/getquotes"))
-        .unwrap_or_else(|| PathBuf::from("~/.config/getquotes"));
-    let json_config_path = config_dir.join("config.json");
-
-    fs::create_dir_all(&config_dir)?;
-
-    let json_config = r#"{
-        "authors": ["JSON Author"],
-        "theme_color": "112233",
-        "max_tries": 15,
-        "log_file": "json.log ",
-        "rainbow_mode": true
-    }"#;
-
-    fs::write(&json_config_path, json_config)?;
-
-    let rt = Runtime::new()?;
-
-    let args = Args {
-        authors: None,
-        theme_color: None,
-        max_tries: None,
-        log_file: None,
-        rainbow_mode: false,
-        init_cache: false,
-        offline: false,
-        version: false,
-        config: None,
-        completion: None,
-        migrate_config: true,
-    };
-
-    let result = rt.block_on(run(args));
-
-    assert!(result.is_ok());
-
-    let toml_config_path = config_dir.join("config.toml");
-    assert!(toml_config_path.exists());
 
     Ok(())
 }
@@ -99,7 +51,6 @@ fn test_run_with_completion() -> Result<(), Box<dyn std::error::Error + Send + S
         version: false,
         config: None,
         completion: Some(getquotes::cli::Shell::Bash),
-        migrate_config: false,
     };
 
     let result = rt.block_on(run(args));
@@ -147,7 +98,6 @@ fn test_run_with_offline_mode() -> Result<(), Box<dyn std::error::Error + Send +
         version: false,
         config: None,
         completion: None,
-        migrate_config: false,
     };
 
     let result = rt.block_on(run(args));
@@ -186,7 +136,6 @@ rainbow_mode = true
         version: false,
         config: Some(custom_config_path.to_str().unwrap().to_string()),
         completion: None,
-        migrate_config: false,
     };
 
     // Insert test quote for the offline mode

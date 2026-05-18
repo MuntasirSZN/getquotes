@@ -35,8 +35,6 @@ _getquotes() {
 '--offline[Run in offline mode, using cached quotes]' \
 '-v[Print version information]' \
 '--version[Print version information]' \
-'-M[Migrate JSON config to TOML format (will be removed in next major release)]' \
-'--migrate-config[Migrate JSON config to TOML format (will be removed in next major release)]' \
 '-h[Print help]' \
 '--help[Print help]' \
 && ret=0
