@@ -21,6 +21,7 @@ pub async fn main() -> Result<(), Box<dyn StdError + Send + Sync>> {
         if let Err(e) = background::update_cache(client.clone()).await {
             eprintln!("Warning: Failed to populate cache: {e}");
         }
+        return Ok(());
     }
 
     run(args).await
