@@ -80,7 +80,7 @@ fn test_cli_arguments() {
         "-o",
         "-v",
         "-C",
-        "conf.toml"
+        "conf.toml",
     ]);
     assert_eq!(args.authors, Some("Author1".to_string()));
     assert_eq!(args.theme_color, Some("#FF0000".to_string()));
