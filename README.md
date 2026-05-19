@@ -87,7 +87,13 @@ Get-Help getquotes
 
 ## 🧭 Configuration
 
-getquotes can be configured using a TOML configuration file. The configuration file should adhere to the schema defined in `config.schema.toml`, which can be validated using [Taplo](https://taplo.tamasfe.dev/). Here's an example of a configuration file:
+getquotes can be configured using a TOML configuration file. The configuration file schema is generated from Rust types with `schemars` and written to `config/config.schema.json`. You can use this schema in editors powered by [Taplo](https://taplo.tamasfe.dev/) or [Tombi](https://tombi-toml.github.io/tombi/). Add this at the top of your config file:
+
+```toml
+#:schema https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config/config.schema.json
+```
+
+Here's an example of a configuration file:
 
 ```toml
 # List of authors to fetch quotes from
@@ -177,7 +183,12 @@ Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contri
 
 ### Configuration Schema
 
-The configuration schema is defined in `config.schema.toml`. Any contributions affecting the configuration should update this schema accordingly.
+The configuration schema file is `config/config.schema.json`, generated from `Config` via `schemars`.
+If you change configuration fields, run:
+
+```bash
+cargo run --bin generate_config_schema
+```
 
 ---
 

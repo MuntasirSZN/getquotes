@@ -1,11 +1,12 @@
 use log::info;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::env::home_dir;
 use std::error::Error as StdError;
 use std::fs::{create_dir_all, read_to_string, write};
 use std::path::PathBuf;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Config {
     pub authors: Vec<String>,
     #[serde(default = "default_theme_color")]
@@ -32,14 +33,14 @@ pub struct Config {
     pub api_calls_per_minute: usize,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum Layout {
     Default,
     Box,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum BoxCorners {
     Pointy,

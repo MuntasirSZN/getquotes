@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Config",
+  "type": "object",
+  "properties": {
+    "api_calls_per_minute": {
+      "type": "integer",
+      "format": "uint",
+      "default": 10,
+      "minimum": 0
+    },
+    "author_style": {
+      "type": "string",
+      "default": "green"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "box_corners": {
+      "$ref": "#/$defs/BoxCorners",
+      "default": "pointy"
+    },
+    "layout": {
+      "$ref": "#/$defs/Layout",
+      "default": "default"
+    },
+    "log_file": {
+      "type": "string",
+      "default": "getquotes.log"
+    },
+    "max_tries": {
+      "type": "integer",
+      "format": "uint",
+      "default": 30,
+      "minimum": 0
+    },
+    "nested_quote_style": {
+      "type": "string",
+      "default": ""
+    },
+    "prefer_cache": {
+      "type": "boolean",
+      "default": true
+    },
+    "quote_style": {
+      "type": "string",
+      "default": "bold"
+    },
+    "rainbow_mode": {
+      "type": "boolean",
+      "default": false
+    },
+    "theme_color": {
+      "type": "string",
+      "default": "#B7FFFA"
+    }
+  },
+  "required": [
+    "authors"
+  ],
+  "$defs": {
+    "BoxCorners": {
+      "type": "string",
+      "enum": [
+        "pointy",
+        "rounded"
+      ]
+    },
+    "Layout": {
+      "type": "string",
+      "enum": [
+        "default",
+        "box"
+      ]
+    }
+  }
+}

@@ -1,6 +1,7 @@
 use crate::config::{BoxCorners, Config, Layout};
 use anstyle::{Color as AnsiColor, RgbColor as AnsiRgbColor, Style as AnsiStyle};
 use cssparser::{ParseError, Parser, ParserInput, Token};
+use cssparser_color::{Color as CssColor, parse_color_keyword};
 use log::warn;
 use std::ops::Range;
 
@@ -661,58 +662,24 @@ fn hsl_to_rgb(hue: f32, saturation: f32, lightness: f32) -> RgbColor {
 }
 
 fn named_color_rgb(name: &str) -> Option<RgbColor> {
-    match normalize_token(name).as_str() {
-        "black" => Some(RgbColor { r: 0, g: 0, b: 0 }),
-        "red" => Some(RgbColor { r: 128, g: 0, b: 0 }),
-        "green" => Some(RgbColor { r: 0, g: 128, b: 0 }),
-        "yellow" => Some(RgbColor {
-            r: 128,
-            g: 128,
-            b: 0,
-        }),
-        "blue" => Some(RgbColor { r: 0, g: 0, b: 128 }),
-        "magenta" | "purple" => Some(RgbColor {
-            r: 128,
-            g: 0,
-            b: 128,
-        }),
-        "cyan" => Some(RgbColor {
-            r: 0,
-            g: 128,
-            b: 128,
-        }),
-        "white" => Some(RgbColor {
-            r: 192,
-            g: 192,
-            b: 192,
-        }),
-        "brightblack" => Some(RgbColor {
-            r: 128,
-            g: 128,
-            b: 128,
-        }),
-        "brightred" => Some(RgbColor { r: 255, g: 0, b: 0 }),
-        "brightgreen" => Some(RgbColor { r: 0, g: 255, b: 0 }),
-        "brightyellow" => Some(RgbColor {
-            r: 255,
-            g: 255,
-            b: 0,
-        }),
-        "brightblue" => Some(RgbColor { r: 0, g: 0, b: 255 }),
-        "brightmagenta" | "brightpurple" => Some(RgbColor {
-            r: 255,
-            g: 0,
-            b: 255,
-        }),
-        "brightcyan" => Some(RgbColor {
-            r: 0,
-            g: 255,
-            b: 255,
-        }),
-        "brightwhite" => Some(RgbColor {
-            r: 255,
-            g: 255,
-            b: 255,
+    let normalized = normalize_token(name);
+    let keyword = match normalized.as_str() {
+        "brightblack" => "gray",
+        "brightred" => "red",
+        "brightgreen" => "lime",
+        "brightyellow" => "yellow",
+        "brightblue" => "blue",
+        "brightmagenta" | "brightpurple" => "magenta",
+        "brightcyan" => "cyan",
+        "brightwhite" => "white",
+        _ => normalized.as_str(),
+    };
+
+    match parse_color_keyword::<CssColor>(keyword).ok()? {
+        CssColor::Rgba(rgba) => Some(RgbColor {
+            r: (rgba.red as f32 * rgba.alpha).round().clamp(0.0, 255.0) as u8,
+            g: (rgba.green as f32 * rgba.alpha).round().clamp(0.0, 255.0) as u8,
+            b: (rgba.blue as f32 * rgba.alpha).round().clamp(0.0, 255.0) as u8,
         }),
         _ => None,
     }
@@ -927,7 +894,7 @@ mod tests {
         );
         assert_eq!(
             parse_gradient_stop("blue 10% 90%"),
-            Some(RgbColor { r: 0, g: 0, b: 128 })
+            Some(RgbColor { r: 0, g: 0, b: 255 })
         );
         assert_eq!(parse_gradient_stop("to right"), None);
     }
