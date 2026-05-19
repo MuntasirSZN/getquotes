@@ -420,15 +420,13 @@ fn parse_gradient_function<'i, 't>(
     }
 
     parser
-        .parse_nested_block(
-            |input| -> Result<Vec<RgbColor>, ParseError<'i, ()>> {
-                Ok(input.parse_comma_separated_ignoring_errors(
-                    |stop| -> Result<RgbColor, ParseError<'i, ()>> {
-                        parse_gradient_stop_value(stop).ok_or_else(|| stop.new_custom_error(()))
-                    },
-                ))
-            },
-        )
+        .parse_nested_block(|input| -> Result<Vec<RgbColor>, ParseError<'i, ()>> {
+            Ok(input.parse_comma_separated_ignoring_errors(
+                |stop| -> Result<RgbColor, ParseError<'i, ()>> {
+                    parse_gradient_stop_value(stop).ok_or_else(|| stop.new_custom_error(()))
+                },
+            ))
+        })
         .ok()
 }
 
@@ -469,11 +467,9 @@ fn parse_color_token<'i, 't>(token: Token<'i>, parser: &mut Parser<'i, 't>) -> O
         Token::Hash(value) | Token::IDHash(value) => parse_hex_color(value.as_ref()),
         Token::Ident(value) => named_color_rgb(value.as_ref()),
         Token::Function(name) => parser
-            .parse_nested_block(
-                |input| -> Result<Option<RgbColor>, ParseError<'i, ()>> {
-                    Ok(parse_color_function(name.as_ref(), input))
-                },
-            )
+            .parse_nested_block(|input| -> Result<Option<RgbColor>, ParseError<'i, ()>> {
+                Ok(parse_color_function(name.as_ref(), input))
+            })
             .ok()
             .flatten(),
         _ => None,
@@ -492,7 +488,10 @@ fn parse_hex_color(value: &str) -> Option<RgbColor> {
     })
 }
 
-fn parse_color_function<'i, 't>(function_name: &str, input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+fn parse_color_function<'i, 't>(
+    function_name: &str,
+    input: &mut Parser<'i, 't>,
+) -> Option<RgbColor> {
     match normalize_token(function_name).as_str() {
         "rgb" => parse_rgb_function(input, false),
         "rgba" => parse_rgb_function(input, true),
@@ -548,9 +547,10 @@ fn parse_numeric_components<'i, 't>(input: &mut Parser<'i, 't>) -> Option<Vec<Nu
             Token::Percentage { unit_value, .. } => {
                 components.push(NumericComponent::Percentage(unit_value))
             }
-            Token::Dimension { value, unit, .. } => {
-                components.push(NumericComponent::Angle(value, parse_angle_unit(unit.as_ref())?))
-            }
+            Token::Dimension { value, unit, .. } => components.push(NumericComponent::Angle(
+                value,
+                parse_angle_unit(unit.as_ref())?,
+            )),
             _ => return None,
         }
     }
