@@ -194,7 +194,9 @@ pub struct Args {
         long,
         short,
         help = "Enable rainbow mode for gradient rainbow quote colors",
-        action = clap::ArgAction::SetTrue
+        action = clap::ArgAction::Set,
+        num_args = 0..=1,
+        default_missing_value = "true"
     )]
     pub rainbow_mode: Option<bool>,
 

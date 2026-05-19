@@ -135,8 +135,8 @@ fn render_box_layout(cfg: &Config, quote: &str, author: &str) -> String {
     );
 
     format!(
-        "{top}\n{}{}{0}\n{}{}{0}\n{bottom}",
-        chars.vertical, styled_quote, styled_author
+        "{top}\n{}{}{}\n{}{}{}\n{bottom}",
+        chars.vertical, styled_quote, chars.vertical, chars.vertical, styled_author, chars.vertical
     )
 }
 
@@ -149,7 +149,10 @@ fn resolve_quote_style(cfg: &Config) -> TextStyle {
 
     if style.fill.is_none() {
         style.fill = parse_fill_spec(&cfg.theme_color).or_else(|| {
-            warn!("Invalid color setting '{}'. Using fallback color.", cfg.theme_color);
+            warn!(
+                "Invalid color setting '{}'. Using fallback color.",
+                cfg.theme_color
+            );
             Some(Fill::Solid(FALLBACK_COLOR))
         });
     }
@@ -160,7 +163,9 @@ fn resolve_quote_style(cfg: &Config) -> TextStyle {
 fn resolve_author_style(cfg: &Config) -> TextStyle {
     let mut style = parse_style_spec(&cfg.author_style);
     if style.fill.is_none() {
-        style.fill = Some(Fill::Solid(named_color_rgb("green").unwrap_or(FALLBACK_COLOR)));
+        style.fill = Some(Fill::Solid(
+            named_color_rgb("green").unwrap_or(FALLBACK_COLOR),
+        ));
     }
     style
 }
@@ -305,7 +310,10 @@ fn gradient_color(stops: &[RgbColor], step: usize, total_steps: usize) -> RgbCol
 
     let scaled = step as f32 * (stops.len() - 1) as f32 / (total_steps - 1) as f32;
     let lower_idx = scaled.floor() as usize;
-    let upper_idx = lower_idx.min(stops.len() - 1).saturating_add(1).min(stops.len() - 1);
+    let upper_idx = lower_idx
+        .min(stops.len() - 1)
+        .saturating_add(1)
+        .min(stops.len() - 1);
     let t = scaled - lower_idx as f32;
     interpolate_color(stops[lower_idx], stops[upper_idx], t)
 }
@@ -711,9 +719,9 @@ fn normalize_token(token: &str) -> String {
 mod tests {
     use super::*;
     use crate::config::{
-        default_api_calls_per_minute, default_authors, default_author_style,
-        default_box_corners, default_log_file, default_max_tries, default_nested_quote_style,
-        default_prefer_cache, default_quote_style, default_theme_color, BoxCorners, Config, Layout,
+        BoxCorners, Config, Layout, default_api_calls_per_minute, default_author_style,
+        default_authors, default_box_corners, default_log_file, default_max_tries,
+        default_nested_quote_style, default_prefer_cache, default_quote_style, default_theme_color,
     };
 
     fn sample_config() -> Config {
@@ -733,15 +741,31 @@ mod tests {
         }
     }
 
+    fn strip_ansi(value: &str) -> String {
+        let mut output = String::new();
+        let mut chars = value.chars().peekable();
+
+        while let Some(ch) = chars.next() {
+            if ch == '\u{1b}' && chars.peek() == Some(&'[') {
+                chars.next();
+                for next in chars.by_ref() {
+                    if next == 'm' {
+                        break;
+                    }
+                }
+            } else {
+                output.push(ch);
+            }
+        }
+
+        output
+    }
+
     #[test]
     fn parses_supported_color_formats() {
         assert_eq!(
             parse_color_spec("#FF0000"),
-            Some(RgbColor {
-                r: 255,
-                g: 0,
-                b: 0
-            })
+            Some(RgbColor { r: 255, g: 0, b: 0 })
         );
         assert_eq!(
             parse_color_spec("rgb(10, 20, 30)"),
@@ -753,11 +777,7 @@ mod tests {
         );
         assert_eq!(
             parse_color_spec("rgba(255, 0, 0, 0.5)"),
-            Some(RgbColor {
-                r: 128,
-                g: 0,
-                b: 0
-            })
+            Some(RgbColor { r: 128, g: 0, b: 0 })
         );
         assert_eq!(
             parse_color_spec("hsl(120, 100%, 50%)"),
@@ -774,7 +794,7 @@ mod tests {
     #[test]
     fn default_layout_adds_space_after_dash() {
         let rendered = render_output(&sample_config(), "Hello", "Author");
-        assert!(rendered.contains("- Author"));
+        assert!(strip_ansi(&rendered).contains("- Author"));
     }
 
     #[test]

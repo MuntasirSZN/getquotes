@@ -159,9 +159,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     Err("Failed to retrieve a quote.".into())
 }
 
-fn display_offline_quote(
-    cfg: &Config,
-) -> Result<(), Box<dyn StdError + Send + Sync>> {
+fn display_offline_quote(cfg: &Config) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let cached_quotes = cache::get_cached_quotes()?;
 
     if cached_quotes.is_empty() {
