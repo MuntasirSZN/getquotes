@@ -1,7 +1,7 @@
 mod common;
 
 use getquotes::config::{
-    default_authors, default_author_style, default_box_corners, default_layout, default_log_file,
+    default_author_style, default_authors, default_box_corners, default_layout, default_log_file,
     default_max_tries, default_nested_quote_style, default_quote_style, default_rainbow_mode,
     default_theme_color, get_config_path, load_or_create_config, load_or_create_config_from_path,
     parse_hex_color,
@@ -158,7 +158,10 @@ fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::
     // Verify custom values
     assert_eq!(config.theme_color, "FF5500");
     assert_eq!(config.quote_style, "italic,rgb(255, 100, 0)");
-    assert_eq!(config.author_style, "bold,linear-gradient(#00ff00, #0000ff)");
+    assert_eq!(
+        config.author_style,
+        "bold,linear-gradient(#00ff00, #0000ff)"
+    );
     assert_eq!(config.nested_quote_style, "underline");
     assert_eq!(config.max_tries, 50);
     assert_eq!(config.log_file, "custom.log");
