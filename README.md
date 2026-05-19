@@ -96,8 +96,8 @@ authors = [
     "Isaac Newton"
 ]
 
-# Theme color supports hex, rgb/rgba, hsl, or gradients
-theme_color = "linear-gradient(#FF5733, hsl(45, 100%, 50%), rgb(0, 170, 255))"
+# Theme color supports hex, rgb/rgba, hsl, or CSS-inspired gradients
+theme_color = "conic-gradient(from 90deg, #FF5733, hsl(45, 100%, 50%), rgb(0, 170, 255))"
 
 # Extra styling for the quote text
 quote_style = "bold"
@@ -127,7 +127,7 @@ box_corners = "pointy"
 ### Properties
 
 - **authors**: An array of author names to fetch quotes from. At least one author must be specified.
-- **theme_color**: The base quote color. Supports hex, `rgb(...)`, `rgba(...)`, `hsl(...)`, and `linear-gradient(...)`.
+- **theme_color**: The base quote color. Supports hex, `rgb(...)`, `rgba(...)`, `hsl(...)`, and CSS-inspired gradient functions such as `linear-gradient(...)`, `radial-gradient(...)`, `conic-gradient(...)`, and repeating variants.
 - **quote_style**: Comma-separated quote styling tokens such as `bold`, `italic`, `underline`, `strikethrough`, colors, or gradients.
 - **author_style**: Comma-separated styling tokens for the author line.
 - **nested_quote_style**: Optional styling applied to quotes found inside the main quote text.

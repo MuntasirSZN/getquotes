@@ -21,7 +21,7 @@ description = "Name of an author."
 
 [properties.theme_color]
 type = "string"
-description = "Base quote color. Supports hex, rgb(...), rgba(...), hsl(...), and linear-gradient(...)."
+description = "Base quote color. Supports hex, rgb(...), rgba(...), hsl(...), and CSS-inspired gradients such as linear-gradient(...), radial-gradient(...), conic-gradient(...), and repeating variants."
 
 [[properties.theme_color.examples]]
 "#FF5733"
@@ -37,6 +37,12 @@ description = "Base quote color. Supports hex, rgb(...), rgba(...), hsl(...), an
 
 [[properties.theme_color.examples]]
 "linear-gradient(#FF5733, rgb(255, 200, 0), #00AAFF)"
+
+[[properties.theme_color.examples]]
+"radial-gradient(circle at center, #FF5733 0%, rgb(255, 200, 0) 50%, #00AAFF 100%)"
+
+[[properties.theme_color.examples]]
+"conic-gradient(from 90deg, #FF5733, rgb(255, 200, 0), #00AAFF)"
 
 [properties.quote_style]
 type = "string"

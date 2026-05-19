@@ -369,20 +369,30 @@ fn parse_fill_spec(spec: &str) -> Option<Fill> {
         return Some(Fill::Rainbow);
     }
 
-    if let Some(inner) = function_args(trimmed, "linear-gradient") {
-        let stops: Vec<_> = split_top_level(inner, ',')
-            .into_iter()
-            .filter_map(|stop| parse_color_spec(stop.trim()))
-            .collect();
+    if let Some((function_name, inner)) = function_name_and_args(trimmed) {
+        if is_supported_gradient_function(function_name) {
+            let stops: Vec<_> = split_top_level(inner, ',')
+                .into_iter()
+                .filter_map(|stop| parse_gradient_stop(stop.trim()))
+                .collect();
 
-        return match stops.len() {
-            0 => None,
-            1 => Some(Fill::Solid(stops[0])),
-            _ => Some(Fill::Gradient(stops)),
-        };
+            return match stops.len() {
+                0 => None,
+                1 => Some(Fill::Solid(stops[0])),
+                _ => Some(Fill::Gradient(stops)),
+            };
+        }
     }
 
     parse_color_spec(trimmed).map(Fill::Solid)
+}
+
+fn parse_gradient_stop(stop: &str) -> Option<RgbColor> {
+    parse_color_spec(stop).or_else(|| {
+        extract_color_like_prefix(stop)
+            .as_deref()
+            .and_then(parse_color_spec)
+    })
 }
 
 fn parse_color_spec(spec: &str) -> Option<RgbColor> {
@@ -678,6 +688,72 @@ fn function_args<'a>(value: &'a str, function_name: &str) -> Option<&'a str> {
     trimmed.get(prefix.len()..trimmed.len().saturating_sub(1))
 }
 
+fn function_name_and_args(value: &str) -> Option<(&str, &str)> {
+    let trimmed = value.trim();
+    let open_idx = trimmed.find('(')?;
+    let close_idx = trimmed.rfind(')')?;
+    if close_idx <= open_idx {
+        return None;
+    }
+
+    Some((
+        trimmed.get(..open_idx)?.trim(),
+        trimmed.get((open_idx + 1)..close_idx)?.trim(),
+    ))
+}
+
+fn is_supported_gradient_function(name: &str) -> bool {
+    matches!(
+        normalize_token(name).as_str(),
+        "lineargradient"
+            | "radialgradient"
+            | "conicgradient"
+            | "repeatinglineargradient"
+            | "repeatingradialgradient"
+            | "repeatingconicgradient"
+    )
+}
+
+fn extract_color_like_prefix(value: &str) -> Option<String> {
+    let trimmed = value.trim();
+    if trimmed.is_empty() {
+        return None;
+    }
+
+    if let Some(open_idx) = trimmed.find('(') {
+        let function_name = trimmed.get(..open_idx)?.trim();
+        if parse_color_spec(function_name).is_some() {
+            return Some(function_name.to_string());
+        }
+
+        if matches!(
+            normalize_token(function_name).as_str(),
+            "rgb" | "rgba" | "hsl"
+        ) {
+            let mut depth = 0usize;
+            for (idx, ch) in trimmed.char_indices() {
+                match ch {
+                    '(' => depth += 1,
+                    ')' => {
+                        depth = depth.saturating_sub(1);
+                        if depth == 0 {
+                            return trimmed.get(..=idx).map(str::to_string);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+
+    trimmed
+        .split_whitespace()
+        .next()
+        .map(str::trim)
+        .filter(|token| parse_color_spec(token).is_some())
+        .map(str::to_string)
+}
+
 fn split_top_level(value: &str, delimiter: char) -> Vec<String> {
     let mut parts = Vec::new();
     let mut current = String::new();
@@ -789,6 +865,35 @@ mod tests {
     fn parses_gradient_style_token() {
         let fill = parse_fill_spec("linear-gradient(#ff0000, rgb(0, 255, 0), hsl(240, 100%, 50%))");
         assert!(matches!(fill, Some(Fill::Gradient(stops)) if stops.len() == 3));
+    }
+
+    #[test]
+    fn parses_css_inspired_gradient_variants() {
+        let radial_fill =
+            parse_fill_spec("radial-gradient(circle at center, #ff0000 0%, rgb(0, 255, 0) 50%, blue 100%)");
+        assert!(matches!(radial_fill, Some(Fill::Gradient(stops)) if stops.len() == 3));
+
+        let conic_fill =
+            parse_fill_spec("conic-gradient(from 90deg at center, red 0deg, yellow 120deg, blue 240deg)");
+        assert!(matches!(conic_fill, Some(Fill::Gradient(stops)) if stops.len() == 3));
+
+        let repeating_fill = parse_fill_spec(
+            "repeating-radial-gradient(circle, hsl(0, 100%, 50%) 0 10%, hsl(240, 100%, 50%) 10% 20%)",
+        );
+        assert!(matches!(repeating_fill, Some(Fill::Gradient(stops)) if stops.len() == 2));
+    }
+
+    #[test]
+    fn extracts_color_prefix_from_gradient_stop() {
+        assert_eq!(
+            parse_gradient_stop("rgb(255, 0, 0) 25%"),
+            Some(RgbColor { r: 255, g: 0, b: 0 })
+        );
+        assert_eq!(
+            parse_gradient_stop("blue 10% 90%"),
+            Some(RgbColor { r: 0, g: 0, b: 128 })
+        );
+        assert_eq!(parse_gradient_stop("to right"), None);
     }
 
     #[test]
