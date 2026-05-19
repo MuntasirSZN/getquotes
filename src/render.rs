@@ -369,19 +369,19 @@ fn parse_fill_spec(spec: &str) -> Option<Fill> {
         return Some(Fill::Rainbow);
     }
 
-    if let Some((function_name, inner)) = function_name_and_args(trimmed) {
-        if is_supported_gradient_function(function_name) {
-            let stops: Vec<_> = split_top_level(inner, ',')
-                .into_iter()
-                .filter_map(|stop| parse_gradient_stop(stop.trim()))
-                .collect();
+    if let Some((function_name, inner)) = function_name_and_args(trimmed)
+        && is_supported_gradient_function(function_name)
+    {
+        let stops: Vec<_> = split_top_level(inner, ',')
+            .into_iter()
+            .filter_map(|stop| parse_gradient_stop(stop.trim()))
+            .collect();
 
-            return match stops.len() {
-                0 => None,
-                1 => Some(Fill::Solid(stops[0])),
-                _ => Some(Fill::Gradient(stops)),
-            };
-        }
+        return match stops.len() {
+            0 => None,
+            1 => Some(Fill::Solid(stops[0])),
+            _ => Some(Fill::Gradient(stops)),
+        };
     }
 
     parse_color_spec(trimmed).map(Fill::Solid)
@@ -869,12 +869,14 @@ mod tests {
 
     #[test]
     fn parses_css_inspired_gradient_variants() {
-        let radial_fill =
-            parse_fill_spec("radial-gradient(circle at center, #ff0000 0%, rgb(0, 255, 0) 50%, blue 100%)");
+        let radial_fill = parse_fill_spec(
+            "radial-gradient(circle at center, #ff0000 0%, rgb(0, 255, 0) 50%, blue 100%)",
+        );
         assert!(matches!(radial_fill, Some(Fill::Gradient(stops)) if stops.len() == 3));
 
-        let conic_fill =
-            parse_fill_spec("conic-gradient(from 90deg at center, red 0deg, yellow 120deg, blue 240deg)");
+        let conic_fill = parse_fill_spec(
+            "conic-gradient(from 90deg at center, red 0deg, yellow 120deg, blue 240deg)",
+        );
         assert!(matches!(conic_fill, Some(Fill::Gradient(stops)) if stops.len() == 3));
 
         let repeating_fill = parse_fill_spec(
