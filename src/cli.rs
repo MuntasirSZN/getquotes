@@ -190,8 +190,13 @@ pub struct Args {
     #[arg(long, short, help = "Specify the log file path")]
     pub log_file: Option<String>,
 
-    #[arg(long, short, help = "Enable rainbow mode for random quote colors")]
-    pub rainbow_mode: bool,
+    #[arg(
+        long,
+        short,
+        help = "Enable rainbow mode for gradient rainbow quote colors",
+        action = clap::ArgAction::SetTrue
+    )]
+    pub rainbow_mode: Option<bool>,
 
     #[arg(long, short, help = "Initialize the quote cache for offline mode")]
     pub init_cache: bool,

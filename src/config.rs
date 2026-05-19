@@ -10,20 +10,56 @@ pub struct Config {
     pub authors: Vec<String>,
     #[serde(default = "default_theme_color")]
     pub theme_color: String,
+    #[serde(default = "default_quote_style")]
+    pub quote_style: String,
+    #[serde(default = "default_author_style")]
+    pub author_style: String,
+    #[serde(default = "default_nested_quote_style")]
+    pub nested_quote_style: String,
     #[serde(default = "default_max_tries")]
     pub max_tries: usize,
     #[serde(default = "default_log_file")]
     pub log_file: String,
     #[serde(default = "default_rainbow_mode")]
     pub rainbow_mode: bool,
+    #[serde(default = "default_layout")]
+    pub layout: Layout,
+    #[serde(default = "default_box_corners")]
+    pub box_corners: BoxCorners,
     #[serde(default = "default_prefer_cache")]
     pub prefer_cache: bool,
     #[serde(default = "default_api_calls_per_minute")]
     pub api_calls_per_minute: usize,
 }
 
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum Layout {
+    Default,
+    Box,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum BoxCorners {
+    Pointy,
+    Rounded,
+}
+
 pub fn default_theme_color() -> String {
     "#B7FFFA".to_string()
+}
+
+pub fn default_quote_style() -> String {
+    "bold".to_string()
+}
+
+pub fn default_author_style() -> String {
+    "green".to_string()
+}
+
+pub fn default_nested_quote_style() -> String {
+    String::new()
 }
 
 pub fn default_max_tries() -> usize {
@@ -36,6 +72,14 @@ pub fn default_log_file() -> String {
 
 pub fn default_rainbow_mode() -> bool {
     false
+}
+
+pub fn default_layout() -> Layout {
+    Layout::Default
+}
+
+pub fn default_box_corners() -> BoxCorners {
+    BoxCorners::Pointy
 }
 
 pub fn default_prefer_cache() -> bool {
@@ -70,9 +114,14 @@ pub fn load_or_create_config() -> Result<Config, Box<dyn StdError + Send + Sync>
         let default_config = Config {
             authors: default_authors(),
             theme_color: default_theme_color(),
+            quote_style: default_quote_style(),
+            author_style: default_author_style(),
+            nested_quote_style: default_nested_quote_style(),
             max_tries: default_max_tries(),
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
+            layout: default_layout(),
+            box_corners: default_box_corners(),
             prefer_cache: default_prefer_cache(),
             api_calls_per_minute: default_api_calls_per_minute(),
         };
@@ -108,9 +157,14 @@ pub fn load_or_create_config_from_path(
         let default_config = Config {
             authors: default_authors(),
             theme_color: default_theme_color(),
+            quote_style: default_quote_style(),
+            author_style: default_author_style(),
+            nested_quote_style: default_nested_quote_style(),
             max_tries: default_max_tries(),
             log_file: default_log_file(),
             rainbow_mode: default_rainbow_mode(),
+            layout: default_layout(),
+            box_corners: default_box_corners(),
             prefer_cache: default_prefer_cache(),
             api_calls_per_minute: default_api_calls_per_minute(),
         };
