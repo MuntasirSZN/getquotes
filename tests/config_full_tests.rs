@@ -1,7 +1,8 @@
 mod common;
 
 use getquotes::config::{
-    default_authors, default_log_file, default_max_tries, default_rainbow_mode,
+    default_author_style, default_authors, default_box_corners, default_layout, default_log_file,
+    default_max_tries, default_nested_quote_style, default_quote_style, default_rainbow_mode,
     default_theme_color, get_config_path, load_or_create_config, load_or_create_config_from_path,
     parse_hex_color,
 };
@@ -17,6 +18,15 @@ fn test_default_config_values() {
     let theme_color = default_theme_color();
     assert_eq!(theme_color, "#B7FFFA");
 
+    let quote_style = default_quote_style();
+    assert_eq!(quote_style, "bold");
+
+    let author_style = default_author_style();
+    assert_eq!(author_style, "green");
+
+    let nested_quote_style = default_nested_quote_style();
+    assert_eq!(nested_quote_style, "");
+
     let max_tries = default_max_tries();
     assert_eq!(max_tries, 30);
 
@@ -25,6 +35,12 @@ fn test_default_config_values() {
 
     let rainbow_mode = default_rainbow_mode();
     assert!(!rainbow_mode);
+
+    let layout = default_layout();
+    assert_eq!(layout, getquotes::config::Layout::Default);
+
+    let box_corners = default_box_corners();
+    assert_eq!(box_corners, getquotes::config::BoxCorners::Pointy);
 }
 
 #[test]
@@ -84,9 +100,14 @@ fn test_load_or_create_config_new_file() -> Result<(), Box<dyn std::error::Error
 
     // Verify default values
     assert_eq!(config.theme_color, default_theme_color());
+    assert_eq!(config.quote_style, default_quote_style());
+    assert_eq!(config.author_style, default_author_style());
+    assert_eq!(config.nested_quote_style, default_nested_quote_style());
     assert_eq!(config.max_tries, default_max_tries());
     assert_eq!(config.log_file, default_log_file());
     assert!(!config.rainbow_mode);
+    assert_eq!(config.layout, default_layout());
+    assert_eq!(config.box_corners, default_box_corners());
     assert_eq!(config.authors, default_authors());
 
     // Verify file was created
@@ -118,9 +139,14 @@ fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::
     let custom_config = r#"
         authors = ["Custom Author"]
         theme_color = "FF5500"
+        quote_style = "italic,rgb(255, 100, 0)"
+        author_style = "bold,linear-gradient(#00ff00, #0000ff)"
+        nested_quote_style = "underline"
         max_tries = 50
         log_file = "custom.log"
         rainbow_mode = true
+        layout = "box"
+        box_corners = "rounded"
     "#;
 
     // Write the custom config
@@ -131,9 +157,17 @@ fn test_load_or_create_config_existing_file() -> Result<(), Box<dyn std::error::
 
     // Verify custom values
     assert_eq!(config.theme_color, "FF5500");
+    assert_eq!(config.quote_style, "italic,rgb(255, 100, 0)");
+    assert_eq!(
+        config.author_style,
+        "bold,linear-gradient(#00ff00, #0000ff)"
+    );
+    assert_eq!(config.nested_quote_style, "underline");
     assert_eq!(config.max_tries, 50);
     assert_eq!(config.log_file, "custom.log");
     assert!(config.rainbow_mode);
+    assert_eq!(config.layout, getquotes::config::Layout::Box);
+    assert_eq!(config.box_corners, getquotes::config::BoxCorners::Rounded);
     assert_eq!(config.authors, vec!["Custom Author"]);
 
     Ok(())
@@ -158,9 +192,14 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
     let custom_config = r#"
         authors = ["Custom Author From Path"]
         theme_color = "AABBCC"
+        quote_style = "bold,hsl(200, 100%, 50%)"
+        author_style = "italic"
+        nested_quote_style = "underline"
         max_tries = 99
         log_file = "path_custom.log"
         rainbow_mode = true
+        layout = "box"
+        box_corners = "rounded"
     "#;
 
     fs::write(&custom_path, custom_config)?;
@@ -170,9 +209,17 @@ fn test_load_or_create_config_from_path() -> Result<(), Box<dyn std::error::Erro
 
     // Verify the modified values
     assert_eq!(reloaded_config.theme_color, "AABBCC");
+    assert_eq!(reloaded_config.quote_style, "bold,hsl(200, 100%, 50%)");
+    assert_eq!(reloaded_config.author_style, "italic");
+    assert_eq!(reloaded_config.nested_quote_style, "underline");
     assert_eq!(reloaded_config.max_tries, 99);
     assert_eq!(reloaded_config.log_file, "path_custom.log");
     assert!(reloaded_config.rainbow_mode);
+    assert_eq!(reloaded_config.layout, getquotes::config::Layout::Box);
+    assert_eq!(
+        reloaded_config.box_corners,
+        getquotes::config::BoxCorners::Rounded
+    );
     assert_eq!(reloaded_config.authors, vec!["Custom Author From Path"]);
 
     Ok(())

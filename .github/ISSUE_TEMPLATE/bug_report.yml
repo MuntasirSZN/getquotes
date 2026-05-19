@@ -36,7 +36,7 @@ body:
       value: |
         ```json
         {
-          "$schema": "https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config.schema.json",
+          "$schema": "https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config/config.schema.json",
           "authors": [
             "Mahatma Gandhi",
             "Albert Einstein",

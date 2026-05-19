@@ -31,9 +31,9 @@
 
 - **Fetch Quotes**: Get random quotes from Wikiquote. 📜
 - **Custom Authors**: Specify authors to fetch quotes from. 🖋️
-- **Rainbow Mode**: Display quotes in random colors. 🌈
+- **Rainbow Mode**: Display quotes with a real rainbow gradient. 🌈
 - **Offline Mode**: Use cached quotes when offline. 📴
-- **Configurable**: Customize theme color, log file, and more via a TOML configuration file. 🛠️
+- **Configurable**: Customize colors, gradients, text styles, layout, log file, and more via a TOML configuration file. 🛠️
 - **Lightweight**: Fast and efficient, written in Rust. ⚡
 
 ---
@@ -87,7 +87,13 @@ Get-Help getquotes
 
 ## 🧭 Configuration
 
-getquotes can be configured using a TOML configuration file. The configuration file should adhere to the schema defined in `config.schema.toml`, which can be validated using [Taplo](https://taplo.tamasfe.dev/). Here's an example of a configuration file:
+getquotes can be configured using a TOML configuration file. The configuration file schema is generated from Rust types with `schemars` and written to `config/config.schema.json`. You can use this schema in editors powered by [Taplo](https://taplo.tamasfe.dev/) or [Tombi](https://tombi-toml.github.io/tombi/). Add this at the top of your config file:
+
+```toml
+#:schema https://raw.githubusercontent.com/MuntasirSZN/getquotes/refs/heads/main/config/config.schema.json
+```
+
+Here's an example of a configuration file:
 
 ```toml
 # List of authors to fetch quotes from
@@ -96,8 +102,17 @@ authors = [
     "Isaac Newton"
 ]
 
-# Theme color in hex format
-theme_color = "#FF5733"
+# Theme color supports hex, rgb/rgba, hsl, or CSS-inspired gradients
+theme_color = "conic-gradient(from 90deg, #FF5733, hsl(45, 100%, 50%), rgb(0, 170, 255))"
+
+# Extra styling for the quote text
+quote_style = "bold"
+
+# Styling for the author line
+author_style = "italic,green"
+
+# Optional styling for nested quotes inside the quote text
+nested_quote_style = "underline"
 
 # Maximum number of attempts to fetch a quote
 max_tries = 50
@@ -105,16 +120,28 @@ max_tries = 50
 # Log file path
 log_file = "custom_getquotes.log"
 
-# Enable rainbow mode for random colors
+# Enable rainbow mode for a true rainbow gradient
 rainbow_mode = false
+
+# Output layout: "default" or "box"
+layout = "default"
+
+# Box corner style when layout = "box": "pointy" or "rounded"
+box_corners = "pointy"
 ```
 
 ### Properties
 
 - **authors**: An array of author names to fetch quotes from. At least one author must be specified.
-- **theme_color**: A hex color code (with or without a leading #) for theming the output.
+- **theme_color**: The base quote color. Supports hex, `rgb(...)`, `rgba(...)`, `hsl(...)`, and CSS-inspired gradient functions such as `linear-gradient(...)`, `radial-gradient(...)`, `conic-gradient(...)`, and repeating variants.
+- **quote_style**: Comma-separated quote styling tokens such as `bold`, `italic`, `underline`, `strikethrough`, colors, or gradients.
+- **author_style**: Comma-separated styling tokens for the author line.
+- **nested_quote_style**: Optional styling applied to quotes found inside the main quote text.
 - **max_tries**: The maximum number of attempts to find a quote (between 1 and 100, default is 30).
 - **log_file**: The path to the log file (default is "getquotes.log").
+- **rainbow_mode**: Overrides the quote color with a rainbow gradient.
+- **layout**: `default` keeps the current layout, while `box` renders the quote and author inside a box.
+- **box_corners**: Chooses `pointy` (`+`, `|`, `-`) or `rounded` (`╭`, `╮`, `╰`, `╯`, `│`, `─`) corners for box layout.
 
 ---
 
@@ -130,7 +157,8 @@ Options:
   -t, --theme-color <THEME_COLOR>  Set the theme color for the displayed quotes
   -m, --max-tries <MAX_TRIES>      Set the maximum number of tries to fetch a quote
   -l, --log-file <LOG_FILE>        Specify the log file path
-  -r, --rainbow-mode               Enable rainbow mode for random quote colors
+  -r, --rainbow-mode [<RAINBOW_MODE>]
+                                  Enable rainbow mode for gradient rainbow quote colors
   -i, --init-cache                 Initialize the quote cache for offline mode
   -o, --offline                    Run in offline mode, using cached quotes
   -v, --version                    Print version information
@@ -155,7 +183,12 @@ Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contri
 
 ### Configuration Schema
 
-The configuration schema is defined in `config.schema.toml`. Any contributions affecting the configuration should update this schema accordingly.
+The configuration schema file is `config/config.schema.json`, generated from `Config` via `schemars`.
+If you change configuration fields, run:
+
+```bash
+cargo run --bin generate_config_schema
+```
 
 ---
 

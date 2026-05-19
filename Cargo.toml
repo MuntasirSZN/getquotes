@@ -28,7 +28,6 @@ clap = { version = "4.6.1", features = [
 ] }
 clap_complete = "4.6.5"
 clap_complete_nushell = "4.6.0"
-colored = "3.1.1"
 git_rev = "0.1.0"
 jiff = "0.2.24"
 log = "0.4.29"
@@ -42,6 +41,10 @@ tokio = { version = "1", features = ["full"] }
 toml = "1.1.2"
 urlencoding = "2.1.3"
 env_logger = "0.11.10"
+cssparser = "0.37.0"
+cssparser-color = "0.5.0"
+anstyle = "1.0.14"
+schemars = "1.2.1"
 
 [dev-dependencies]
 lazy_static = "1.5.0"

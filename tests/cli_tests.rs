@@ -10,7 +10,7 @@ fn test_cli_arguments() {
     assert_eq!(default_args.theme_color, None);
     assert_eq!(default_args.max_tries, None);
     assert_eq!(default_args.log_file, None);
-    assert!(!default_args.rainbow_mode);
+    assert_eq!(default_args.rainbow_mode, None);
     assert!(!default_args.init_cache);
     assert!(!default_args.offline);
     assert!(!default_args.version);
@@ -35,7 +35,7 @@ fn test_cli_arguments() {
 
     // Test setting rainbow mode
     let args = Args::parse_from(["getquotes", "--rainbow-mode"]);
-    assert!(args.rainbow_mode);
+    assert_eq!(args.rainbow_mode, Some(true));
 
     // Test setting init cache
     let args = Args::parse_from(["getquotes", "--init-cache"]);
@@ -86,7 +86,7 @@ fn test_cli_arguments() {
     assert_eq!(args.theme_color, Some("#FF0000".to_string()));
     assert_eq!(args.max_tries, Some(25));
     assert_eq!(args.log_file, Some("log.txt".to_string()));
-    assert!(args.rainbow_mode);
+    assert_eq!(args.rainbow_mode, Some(true));
     assert!(args.init_cache);
     assert!(args.offline);
     assert!(args.version);

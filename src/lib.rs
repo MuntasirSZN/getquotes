@@ -4,16 +4,16 @@ pub mod cli;
 pub mod config;
 pub mod logger;
 pub mod quotes;
+pub mod render;
 pub mod throttle;
 pub mod types;
 
 use crate::cli::Args;
 use crate::config::Config;
-use crate::config::{load_or_create_config, load_or_create_config_from_path, parse_hex_color};
+use crate::config::{load_or_create_config, load_or_create_config_from_path};
 use crate::throttle::ApiThrottler;
 use clap::CommandFactory;
 use clap_complete::generate;
-use colored::*;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
 use rand::{RngExt, rng as thread_rng};
@@ -49,7 +49,9 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         generate(shell, &mut cmd, "getquotes", &mut io::stdout());
         return Ok(());
     }
-    cfg.rainbow_mode = args.rainbow_mode;
+    if args.rainbow_mode.unwrap_or(false) {
+        cfg.rainbow_mode = true;
+    }
 
     // Initialize logger
     logger::initialize_logger(&cfg.log_file)?;
@@ -68,28 +70,9 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         return Ok(());
     }
 
-    let mut rng = thread_rng();
-
-    let color = if cfg.rainbow_mode {
-        // Generate random RGB values
-        let r: u8 = rng.random();
-        let g: u8 = rng.random();
-        let b: u8 = rng.random();
-        (r, g, b)
-    } else {
-        // Use parsed theme color
-        match parse_hex_color(&cfg.theme_color) {
-            Some((r, g, b)) => (r, g, b),
-            None => {
-                warn!("Invalid hex code in config. Using fallback color.");
-                (0x1E, 0x90, 0xFF)
-            }
-        }
-    };
-
     if args.offline {
         info!("Running in offline mode");
-        return display_offline_quote(&cfg, color);
+        return display_offline_quote(&cfg);
     }
 
     // Try cache first if prefer_cache is enabled (randomized data approach)
@@ -98,15 +81,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
         match cache::get_random_cached_quote(&cfg.authors) {
             Ok(Some((author, quote))) => {
                 // Successfully got a quote from cache
-                let colorized_quote = format!("\"{quote}\"").truecolor(color.0, color.1, color.2);
-                let dash = "-";
-
-                println!(
-                    "{}\n\n {:>99}{}",
-                    colorized_quote.bold(),
-                    dash.bold().green(),
-                    author.green()
-                );
+                println!("{}", render::render_output(&cfg, &quote, &author));
                 info!("Quote successfully displayed from cache: {author}");
                 return Ok(());
             }
@@ -169,18 +144,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                         }
                     }
                     if let Some((auth_found, quote_found)) = found_quote {
-                        // Apply the parsed hex color to the quote
-                        let colorized_quote =
-                            format!("\"{quote_found}\"").truecolor(color.0, color.1, color.2);
-                        let dash = "-";
-
-                        // Print the quote and the author on a new line, right-aligned
-                        println!(
-                            "{}\n\n {:>99}{}",
-                            colorized_quote.bold(),
-                            dash.bold().green(),
-                            auth_found.green()
-                        );
+                        println!("{}", render::render_output(&cfg, &quote_found, &auth_found));
                         info!("Quote successfully displayed from author: {auth_found}");
                         return Ok(());
                     }
@@ -195,10 +159,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
     Err("Failed to retrieve a quote.".into())
 }
 
-fn display_offline_quote(
-    cfg: &Config,
-    color: (u8, u8, u8),
-) -> Result<(), Box<dyn StdError + Send + Sync>> {
+fn display_offline_quote(cfg: &Config) -> Result<(), Box<dyn StdError + Send + Sync>> {
     let cached_quotes = cache::get_cached_quotes()?;
 
     if cached_quotes.is_empty() {
@@ -231,15 +192,7 @@ fn display_offline_quote(
     let (author, quote) = &filtered_quotes[quote_idx];
 
     // Display the randomly selected quote
-    let colorized_quote = format!("\"{quote}\"").truecolor(color.0, color.1, color.2);
-    let dash = "-";
-
-    println!(
-        "{}\n\n {:>99}{}",
-        colorized_quote.bold(),
-        dash.bold().green(),
-        author.green()
-    );
+    println!("{}", render::render_output(cfg, quote, author));
     info!("Offline quote successfully displayed from author: {author}");
     Ok(())
 }

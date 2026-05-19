@@ -1,5 +1,9 @@
 module completions {
 
+  def "nu-complete getquotes rainbow_mode" [] {
+    [ "true" "false" ]
+  }
+
   def "nu-complete getquotes completion" [] {
     [ "bash" "elvish" "fish" "powershell" "zsh" "nushell" ]
   }
@@ -10,7 +14,7 @@ module completions {
     --theme-color(-t): string # Set the theme color for the displayed quotes
     --max-tries(-m): string   # Set the maximum number of tries to fetch a quote
     --log-file(-l): string    # Specify the log file path
-    --rainbow-mode(-r)        # Enable rainbow mode for random quote colors
+    --rainbow-mode(-r): string@"nu-complete getquotes rainbow_mode" # Enable rainbow mode for gradient rainbow quote colors
     --init-cache(-i)          # Initialize the quote cache for offline mode
     --offline(-o)             # Run in offline mode, using cached quotes
     --version(-v)             # Print version information

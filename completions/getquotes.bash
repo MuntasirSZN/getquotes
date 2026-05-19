@@ -61,6 +61,14 @@ _getquotes() {
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
+                --rainbow-mode)
+                    COMPREPLY=($(compgen -W "true false" -- "${cur}"))
+                    return 0
+                    ;;
+                -r)
+                    COMPREPLY=($(compgen -W "true false" -- "${cur}"))
+                    return 0
+                    ;;
                 --config)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
