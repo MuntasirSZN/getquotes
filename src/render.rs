@@ -1,5 +1,6 @@
 use crate::config::{BoxCorners, Config, Layout};
-use colored::Colorize;
+use anstyle::{Color as AnsiColor, RgbColor as AnsiRgbColor, Style as AnsiStyle};
+use cssparser::{ParseError, Parser, ParserInput, Token};
 use log::warn;
 use std::ops::Range;
 
@@ -70,6 +71,21 @@ enum FillSource {
     None,
     Base,
     Override(usize),
+}
+
+#[derive(Clone, Copy, Debug)]
+enum NumericComponent {
+    Number(f32),
+    Percentage(f32),
+    Angle(f32, AngleUnit),
+}
+
+#[derive(Clone, Copy, Debug)]
+enum AngleUnit {
+    Deg,
+    Grad,
+    Rad,
+    Turn,
 }
 
 #[derive(Clone, Copy)]
@@ -250,30 +266,30 @@ fn style_char(ch: char, color: Option<RgbColor>, decorations: Decorations) -> St
         return ch.to_string();
     }
 
-    let mut styled = ch.to_string().normal();
+    let mut style = AnsiStyle::new();
     if let Some(rgb) = color {
-        styled = styled.truecolor(rgb.r, rgb.g, rgb.b);
+        style = style.fg_color(Some(AnsiColor::Rgb(AnsiRgbColor(rgb.r, rgb.g, rgb.b))));
     }
     if decorations.bold {
-        styled = styled.bold();
+        style = style.bold();
     }
     if decorations.italic {
-        styled = styled.italic();
+        style = style.italic();
     }
     if decorations.underline {
-        styled = styled.underline();
+        style = style.underline();
     }
     if decorations.strikethrough {
-        styled = styled.strikethrough();
+        style = style.strikethrough();
     }
     if decorations.dimmed {
-        styled = styled.dimmed();
+        style = style.dimmed();
     }
     if decorations.reversed {
-        styled = styled.reversed();
+        style = style.invert();
     }
 
-    styled.to_string()
+    format!("{style}{ch}{style:#}")
 }
 
 fn assign_fill_colors(fill: &Fill, indices: &[usize], colors: &mut [Option<RgbColor>]) {
@@ -369,14 +385,7 @@ fn parse_fill_spec(spec: &str) -> Option<Fill> {
         return Some(Fill::Rainbow);
     }
 
-    if let Some((function_name, inner)) = function_name_and_args(trimmed)
-        && is_supported_gradient_function(function_name)
-    {
-        let stops: Vec<_> = split_top_level(inner, ',')
-            .into_iter()
-            .filter_map(|stop| parse_gradient_stop(stop.trim()))
-            .collect();
-
+    if let Some(stops) = parse_gradient_spec(trimmed) {
         return match stops.len() {
             0 => None,
             1 => Some(Fill::Solid(stops[0])),
@@ -387,62 +396,128 @@ fn parse_fill_spec(spec: &str) -> Option<Fill> {
     parse_color_spec(trimmed).map(Fill::Solid)
 }
 
-fn parse_gradient_stop(stop: &str) -> Option<RgbColor> {
-    parse_color_spec(stop).or_else(|| {
-        extract_color_like_prefix(stop)
-            .as_deref()
-            .and_then(parse_color_spec)
-    })
+fn parse_gradient_spec(spec: &str) -> Option<Vec<RgbColor>> {
+    let mut input = ParserInput::new(spec);
+    let mut parser = Parser::new(&mut input);
+    let function_name = match parser.next().ok()? {
+        Token::Function(name) if is_supported_gradient_function(name.as_ref()) => {
+            name.as_ref().to_string()
+        }
+        _ => return None,
+    };
+
+    let stops = parse_gradient_function(&function_name, &mut parser)?;
+    parser.expect_exhausted().ok()?;
+    Some(stops)
+}
+
+fn parse_gradient_function<'i, 't>(
+    function_name: &str,
+    parser: &mut Parser<'i, 't>,
+) -> Option<Vec<RgbColor>> {
+    if !is_supported_gradient_function(function_name) {
+        return None;
+    }
+
+    parser
+        .parse_nested_block(
+            |input| -> Result<Vec<RgbColor>, ParseError<'i, ()>> {
+                Ok(input.parse_comma_separated_ignoring_errors(
+                    |stop| -> Result<RgbColor, ParseError<'i, ()>> {
+                        parse_gradient_stop_value(stop).ok_or_else(|| stop.new_custom_error(()))
+                    },
+                ))
+            },
+        )
+        .ok()
 }
 
 fn parse_color_spec(spec: &str) -> Option<RgbColor> {
-    parse_hex_color(spec)
-        .or_else(|| parse_rgb_function(spec, "rgb"))
-        .or_else(|| parse_rgba_function(spec))
-        .or_else(|| parse_hsl_function(spec))
-        .or_else(|| named_color_rgb(spec))
+    let mut input = ParserInput::new(spec);
+    let mut parser = Parser::new(&mut input);
+    let color = parse_single_color(&mut parser)?;
+    parser.expect_exhausted().ok()?;
+    Some(color)
 }
 
-fn parse_hex_color(spec: &str) -> Option<RgbColor> {
-    let clean_hex = spec.trim().strip_prefix('#').unwrap_or(spec.trim());
-    if clean_hex.len() != 6 {
+#[cfg(test)]
+fn parse_gradient_stop(spec: &str) -> Option<RgbColor> {
+    let mut input = ParserInput::new(spec);
+    let mut parser = Parser::new(&mut input);
+    parse_gradient_stop_value(&mut parser)
+}
+
+fn parse_gradient_stop_value<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+    let mut color = None;
+
+    while let Ok(token) = input.next().cloned() {
+        if color.is_none() {
+            color = parse_color_token(token, input);
+        }
+    }
+
+    color
+}
+
+fn parse_single_color<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+    let token = input.next().ok()?.clone();
+    parse_color_token(token, input)
+}
+
+fn parse_color_token<'i, 't>(token: Token<'i>, parser: &mut Parser<'i, 't>) -> Option<RgbColor> {
+    match token {
+        Token::Hash(value) | Token::IDHash(value) => parse_hex_color(value.as_ref()),
+        Token::Ident(value) => named_color_rgb(value.as_ref()),
+        Token::Function(name) => parser
+            .parse_nested_block(
+                |input| -> Result<Option<RgbColor>, ParseError<'i, ()>> {
+                    Ok(parse_color_function(name.as_ref(), input))
+                },
+            )
+            .ok()
+            .flatten(),
+        _ => None,
+    }
+}
+
+fn parse_hex_color(value: &str) -> Option<RgbColor> {
+    if value.len() != 6 {
         return None;
     }
 
     Some(RgbColor {
-        r: u8::from_str_radix(&clean_hex[0..2], 16).ok()?,
-        g: u8::from_str_radix(&clean_hex[2..4], 16).ok()?,
-        b: u8::from_str_radix(&clean_hex[4..6], 16).ok()?,
+        r: u8::from_str_radix(&value[0..2], 16).ok()?,
+        g: u8::from_str_radix(&value[2..4], 16).ok()?,
+        b: u8::from_str_radix(&value[4..6], 16).ok()?,
     })
 }
 
-fn parse_rgb_function(spec: &str, function_name: &str) -> Option<RgbColor> {
-    let inner = function_args(spec, function_name)?;
-    let parts = split_top_level(inner, ',');
-    if parts.len() != 3 {
-        return None;
+fn parse_color_function<'i, 't>(function_name: &str, input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+    match normalize_token(function_name).as_str() {
+        "rgb" => parse_rgb_function(input, false),
+        "rgba" => parse_rgb_function(input, true),
+        "hsl" => parse_hsl_function(input),
+        _ => None,
     }
-
-    Some(RgbColor {
-        r: parse_rgb_channel(&parts[0])?,
-        g: parse_rgb_channel(&parts[1])?,
-        b: parse_rgb_channel(&parts[2])?,
-    })
 }
 
-fn parse_rgba_function(spec: &str) -> Option<RgbColor> {
-    let inner = function_args(spec, "rgba")?;
-    let parts = split_top_level(inner, ',');
-    if parts.len() != 4 {
+fn parse_rgb_function<'i, 't>(input: &mut Parser<'i, 't>, allow_alpha: bool) -> Option<RgbColor> {
+    let components = parse_numeric_components(input)?;
+    let expected_len = if allow_alpha { 4 } else { 3 };
+    if components.len() != expected_len {
         return None;
     }
 
     let rgb = RgbColor {
-        r: parse_rgb_channel(&parts[0])?,
-        g: parse_rgb_channel(&parts[1])?,
-        b: parse_rgb_channel(&parts[2])?,
+        r: parse_rgb_channel(components[0])?,
+        g: parse_rgb_channel(components[1])?,
+        b: parse_rgb_channel(components[2])?,
     };
-    let alpha = parse_alpha_channel(&parts[3])?;
+    let alpha = if allow_alpha {
+        parse_alpha_channel(components[3])?
+    } else {
+        1.0
+    };
 
     Some(RgbColor {
         r: (rgb.r as f32 * alpha).round().clamp(0.0, 255.0) as u8,
@@ -451,62 +526,89 @@ fn parse_rgba_function(spec: &str) -> Option<RgbColor> {
     })
 }
 
-fn parse_hsl_function(spec: &str) -> Option<RgbColor> {
-    let inner = function_args(spec, "hsl")?;
-    let parts = split_top_level(inner, ',');
-    if parts.len() != 3 {
+fn parse_hsl_function<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+    let components = parse_numeric_components(input)?;
+    if components.len() != 3 {
         return None;
     }
 
-    let hue = parts[0].trim().parse::<f32>().ok()?;
-    let saturation = parse_percentage(&parts[1])?;
-    let lightness = parse_percentage(&parts[2])?;
+    let hue = parse_hue_channel(components[0])?;
+    let saturation = parse_percentage(components[1])?;
+    let lightness = parse_percentage(components[2])?;
     Some(hsl_to_rgb(hue, saturation, lightness))
 }
 
-fn parse_rgb_channel(value: &str) -> Option<u8> {
-    let trimmed = value.trim();
-    if let Some(number) = trimmed.strip_suffix('%') {
-        let percentage = number.trim().parse::<f32>().ok()?;
-        if !(0.0..=100.0).contains(&percentage) {
-            return None;
+fn parse_numeric_components<'i, 't>(input: &mut Parser<'i, 't>) -> Option<Vec<NumericComponent>> {
+    let mut components = Vec::new();
+
+    while let Ok(token) = input.next().cloned() {
+        match token {
+            Token::Comma => {}
+            Token::Number { value, .. } => components.push(NumericComponent::Number(value)),
+            Token::Percentage { unit_value, .. } => {
+                components.push(NumericComponent::Percentage(unit_value))
+            }
+            Token::Dimension { value, unit, .. } => {
+                components.push(NumericComponent::Angle(value, parse_angle_unit(unit.as_ref())?))
+            }
+            _ => return None,
         }
-        return Some((percentage * 255.0 / 100.0).round() as u8);
     }
 
-    let channel = trimmed.parse::<f32>().ok()?;
-    if !(0.0..=255.0).contains(&channel) {
-        return None;
-    }
-    Some(channel.round() as u8)
+    Some(components)
 }
 
-fn parse_alpha_channel(value: &str) -> Option<f32> {
-    let trimmed = value.trim();
-    if let Some(number) = trimmed.strip_suffix('%') {
-        let percentage = number.trim().parse::<f32>().ok()?;
-        if !(0.0..=100.0).contains(&percentage) {
-            return None;
+fn parse_rgb_channel(value: NumericComponent) -> Option<u8> {
+    match value {
+        NumericComponent::Number(channel) if (0.0..=255.0).contains(&channel) => {
+            Some(channel.round() as u8)
         }
-        return Some((percentage / 100.0).clamp(0.0, 1.0));
-    }
-
-    let alpha = trimmed.parse::<f32>().ok()?;
-    if (0.0..=1.0).contains(&alpha) {
-        Some(alpha)
-    } else if (0.0..=255.0).contains(&alpha) {
-        Some((alpha / 255.0).clamp(0.0, 1.0))
-    } else {
-        None
+        NumericComponent::Percentage(channel) if (0.0..=1.0).contains(&channel) => {
+            Some((channel * 255.0).round() as u8)
+        }
+        _ => None,
     }
 }
 
-fn parse_percentage(value: &str) -> Option<f32> {
-    let number = value.trim().strip_suffix('%')?.trim().parse::<f32>().ok()?;
-    if !(0.0..=100.0).contains(&number) {
-        return None;
+fn parse_alpha_channel(value: NumericComponent) -> Option<f32> {
+    match value {
+        NumericComponent::Number(alpha) if (0.0..=1.0).contains(&alpha) => Some(alpha),
+        NumericComponent::Number(alpha) if (0.0..=255.0).contains(&alpha) => {
+            Some((alpha / 255.0).clamp(0.0, 1.0))
+        }
+        NumericComponent::Percentage(alpha) if (0.0..=1.0).contains(&alpha) => Some(alpha),
+        _ => None,
     }
-    Some(number / 100.0)
+}
+
+fn parse_percentage(value: NumericComponent) -> Option<f32> {
+    match value {
+        NumericComponent::Percentage(percentage) if (0.0..=1.0).contains(&percentage) => {
+            Some(percentage)
+        }
+        _ => None,
+    }
+}
+
+fn parse_hue_channel(value: NumericComponent) -> Option<f32> {
+    match value {
+        NumericComponent::Number(hue) => Some(hue),
+        NumericComponent::Angle(hue, AngleUnit::Deg) => Some(hue),
+        NumericComponent::Angle(hue, AngleUnit::Grad) => Some(hue * 0.9),
+        NumericComponent::Angle(hue, AngleUnit::Rad) => Some(hue.to_degrees()),
+        NumericComponent::Angle(hue, AngleUnit::Turn) => Some(hue * 360.0),
+        _ => None,
+    }
+}
+
+fn parse_angle_unit(unit: &str) -> Option<AngleUnit> {
+    match normalize_token(unit).as_str() {
+        "deg" => Some(AngleUnit::Deg),
+        "grad" => Some(AngleUnit::Grad),
+        "rad" => Some(AngleUnit::Rad),
+        "turn" => Some(AngleUnit::Turn),
+        _ => None,
+    }
 }
 
 fn hsl_to_rgb(hue: f32, saturation: f32, lightness: f32) -> RgbColor {
@@ -674,34 +776,6 @@ fn find_nested_quote_ranges(text: &str) -> Vec<Range<usize>> {
     ranges
 }
 
-fn function_args<'a>(value: &'a str, function_name: &str) -> Option<&'a str> {
-    let trimmed = value.trim();
-    let prefix = format!("{function_name}(");
-    if !trimmed
-        .get(..prefix.len())?
-        .eq_ignore_ascii_case(prefix.as_str())
-        || !trimmed.ends_with(')')
-    {
-        return None;
-    }
-
-    trimmed.get(prefix.len()..trimmed.len().saturating_sub(1))
-}
-
-fn function_name_and_args(value: &str) -> Option<(&str, &str)> {
-    let trimmed = value.trim();
-    let open_idx = trimmed.find('(')?;
-    let close_idx = trimmed.rfind(')')?;
-    if close_idx <= open_idx {
-        return None;
-    }
-
-    Some((
-        trimmed.get(..open_idx)?.trim(),
-        trimmed.get((open_idx + 1)..close_idx)?.trim(),
-    ))
-}
-
 fn is_supported_gradient_function(name: &str) -> bool {
     matches!(
         normalize_token(name).as_str(),
@@ -712,46 +786,6 @@ fn is_supported_gradient_function(name: &str) -> bool {
             | "repeatingradialgradient"
             | "repeatingconicgradient"
     )
-}
-
-fn extract_color_like_prefix(value: &str) -> Option<String> {
-    let trimmed = value.trim();
-    if trimmed.is_empty() {
-        return None;
-    }
-
-    if let Some(open_idx) = trimmed.find('(') {
-        let function_name = trimmed.get(..open_idx)?.trim();
-        if parse_color_spec(function_name).is_some() {
-            return Some(function_name.to_string());
-        }
-
-        if matches!(
-            normalize_token(function_name).as_str(),
-            "rgb" | "rgba" | "hsl"
-        ) {
-            let mut depth = 0usize;
-            for (idx, ch) in trimmed.char_indices() {
-                match ch {
-                    '(' => depth += 1,
-                    ')' => {
-                        depth = depth.saturating_sub(1);
-                        if depth == 0 {
-                            return trimmed.get(..=idx).map(str::to_string);
-                        }
-                    }
-                    _ => {}
-                }
-            }
-        }
-    }
-
-    trimmed
-        .split_whitespace()
-        .next()
-        .map(str::trim)
-        .filter(|token| parse_color_spec(token).is_some())
-        .map(str::to_string)
 }
 
 fn split_top_level(value: &str, delimiter: char) -> Vec<String> {
