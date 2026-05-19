@@ -594,7 +594,7 @@ fn parse_hue_channel(value: NumericComponent) -> Option<f32> {
     match value {
         NumericComponent::Number(hue) => Some(hue),
         NumericComponent::Angle(hue, AngleUnit::Deg) => Some(hue),
-        NumericComponent::Angle(hue, AngleUnit::Grad) => Some(hue * 0.9),
+        NumericComponent::Angle(hue, AngleUnit::Grad) => Some(hue * 360.0 / 400.0),
         NumericComponent::Angle(hue, AngleUnit::Rad) => Some(hue.to_degrees()),
         NumericComponent::Angle(hue, AngleUnit::Turn) => Some(hue * 360.0),
         _ => None,
