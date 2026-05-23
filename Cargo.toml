@@ -45,6 +45,7 @@ cssparser = "0.37.0"
 cssparser-color = "0.5.0"
 anstyle = "1.0.14"
 schemars = "1.2.1"
+terminal_size = "0.4.4"
 
 [dev-dependencies]
 lazy_static = "1.5.0"

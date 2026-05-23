@@ -4,6 +4,7 @@ use cssparser::{ParseError, Parser, ParserInput, Token};
 use cssparser_color::{Color as CssColor, parse_color_keyword};
 use log::warn;
 use std::ops::Range;
+use terminal_size::{Width, terminal_size};
 
 const FALLBACK_COLOR: RgbColor = RgbColor {
     r: 0x1E,
@@ -177,9 +178,8 @@ fn terminal_inner_width() -> usize {
     const DEFAULT_INNER_WIDTH: usize = 100;
     const MIN_INNER_WIDTH: usize = 20;
 
-    std::env::var("COLUMNS")
-        .ok()
-        .and_then(|value| value.parse::<usize>().ok())
+    terminal_size()
+        .map(|(Width(width), _)| usize::from(width))
         .map(|width| width.saturating_sub(BOX_BORDER_WIDTH).max(MIN_INNER_WIDTH))
         .unwrap_or(DEFAULT_INNER_WIDTH)
 }
