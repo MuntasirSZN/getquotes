@@ -1023,6 +1023,12 @@ mod tests {
     }
 
     #[test]
+    fn wraps_text_on_word_boundaries() {
+        let lines = wrap_text_lines("one two three four", 7);
+        assert_eq!(lines, vec!["one two", "three", "four"]);
+    }
+
+    #[test]
     fn finds_nested_quote_ranges() {
         assert_eq!(find_nested_quote_ranges(r#"He said "hi""#), vec![8..12]);
     }
