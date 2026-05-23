@@ -173,13 +173,14 @@ fn render_box_layout(cfg: &Config, quote: &str, author: &str) -> String {
 }
 
 fn terminal_inner_width() -> usize {
+    const BOX_BORDER_WIDTH: usize = 2;
     const DEFAULT_INNER_WIDTH: usize = 100;
     const MIN_INNER_WIDTH: usize = 20;
 
     std::env::var("COLUMNS")
         .ok()
         .and_then(|value| value.parse::<usize>().ok())
-        .map(|width| width.saturating_sub(2).max(MIN_INNER_WIDTH))
+        .map(|width| width.saturating_sub(BOX_BORDER_WIDTH).max(MIN_INNER_WIDTH))
         .unwrap_or(DEFAULT_INNER_WIDTH)
 }
 
@@ -1009,14 +1010,14 @@ mod tests {
     fn box_layout_wraps_long_quotes() {
         let mut config = sample_config();
         config.layout = Layout::Box;
-        let quote = "word ".repeat(40);
+        let quote = "a".repeat((terminal_inner_width() * 2) + 10);
 
         let rendered = render_output(&config, &quote, "Author");
         let plain = strip_ansi(&rendered);
         let lines = plain.lines().collect::<Vec<_>>();
 
         assert!(lines.len() > 4);
-        assert!(lines[0].chars().count() <= 102);
+        assert!(lines[0].chars().count() <= terminal_inner_width() + 2);
     }
 
     #[test]
