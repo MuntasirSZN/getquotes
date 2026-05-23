@@ -1008,9 +1008,11 @@ mod tests {
 
     #[test]
     fn box_layout_wraps_long_quotes() {
+        const EXTRA_WIDTH: usize = 10;
+
         let mut config = sample_config();
         config.layout = Layout::Box;
-        let quote = "a".repeat((terminal_inner_width() * 2) + 10);
+        let quote = "a".repeat((terminal_inner_width() * 2) + EXTRA_WIDTH);
 
         let rendered = render_output(&config, &quote, "Author");
         let plain = strip_ansi(&rendered);
