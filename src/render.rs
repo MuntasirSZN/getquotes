@@ -4,6 +4,7 @@ use cssparser::{ParseError, Parser, ParserInput, Token};
 use cssparser_color::{Color as CssColor, parse_color_keyword};
 use log::warn;
 use std::ops::Range;
+use terminal_size::{Width, terminal_size};
 
 const FALLBACK_COLOR: RgbColor = RgbColor {
     r: 0x1E,
@@ -123,15 +124,25 @@ fn render_default_layout(cfg: &Config, quote: &str, author: &str) -> String {
 fn render_box_layout(cfg: &Config, quote: &str, author: &str) -> String {
     let quote_plain = format!("\"{quote}\"");
     let author_plain = author.to_string();
-    let width = quote_plain
-        .chars()
-        .count()
+
+    let max_quote_width = terminal_inner_width();
+    let quote_lines = wrap_text_lines(&quote_plain, max_quote_width);
+    let width = quote_lines
+        .iter()
+        .map(|line| line.chars().count())
+        .max()
+        .unwrap_or(0)
         .max(author_plain.chars().count());
 
     let quote_style = resolve_quote_style(cfg);
-    let nested_overrides = nested_quote_overrides(quote, &cfg.nested_quote_style);
-    let quote_row_plain = pad_right(&quote_plain, width);
-    let styled_quote = style_text(&quote_row_plain, &quote_style, &nested_overrides);
+    let quote_rows = quote_lines
+        .iter()
+        .map(|line| {
+            let nested_overrides = nested_quote_overrides(line, &cfg.nested_quote_style);
+            let quote_row_plain = pad_right(line, width);
+            style_text(&quote_row_plain, &quote_style, &nested_overrides)
+        })
+        .collect::<Vec<_>>();
 
     let author_style = resolve_author_style(cfg);
     let author_row_plain = pad_left(&author_plain, width);
@@ -151,10 +162,88 @@ fn render_box_layout(cfg: &Config, quote: &str, author: &str) -> String {
         chars.bottom_right
     );
 
-    format!(
-        "{top}\n{}{}{}\n{}{}{}\n{bottom}",
-        chars.vertical, styled_quote, chars.vertical, chars.vertical, styled_author, chars.vertical
-    )
+    let mut rows = quote_rows;
+    rows.push(styled_author);
+    let body = rows
+        .iter()
+        .map(|row| format!("{}{}{}", chars.vertical, row, chars.vertical))
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    format!("{top}\n{body}\n{bottom}")
+}
+
+fn terminal_inner_width() -> usize {
+    const BOX_BORDER_WIDTH: usize = 2;
+    const DEFAULT_INNER_WIDTH: usize = 100;
+    const MIN_INNER_WIDTH: usize = 20;
+
+    terminal_size()
+        .map(|(Width(width), _)| usize::from(width))
+        .map(|width| width.saturating_sub(BOX_BORDER_WIDTH).max(MIN_INNER_WIDTH))
+        .unwrap_or(DEFAULT_INNER_WIDTH)
+}
+
+fn wrap_text_lines(text: &str, max_width: usize) -> Vec<String> {
+    if text.is_empty() {
+        return vec![String::new()];
+    }
+
+    if max_width == 0 {
+        return vec![text.to_string()];
+    }
+
+    let mut lines = Vec::new();
+    let mut current = String::new();
+
+    for word in text.split_whitespace() {
+        if current.is_empty() {
+            push_wrapped_word(&mut lines, &mut current, word, max_width);
+            continue;
+        }
+
+        let prospective_len = current.chars().count() + 1 + word.chars().count();
+        if prospective_len <= max_width {
+            current.push(' ');
+            current.push_str(word);
+        } else {
+            lines.push(std::mem::take(&mut current));
+            push_wrapped_word(&mut lines, &mut current, word, max_width);
+        }
+    }
+
+    if !current.is_empty() {
+        lines.push(current);
+    }
+
+    if lines.is_empty() {
+        lines.push(String::new());
+    }
+
+    lines
+}
+
+fn push_wrapped_word(lines: &mut Vec<String>, current: &mut String, word: &str, max_width: usize) {
+    if word.chars().count() <= max_width {
+        current.push_str(word);
+        return;
+    }
+
+    if !current.is_empty() {
+        lines.push(std::mem::take(current));
+    }
+
+    let mut chunk = String::new();
+    for ch in word.chars() {
+        chunk.push(ch);
+        if chunk.chars().count() == max_width {
+            lines.push(std::mem::take(&mut chunk));
+        }
+    }
+
+    if !chunk.is_empty() {
+        current.push_str(&chunk);
+    }
 }
 
 fn resolve_quote_style(cfg: &Config) -> TextStyle {
@@ -915,6 +1004,28 @@ mod tests {
         assert!(rendered.contains('╭'));
         assert!(rendered.contains('╯'));
         assert!(rendered.contains('│'));
+    }
+
+    #[test]
+    fn box_layout_wraps_long_quotes() {
+        const MAX_WIDTH: usize = 20;
+        let quote = "a".repeat((MAX_WIDTH * 2) + 10);
+
+        let lines = wrap_text_lines(&quote, MAX_WIDTH);
+        assert!(lines.len() > 1);
+        assert!(lines.iter().all(|line| line.chars().count() <= MAX_WIDTH));
+    }
+
+    #[test]
+    fn wraps_long_unbroken_words() {
+        let lines = wrap_text_lines("abcdefghij", 4);
+        assert_eq!(lines, vec!["abcd", "efgh", "ij"]);
+    }
+
+    #[test]
+    fn wraps_text_on_word_boundaries() {
+        let lines = wrap_text_lines("one two three four", 7);
+        assert_eq!(lines, vec!["one two", "three", "four"]);
     }
 
     #[test]
