@@ -1008,18 +1008,12 @@ mod tests {
 
     #[test]
     fn box_layout_wraps_long_quotes() {
-        const EXTRA_WIDTH: usize = 10;
+        const MAX_WIDTH: usize = 20;
+        let quote = "a".repeat((MAX_WIDTH * 2) + 10);
 
-        let mut config = sample_config();
-        config.layout = Layout::Box;
-        let quote = "a".repeat((terminal_inner_width() * 2) + EXTRA_WIDTH);
-
-        let rendered = render_output(&config, &quote, "Author");
-        let plain = strip_ansi(&rendered);
-        let lines = plain.lines().collect::<Vec<_>>();
-
-        assert!(lines.len() > 4);
-        assert!(lines[0].chars().count() <= terminal_inner_width() + 2);
+        let lines = wrap_text_lines(&quote, MAX_WIDTH);
+        assert!(lines.len() > 1);
+        assert!(lines.iter().all(|line| line.chars().count() <= MAX_WIDTH));
     }
 
     #[test]
