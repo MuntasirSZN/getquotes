@@ -6,9 +6,6 @@ jobs:
   build-linux:
     uses: ./.github/workflows/build-linux.yaml
     name: 🏗️ Build For Linux
-  build-android:
-    uses: ./.github/workflows/build-android.yaml
-    name: 🏗️ Build For Android
   build-macos:
     uses: ./.github/workflows/build-mac.yaml
     name: 🏗️ Build For MacOS

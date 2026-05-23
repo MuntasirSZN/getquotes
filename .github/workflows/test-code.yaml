@@ -34,7 +34,6 @@ jobs:
           # Windows (MSVC)
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-          # TODO: Run tests for android, pr wanted.
 
     steps:
       - name: 🛎️ Checkout code
