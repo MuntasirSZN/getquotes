@@ -222,12 +222,7 @@ fn wrap_text_lines(text: &str, max_width: usize) -> Vec<String> {
     lines
 }
 
-fn push_wrapped_word(
-    lines: &mut Vec<String>,
-    current: &mut String,
-    word: &str,
-    max_width: usize,
-) {
+fn push_wrapped_word(lines: &mut Vec<String>, current: &mut String, word: &str, max_width: usize) {
     if word.chars().count() <= max_width {
         current.push_str(word);
         return;
