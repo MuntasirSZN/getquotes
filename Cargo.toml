@@ -30,7 +30,7 @@ clap_complete = "4.6.5"
 clap_complete_nushell = "4.6.0"
 git_rev = "0.1.0"
 jiff = "0.2.25"
-log = "0.4.29"
+log = "0.4.30"
 rand = "0.10"
 reqwest = { version = "0.13", features = ["json", "socks"] }
 rusqlite = { version = "0.39.0", features = ["bundled"] }
