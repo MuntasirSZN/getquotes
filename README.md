@@ -45,7 +45,7 @@
 | Crates.io | `cargo install getquotes` | [![Crates.io](https://img.shields.io/crates/v/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=rust)](https://crates.io/crates/getquotes) |
 | AUR | `yay -S getquotes` | [![AUR](https://img.shields.io/aur/version/getquotes?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=archlinux)](https://aur.archlinux.org/packages/getquotes) |
 | AUR (Git) | `yay -S getquotes-git` | [![AUR](https://img.shields.io/aur/version/getquotes-git?style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&labelColor=1E1E2E&logo=git)](https://aur.archlinux.org/packages/getquotes-git) |
-| Homebrew | `brew install MuntasirSZN/homebrew-programs/getquotes` | [![Homebrew](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/MuntasirSZN/homebrew-programs/master/Info/g/getquotes.json&query=$.versions.stable&label=Homebrew&labelColor=1E1E2E&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&logo=homebrew)](https://github.com/MuntasirSZN/homebrew-programs)
+| Homebrew | `brew install MuntasirSZN/programs/getquotes` | [![Homebrew](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/MuntasirSZN/homebrew-programs/master/Info/g/getquotes.json&query=$.versions.stable&label=Homebrew&labelColor=1E1E2E&style=for-the-badge&color=FFB1C8&logoColor=D9E0EE&logo=homebrew)](https://github.com/MuntasirSZN/homebrew-programs)
 
 > [!Note]
 > You can install getquotes from the AUR using `yay` or `paru`, or any other AUR helper.
