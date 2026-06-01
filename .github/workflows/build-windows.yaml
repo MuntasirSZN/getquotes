@@ -10,7 +10,7 @@ jobs:
         target: [x86_64-pc-windows-gnu, x86_64-pc-windows-msvc]
     steps:
       - name: 🔍 Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: ⚙️ Set Up Rust for ${{ matrix.target }}
         uses: dtolnay/rust-toolchain@stable
         with:
