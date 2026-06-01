@@ -37,12 +37,13 @@ jobs:
         with:
           fetch-depth: 0
           ref: "main"
-      - name: 💱 Generate Changelog
-        uses: orhun/git-cliff-action@v3
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
-          args: --verbose --output CHANGELOG.md
+          args: --verbose
         env:
+          OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
       - name: 💫 Commit Changelog
         uses: EndBug/add-and-commit@v9
