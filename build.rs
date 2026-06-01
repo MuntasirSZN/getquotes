@@ -1,12 +1,17 @@
 use clap::CommandFactory;
 use clap_complete::generate_to;
+use schemars::schema_for;
 use std::fs;
 
 include!("src/cli.rs");
+include!("src/config.rs");
 
 fn main() -> std::io::Result<()> {
     let mut cmd = Args::command();
     let completion_out_dir = Path::new("completions");
+    let schema = schema_for!(Config);
+    let output_path = PathBuf::from("config.schema.json");
+    fs::write(output_path, serde_json::to_string_pretty(&schema)?)?;
 
     fs::create_dir_all(completion_out_dir)?;
 

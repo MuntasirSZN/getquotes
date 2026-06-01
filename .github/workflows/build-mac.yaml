@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir -p release
           cp target/${{ matrix.target }}/release/getquotes release/
-          tar -czvf getquotes-${{ matrix.target }}.tar.gz -C release getquotes -C ../ man/getquotes.1 LICENSE completions/
+          tar -czvf getquotes-${{ matrix.target }}.tar.gz -C release getquotes -C ../ man/getquotes.1 LICENSE completions/ config.schema.json
       - name: 🚢 Upload macOS Artifact
         uses: actions/upload-artifact@v4
         with:

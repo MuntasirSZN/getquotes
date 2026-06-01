@@ -13,9 +13,6 @@ build = "build.rs"
 [package.metadata.android]
 build_targets = ["aarch64-linux-android"]
 
-[[bin]]
-name = "getquotes"
-
 [dependencies]
 clap = { version = "4.6.1", features = [
   "cargo",
@@ -69,6 +66,11 @@ clap = { version = "4.6.1", features = [
 clap_complete = "4.6.5"
 clap_complete_nushell = "4.6.0"
 clap_mangen = "0.3.0"
+schemars = "1.2.1"
+serde_json = "1.0"
+toml = "1.1.2"
+log = "0.4.30"
+serde = { version = "1.0", features = ["derive"] }
 
 [profile.release]
 opt-level = 3
