@@ -31,7 +31,7 @@ jobs:
 
       # Cache Rust dependencies
       - name: 📦 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v1
+        uses: Swatinem/rust-cache@v2
 
       # Install clippy-sarif and sarif-fmt
       - name: ⬇️ Install clippy-sarif and sarif-fmt
