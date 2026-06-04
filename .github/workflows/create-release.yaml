@@ -96,7 +96,7 @@ jobs:
           AUR_EMAIL: ${{ secrets.AUR_EMAIL }}
           AUR_SSH_PRIVATE_KEY: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
       - name: 💫 Commit PKGBUILD
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           add: "packages/aur/getquotes/PKGBUILD"
           message: "📝 Update PKGBUILD"
