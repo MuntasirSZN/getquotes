@@ -200,8 +200,14 @@ pub struct Args {
     )]
     pub rainbow_mode: Option<bool>,
 
-    #[arg(long, short, help = "Initialize the quote cache for offline mode")]
-    pub init_cache: bool,
+    #[arg(
+        long,
+        short,
+        help = "Initialize quote cache (optionally specify comma-separated authors)",
+        num_args = 0..=1,
+        default_missing_value = "",
+    )]
+    pub init_cache: Option<String>,
 
     #[arg(long, short, help = "Run in offline mode, using cached quotes")]
     pub offline: bool,

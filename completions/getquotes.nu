@@ -15,7 +15,7 @@ module completions {
     --max-tries(-m): string   # Set the maximum number of tries to fetch a quote
     --log-file(-l): string    # Specify the log file path
     --rainbow-mode(-r): string@"nu-complete getquotes rainbow_mode" # Enable rainbow mode for gradient rainbow quote colors
-    --init-cache(-i)          # Initialize the quote cache for offline mode
+    --init-cache(-i): string  # Initialize quote cache (optionally specify comma-separated authors)
     --offline(-o)             # Run in offline mode, using cached quotes
     --version(-v)             # Print version information
     --config(-C): string      # Use a custom TOML configuration file

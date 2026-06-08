@@ -100,7 +100,7 @@ fn test_update_cache() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let rt = Runtime::new()?;
     let client = Arc::new(Client::builder().build()?);
 
-    rt.block_on(update_cache(client))?;
+    rt.block_on(update_cache(client, &config.authors))?;
 
     author_sections_mock.assert();
     quotes_mock.assert();

@@ -11,7 +11,7 @@ fn test_cli_arguments() {
     assert_eq!(default_args.max_tries, None);
     assert_eq!(default_args.log_file, None);
     assert_eq!(default_args.rainbow_mode, None);
-    assert!(!default_args.init_cache);
+    assert_eq!(default_args.init_cache, None);
     assert!(!default_args.offline);
     assert!(!default_args.version);
     assert_eq!(default_args.config, None);
@@ -37,9 +37,13 @@ fn test_cli_arguments() {
     let args = Args::parse_from(["getquotes", "--rainbow-mode"]);
     assert_eq!(args.rainbow_mode, Some(true));
 
-    // Test setting init cache
+    // Test setting init cache (no value = all config authors)
     let args = Args::parse_from(["getquotes", "--init-cache"]);
-    assert!(args.init_cache);
+    assert_eq!(args.init_cache, Some("".to_string()));
+
+    // Test setting init cache with specific authors
+    let args = Args::parse_from(["getquotes", "--init-cache", "Einstein,Tesla"]);
+    assert_eq!(args.init_cache, Some("Einstein,Tesla".to_string()));
 
     // Test setting offline mode
     let args = Args::parse_from(["getquotes", "--offline"]);
@@ -87,7 +91,7 @@ fn test_cli_arguments() {
     assert_eq!(args.max_tries, Some(25));
     assert_eq!(args.log_file, Some("log.txt".to_string()));
     assert_eq!(args.rainbow_mode, Some(true));
-    assert!(args.init_cache);
+    assert_eq!(args.init_cache, Some("".to_string()));
     assert!(args.offline);
     assert!(args.version);
     assert_eq!(args.config, Some("conf.toml".to_string()));

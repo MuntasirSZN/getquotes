@@ -69,6 +69,14 @@ _getquotes() {
                     COMPREPLY=($(compgen -W "true false" -- "${cur}"))
                     return 0
                     ;;
+                --init-cache)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                -i)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
                 --config)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0

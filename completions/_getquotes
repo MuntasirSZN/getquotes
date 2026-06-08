@@ -25,12 +25,12 @@ _getquotes() {
 '--log-file=[Specify the log file path]:LOG_FILE:_default' \
 '-r+[Enable rainbow mode for gradient rainbow quote colors]::RAINBOW_MODE:(true false)' \
 '--rainbow-mode=[Enable rainbow mode for gradient rainbow quote colors]::RAINBOW_MODE:(true false)' \
+'-i+[Initialize quote cache (optionally specify comma-separated authors)]::INIT_CACHE:_default' \
+'--init-cache=[Initialize quote cache (optionally specify comma-separated authors)]::INIT_CACHE:_default' \
 '-C+[Use a custom TOML configuration file]:CONFIG:_default' \
 '--config=[Use a custom TOML configuration file]:CONFIG:_default' \
 '-c+[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
 '--completion=[Generate shell completion script]:COMPLETION:(bash elvish fish powershell zsh nushell)' \
-'-i[Initialize the quote cache for offline mode]' \
-'--init-cache[Initialize the quote cache for offline mode]' \
 '-o[Run in offline mode, using cached quotes]' \
 '--offline[Run in offline mode, using cached quotes]' \
 '-v[Print version information]' \
