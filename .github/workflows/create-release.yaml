@@ -81,7 +81,7 @@ jobs:
           ./pkgbuild-ci.sh
           cd ..
       - name: 💠 Publish To Aur
-        uses: KSXGitHub/github-actions-deploy-aur@v4.1.3
+        uses: KSXGitHub/github-actions-deploy-aur@v4.2.0
         with:
           pkgname: getquotes
           pkgbuild: ./packages/aur/getquotes/PKGBUILD
