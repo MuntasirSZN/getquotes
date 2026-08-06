@@ -18,11 +18,11 @@ jobs:
     steps:
       # Checkout the repository
       - name: 🛠️ Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Set up Rust toolchain
       - name: 🦀 Set up Rust toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@b2417cde72dcf67f306c0ae8e0828a81bf0b189f # v1.0.6
         with:
           profile: minimal
           toolchain: stable
@@ -31,7 +31,7 @@ jobs:
 
       # Cache Rust dependencies
       - name: 📦 Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
 
       # Install clippy-sarif and sarif-fmt
       - name: ⬇️ Install clippy-sarif and sarif-fmt
@@ -45,6 +45,6 @@ jobs:
 
       # Upload SARIF file
       - name: 📤 Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v4.37.5
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
         with:
           sarif_file: results.sarif
