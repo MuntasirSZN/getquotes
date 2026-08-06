@@ -528,6 +528,52 @@ fn parse_color_spec(spec: &str) -> Option<RgbColor> {
     Some(color)
 }
 
+/// Paint `text` with the configured theme color for terminal progress output.
+/// Returns `text` unchanged when the theme cannot be parsed as a single color.
+pub fn paint_theme(text: &str, theme_color: &str) -> String {
+    render_style(&style_from_spec(theme_color), text)
+}
+
+/// Style a number so its hue cycles through the rainbow as it grows
+/// (full cycle every 60 counts) — for live progress counters.
+pub fn paint_counter(count: usize) -> String {
+    render_style(
+        &Some(style_from_rgb(rainbow_color(count, 60))),
+        &count.to_string(),
+    )
+}
+
+/// Paint a progress line: the counter cycles a rainbow hue, the surrounding
+/// text stays in the theme color.
+pub fn paint_progress_line(count: usize, author: &str, theme_color: &str, verb: &str) -> String {
+    let theme = style_from_spec(theme_color);
+    let counter = Some(style_from_rgb(rainbow_color(count, 60)));
+    let mut out = String::new();
+    out.push_str(&render_style(&theme, "Cached "));
+    out.push_str(&render_style(&counter, &count.to_string()));
+    out.push_str(&render_style(&theme, &format!(" quotes {verb} '")));
+    out.push_str(&render_style(&theme, author));
+    out.push_str(&render_style(&theme, "'"));
+    out
+}
+
+fn style_from_spec(spec: &str) -> Option<AnsiStyle> {
+    parse_color_spec(spec).map(style_from_rgb)
+}
+
+fn style_from_rgb(color: RgbColor) -> AnsiStyle {
+    AnsiStyle::new().fg_color(Some(AnsiColor::Rgb(AnsiRgbColor(
+        color.r, color.g, color.b,
+    ))))
+}
+
+fn render_style(style: &Option<AnsiStyle>, text: &str) -> String {
+    match style {
+        Some(style) => format!("{}{}{}", style.render(), text, style.render_reset()),
+        None => text.to_string(),
+    }
+}
+
 #[cfg(test)]
 fn parse_gradient_stop(spec: &str) -> Option<RgbColor> {
     let mut input = ParserInput::new(spec);

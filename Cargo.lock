@@ -591,18 +591,19 @@ dependencies = [
  "cssparser",
  "cssparser-color",
  "env_logger",
+ "fastrand",
  "git_rev",
  "jiff",
  "lazy_static",
  "log",
  "mockito",
- "rand 0.10.2",
  "reqwest",
  "rusqlite",
  "schemars",
  "scraper",
  "serde",
  "serde_json",
+ "simd-normalizer",
  "tempfile",
  "terminal_size",
  "tokio",
@@ -1961,6 +1962,12 @@ dependencies = [
  "errno",
  "libc",
 ]
+
+[[package]]
+name = "simd-normalizer"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "58c1da222c2fb767b7a65172d036d3de1a86db177cdf8ea13cb8b59442de7031"
 
 [[package]]
 name = "simd_cesu8"

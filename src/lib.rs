@@ -14,9 +14,9 @@ use crate::config::{load_or_create_config, load_or_create_config_from_path};
 use crate::throttle::ApiThrottler;
 use clap::CommandFactory;
 use clap_complete::generate;
+use fastrand::Rng;
 use git_rev::try_revision_string;
 use log::{debug, error, info, warn};
-use rand::{RngExt, rng as thread_rng};
 use reqwest::Client;
 use std::error::Error as StdError;
 use std::io;
@@ -104,12 +104,12 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
 
     // Attempt up to max_tries to find a quote
     let max_tries = cfg.max_tries;
-    let mut rng = thread_rng();
+    let mut rng = Rng::new();
 
     for attempt in 1..=max_tries {
         debug!("Attempt {attempt}/{max_tries}");
         // Pick a random author from config
-        let author_idx = rng.random_range(0..cfg.authors.len());
+        let author_idx = rng.usize(0..cfg.authors.len());
         let author = &cfg.authors[author_idx];
 
         info!("Attempting to fetch quote for author: {author}");
@@ -138,7 +138,7 @@ pub async fn run(args: Args) -> Result<(), Box<dyn StdError + Send + Sync>> {
                             };
 
                         if !quotes.is_empty() {
-                            let random_quote = &quotes[rng.random_range(0..quotes.len())];
+                            let random_quote = &quotes[rng.usize(0..quotes.len())];
                             found_quote = Some((author.to_string(), random_quote.clone()));
                             break;
                         }
@@ -170,7 +170,7 @@ fn display_offline_quote(cfg: &Config) -> Result<(), Box<dyn StdError + Send + S
         );
     }
 
-    let mut rng = thread_rng();
+    let mut rng = Rng::new();
 
     // Filter quotes by configured authors if specified
     let filtered_quotes: Vec<_> = if !cfg.authors.is_empty() {
@@ -188,7 +188,7 @@ fn display_offline_quote(cfg: &Config) -> Result<(), Box<dyn StdError + Send + S
     }
 
     // Select a random quote from filtered list
-    let quote_idx = rng.random_range(0..filtered_quotes.len());
+    let quote_idx = rng.usize(0..filtered_quotes.len());
     let (author, quote) = &filtered_quotes[quote_idx];
 
     // Display the randomly selected quote

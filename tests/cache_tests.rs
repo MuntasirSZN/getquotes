@@ -126,6 +126,60 @@ fn test_get_cached_quotes() -> Result<(), Box<dyn std::error::Error + Send + Syn
 }
 
 #[test]
+fn test_init_cache_normalizes_and_collapses_duplicates()
+-> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let (_guard, _temp_dir) = common::setup_temp_home()?;
+
+    init_cache()?;
+    let db_path = get_database_path()?;
+    let conn = Connection::open(&db_path)?;
+
+    // Distinct raw strings that collapse under NFKC.
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Test Author", "Efficient thinking"],
+    )?;
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Test Author", "Efﬁcient thinking"], // U+FB01 ligature
+    )?;
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Test Author", "ＡＬＬ ＣＡＰＳ"], // fullwidth forms
+    )?;
+    conn.execute(
+        "INSERT INTO quotes (author, quote) VALUES (?1, ?2)",
+        ["Test Author", "ALL CAPS"],
+    )?;
+
+    // Re-running init_cache runs the normalization migration.
+    init_cache()?;
+
+    let quotes = get_cached_quotes()?;
+    let mut texts: Vec<&String> = quotes.iter().map(|(_, q)| q).collect();
+    texts.sort();
+    assert_eq!(
+        texts,
+        vec!["ALL CAPS", "Efficient thinking"],
+        "NFKC variants must collapse into a single normalized row"
+    );
+
+    Ok(())
+}
+
+#[test]
+fn test_normalize_quote() {
+    assert_eq!(
+        getquotes::cache::normalize_quote("Ｅｆﬁｃｉｅｎｔ"),
+        "Efficient"
+    );
+    assert_eq!(
+        getquotes::cache::normalize_quote("already plain"),
+        "already plain"
+    );
+}
+
+#[test]
 fn test_get_random_cached_quote() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let (_guard, _temp_dir) = common::setup_temp_home()?;
 
