@@ -77,8 +77,6 @@
 
 ### 🐞 Bug Fixes
 
-- **ci:** archive part
-- **ci:** windows build
 - homebrew ci part 1
 - hombrew ci final
 - **tests:** format code and make it flexible to tests
@@ -90,7 +88,7 @@
 
 <a name="v0.4.0"></a>
 
-## [v0.4.0](https://github.com/MuntasirSZN/getquotes/compare/v0.3.7...v0.4.0) (2025-04-12)
+## [v0.4.0](https://github.com/MuntasirSZN/getquotes/compare/v0.3.7...v0.4.0) (2025-04-13)
 
 ### ✨ Features
 
@@ -101,6 +99,8 @@
 ### 🐞 Bug Fixes
 
 - **ci:** use actions bot
+- **ci:** archive part
+- **ci:** windows build
 
 
 <a name="v0.3.7"></a>
