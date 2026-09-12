@@ -1,6 +1,6 @@
 use crate::config::{BoxCorners, Config, Layout};
 use anstyle::{Color as AnsiColor, RgbColor as AnsiRgbColor, Style as AnsiStyle};
-use cssparser::{ParseError, Parser, ParserInput, Token};
+use cssparser::{ParseError, Parser, Token};
 use cssparser_color::{Color as CssColor, parse_color_keyword};
 use log::warn;
 use std::ops::Range;
@@ -487,8 +487,7 @@ fn parse_fill_spec(spec: &str) -> Option<Fill> {
 }
 
 fn parse_gradient_spec(spec: &str) -> Option<Vec<RgbColor>> {
-    let mut input = ParserInput::new(spec);
-    let mut parser = Parser::new(&mut input);
+    let mut parser = Parser::new(spec);
     let function_name = match parser.next().ok()? {
         Token::Function(name) if is_supported_gradient_function(name.as_ref()) => {
             name.as_ref().to_string()
@@ -501,19 +500,19 @@ fn parse_gradient_spec(spec: &str) -> Option<Vec<RgbColor>> {
     Some(stops)
 }
 
-fn parse_gradient_function<'i, 't>(
+fn parse_gradient_function<'i>(
     function_name: &str,
-    parser: &mut Parser<'i, 't>,
+    parser: &mut Parser<'i>,
 ) -> Option<Vec<RgbColor>> {
     if !is_supported_gradient_function(function_name) {
         return None;
     }
 
     parser
-        .parse_nested_block(|input| -> Result<Vec<RgbColor>, ParseError<'i, ()>> {
+        .parse_nested_block(|input| -> Result<Vec<RgbColor>, ParseError<()>> {
             Ok(input.parse_comma_separated_ignoring_errors(
-                |stop| -> Result<RgbColor, ParseError<'i, ()>> {
-                    parse_gradient_stop_value(stop).ok_or_else(|| stop.new_custom_error(()))
+                |stop| -> Result<RgbColor, ParseError<()>> {
+                    parse_gradient_stop_value(stop).ok_or_else(|| stop.new_error_for_next_token())
                 },
             ))
         })
@@ -521,8 +520,7 @@ fn parse_gradient_function<'i, 't>(
 }
 
 fn parse_color_spec(spec: &str) -> Option<RgbColor> {
-    let mut input = ParserInput::new(spec);
-    let mut parser = Parser::new(&mut input);
+    let mut parser = Parser::new(spec);
     let color = parse_single_color(&mut parser)?;
     parser.expect_exhausted().ok()?;
     Some(color)
@@ -576,12 +574,11 @@ fn render_style(style: &Option<AnsiStyle>, text: &str) -> String {
 
 #[cfg(test)]
 fn parse_gradient_stop(spec: &str) -> Option<RgbColor> {
-    let mut input = ParserInput::new(spec);
-    let mut parser = Parser::new(&mut input);
+    let mut parser = Parser::new(spec);
     parse_gradient_stop_value(&mut parser)
 }
 
-fn parse_gradient_stop_value<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+fn parse_gradient_stop_value<'i>(input: &mut Parser<'i>) -> Option<RgbColor> {
     let mut color = None;
 
     while let Ok(token) = input.next().cloned() {
@@ -593,17 +590,17 @@ fn parse_gradient_stop_value<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbCo
     color
 }
 
-fn parse_single_color<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+fn parse_single_color<'i>(input: &mut Parser<'i>) -> Option<RgbColor> {
     let token = input.next().ok()?.clone();
     parse_color_token(token, input)
 }
 
-fn parse_color_token<'i, 't>(token: Token<'i>, parser: &mut Parser<'i, 't>) -> Option<RgbColor> {
+fn parse_color_token<'i>(token: Token<'i>, parser: &mut Parser<'i>) -> Option<RgbColor> {
     match token {
         Token::Hash(value) | Token::IDHash(value) => parse_hex_color(value.as_ref()),
         Token::Ident(value) => named_color_rgb(value.as_ref()),
         Token::Function(name) => parser
-            .parse_nested_block(|input| -> Result<Option<RgbColor>, ParseError<'i, ()>> {
+            .parse_nested_block(|input| -> Result<Option<RgbColor>, ParseError<()>> {
                 Ok(parse_color_function(name.as_ref(), input))
             })
             .ok()
@@ -624,10 +621,7 @@ fn parse_hex_color(value: &str) -> Option<RgbColor> {
     })
 }
 
-fn parse_color_function<'i, 't>(
-    function_name: &str,
-    input: &mut Parser<'i, 't>,
-) -> Option<RgbColor> {
+fn parse_color_function<'i>(function_name: &str, input: &mut Parser<'i>) -> Option<RgbColor> {
     match normalize_token(function_name).as_str() {
         "rgb" => parse_rgb_function(input, false),
         "rgba" => parse_rgb_function(input, true),
@@ -636,7 +630,7 @@ fn parse_color_function<'i, 't>(
     }
 }
 
-fn parse_rgb_function<'i, 't>(input: &mut Parser<'i, 't>, allow_alpha: bool) -> Option<RgbColor> {
+fn parse_rgb_function<'i>(input: &mut Parser<'i>, allow_alpha: bool) -> Option<RgbColor> {
     let components = parse_numeric_components(input)?;
     let expected_len = if allow_alpha { 4 } else { 3 };
     if components.len() != expected_len {
@@ -661,7 +655,7 @@ fn parse_rgb_function<'i, 't>(input: &mut Parser<'i, 't>, allow_alpha: bool) -> 
     })
 }
 
-fn parse_hsl_function<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
+fn parse_hsl_function<'i>(input: &mut Parser<'i>) -> Option<RgbColor> {
     let components = parse_numeric_components(input)?;
     if components.len() != 3 {
         return None;
@@ -673,7 +667,7 @@ fn parse_hsl_function<'i, 't>(input: &mut Parser<'i, 't>) -> Option<RgbColor> {
     Some(hsl_to_rgb(hue, saturation, lightness))
 }
 
-fn parse_numeric_components<'i, 't>(input: &mut Parser<'i, 't>) -> Option<Vec<NumericComponent>> {
+fn parse_numeric_components<'i>(input: &mut Parser<'i>) -> Option<Vec<NumericComponent>> {
     let mut components = Vec::new();
 
     while let Ok(token) = input.next().cloned() {
