@@ -31,7 +31,7 @@ pub fn initialize_logger(log_file: &str) -> Result<(), Box<dyn StdError + Send +
             writeln!(
                 buf,
                 "{} [{}] - {}",
-                jiff::Zoned::now().strftime("%Y-%m-%dT%H:%M:%S"),
+                jiff::ZonedDateTime::now().strftime("%Y-%m-%dT%H:%M:%S"),
                 record.level(),
                 record.args()
             )
